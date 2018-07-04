@@ -41,7 +41,7 @@ public class CustomRunner {
             throw new RuntimeException("Nothing to test");
         }
 
-        copyToSystemProperties(props);
+        passToSystemProperties(props);
 
         log.info("Running with classes: " + classes.toString());
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
@@ -72,7 +72,7 @@ public class CustomRunner {
         reporter.close();
     }
 
-    protected static void copyToSystemProperties(Properties props) {
+    protected static void passToSystemProperties(Properties props) {
         Enumeration<?> it = props.propertyNames();
         while (it.hasMoreElements()) {
             String propName = (String) it.nextElement();
