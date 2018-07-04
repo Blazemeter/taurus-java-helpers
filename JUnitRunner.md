@@ -17,10 +17,10 @@ Custom Runner expects the following properties:
 - `target_***` - paths to `*.jar` file, that contains JUnit test case classes 
 
 _Example:_ 
-
-_target_lib1=/home/user/tests/libs/myLib.jar_
-
-_target_lib2=C:/libs/myLib.jar_
+```
+target_lib1=/home/user/tests/libs/myLib.jar
+target_lib2=C:/libs/myLib.jar
+```
 
 - `report_file` - path to report file
 
