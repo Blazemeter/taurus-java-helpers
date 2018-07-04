@@ -30,5 +30,7 @@ _target_lib2=C:/libs/myLib.jar_
 
 Also you can specify custom properties, that will be pass to Java System Properties, e.g.:
 
-    var1=value1
-    var2=val2
+```
+var1=value1
+var2=val2
+```

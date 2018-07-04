@@ -1,6 +1,4 @@
-*/target/
-*/target/*.pom
-*/.idea/
+/target/
 /.idea/
 *.iml
 
@@ -28,17 +26,3 @@
 hs_err_pid*
 /http2/datawriter
 
-*.index
-*.asc
-*.lst
-*.html
-*.js
-*.css
-/target/taurus-java-helpers-1.0.pom
-/target/apidocs/package-list
-/target/javadoc-bundle-options/package-list
-/target/maven-archiver/pom.properties
-/target/nexus-staging/staging/12cacbcea7faf5/com/blazemeter/taurus-java-helpers/1.0/taurus-java-helpers-1.0.pom
-/target/nexus-staging/staging/12cacbcea7faf5.properties
-/target/nexus-staging/staging/12cacbcea7faf5/com/blazemeter/taurus-java-helpers/maven-metadata-nexus.xml
-/target/javadoc-bundle-options/javadoc-options-javadoc-resources.xml
