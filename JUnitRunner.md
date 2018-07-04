@@ -16,12 +16,6 @@ Custom Runner expects the following properties:
 
 - `target_***` - paths to `*.jar` file, that contains JUnit test case classes 
 
-_Example:_ 
-```
-target_lib1=/home/user/tests/libs/myLib.jar
-target_lib2=C:/libs/myLib.jar
-```
-
 - `report_file` - path to report file
 
 - `iterations` - execution count of Test Suite (long value)
@@ -31,6 +25,18 @@ target_lib2=C:/libs/myLib.jar
 Also you can specify custom properties, that will be pass to Java System Properties, e.g.:
 
 ```
+var1=value1
+var2=val2
+```
+
+#### Example 
+```
+target_lib1=/home/user/tests/libs/myLib.jar
+target_lib2=C:/libs/myLib.jar
+report_file=/home/user/reports/junit.xml
+iterations=1
+hold_for=60
+
 var1=value1
 var2=val2
 ```
