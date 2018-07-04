@@ -26,15 +26,19 @@ public class CustomRunnerTest extends TestCase {
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty("myProperty", "myValue");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
         props.store(new FileWriter(propsFile), "test");
 
         String[] args = {propsFile.getAbsolutePath()};
+        System.clearProperty("myProperty");
         CustomRunner.main(args);
 
         assertEquals(1, getLinesCount(report));
+        assertNull(System.getProperty(CustomRunner.REPORT_FILE));
+        assertEquals("myValue", System.getProperty("myProperty"));
     }
 
     public void testIterations() throws Exception {

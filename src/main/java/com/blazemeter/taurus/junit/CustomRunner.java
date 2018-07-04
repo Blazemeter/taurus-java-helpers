@@ -41,6 +41,8 @@ public class CustomRunner {
             throw new RuntimeException("Nothing to test");
         }
 
+        passToSystemProperties(props);
+
         log.info("Running with classes: " + classes.toString());
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
         CustomListener custom_listener = new CustomListener(reporter);
@@ -68,6 +70,23 @@ public class CustomRunner {
         }
 
         reporter.close();
+    }
+
+    protected static void passToSystemProperties(Properties props) {
+        Enumeration<?> it = props.propertyNames();
+        while (it.hasMoreElements()) {
+            String propName = (String) it.nextElement();
+            if (!isCustomRunnerProperty(propName)) {
+                System.setProperty(propName, props.getProperty(propName));
+            }
+        }
+    }
+
+    protected static boolean isCustomRunnerProperty(String propName) {
+        return REPORT_FILE.equals(propName)
+                || ITERATIONS.equals(propName)
+                || HOLD.equals(propName)
+                || propName.startsWith(TARGET_PREFIX);
     }
 
     protected static ArrayList<Class> getClasses(Properties props) {

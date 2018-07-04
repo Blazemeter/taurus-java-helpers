@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/Blazemeter/taurus-java-helpers.svg?branch=master)](https://travis-ci.org/Blazemeter/taurus-java-helpers)
 [![codecov](https://codecov.io/gh/Blazemeter/taurus-java-helpers/branch/master/graph/badge.svg)](https://codecov.io/gh/Blazemeter/taurus-java-helpers)
 
+#### [JUnit Runner](JUnitRunner.md)
 
 #### License
  
