@@ -2,8 +2,6 @@ package com.blazemeter.taurus.junit;
 
 
 import junit.framework.TestCase;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -80,9 +78,7 @@ public class CustomRunnerTest extends TestCase {
         String[] args = {propsFile.getAbsolutePath()};
         CustomRunner.main(args);
 
-        String file = FileUtils.readFileToString(report);
-        System.out.println(file);
-        assertTrue(file, 2 < getLinesCount(report));
+        assertTrue(2 < getLinesCount(report));
     }
 
     public void testHoldIterations() throws Exception {
