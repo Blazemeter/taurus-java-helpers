@@ -3,9 +3,10 @@
 ### Execution
 
 For execute JUnit Runner from command-line use the following command:
-    
-    java -cp taurus-java-helpers-[VERSION].jar:junit-[VERSION].jar com.blazemeter.taurus.junit.CustomRunner [PATH_TO_PROPERTIES_FILE]
 
+```    
+java -cp taurus-java-helpers-[VERSION].jar:junit-[VERSION].jar com.blazemeter.taurus.junit.CustomRunner [PATH_TO_PROPERTIES_FILE]
+```
     
 ### Properties file
 
