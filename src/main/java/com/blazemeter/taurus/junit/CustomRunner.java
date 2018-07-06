@@ -132,6 +132,9 @@ public class CustomRunner {
         return REPORT_FILE.equals(propName)
                 || ITERATIONS.equals(propName)
                 || HOLD.equals(propName)
+                || INCLUDE_CATEGORY.equals(propName)
+                || EXCLUDE_CATEGORY.equals(propName)
+                || TEST_SUITE.equals(propName)
                 || propName.startsWith(TARGET_PREFIX);
     }
 
