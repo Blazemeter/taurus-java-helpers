@@ -87,7 +87,7 @@ public class CustomRunner {
         String runItems = props.getProperty(RUN_ITEMS);
         if (runItems != null) {
             log.info("Create JUnit request with following items: " + runItems);
-            return JUnitRequest.createSuiteRequest(runItems);
+            return JUnitRequest.createItemsRequest(runItems);
         } else {
             String[] junitArguments = generateArgs(classes, props);
             log.info("Create JUnit request with following arguments: " + Arrays.toString(junitArguments));

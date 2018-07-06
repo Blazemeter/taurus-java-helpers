@@ -261,7 +261,7 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
     }
 
-    public void testRunTestSuite() throws Exception {
+    public void testRunItems() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 

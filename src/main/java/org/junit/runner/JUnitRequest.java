@@ -17,7 +17,7 @@ public class JUnitRequest {
         return parse.createRequest(Computer.serial());
     }
 
-    public static Request createSuiteRequest(String runItems) {
+    public static Request createItemsRequest(String runItems) {
         String[] testCases = runItems.split(",");
         final List<Filter> filters = new ArrayList<>();
         final List<Class> classes = new ArrayList<>();
