@@ -260,4 +260,67 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
     }
+
+    public void testRunTestSuite() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.TEST_SUITE, "testcases.TestClass1#flow1,testcases.TestClass2#test2,testcases.TestClass4");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 4, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
+    }
+
+    public void testRunAll() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 8, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
+    }
 }

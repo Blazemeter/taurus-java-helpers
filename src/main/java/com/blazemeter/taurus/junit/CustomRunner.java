@@ -28,7 +28,7 @@ public class CustomRunner {
     public static final String HOLD = "hold_for";
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
-    public static final String SUITE_CLASSES = "suite_classes";
+    public static final String TEST_SUITE = "test_suite";
 
     static {
         log.setLevel(Level.FINER);
@@ -58,9 +58,7 @@ public class CustomRunner {
         JUnitCore runner = new JUnitCore();
         runner.addListener(custom_listener);
 
-        String[] junitArguments = generateArgs(classes, props);
-        log.info("Create JUnit request with following arguments: " + Arrays.toString(junitArguments));
-        Request request = JUnitRequest.createRequest(junitArguments);
+        Request request = createRequest(classes, props);
 
         long iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
         float hold = Float.valueOf(props.getProperty(HOLD, "0"));
@@ -83,6 +81,18 @@ public class CustomRunner {
         }
 
         reporter.close();
+    }
+
+    private static Request createRequest(ArrayList<Class> classes, Properties props) {
+        String testSuite = props.getProperty(TEST_SUITE);
+        if (testSuite != null) {
+            log.info("Create JUnit request for test suite: " + testSuite);
+            return JUnitRequest.createSuiteRequest(testSuite);
+        } else {
+            String[] junitArguments = generateArgs(classes, props);
+            log.info("Create JUnit request with following arguments: " + Arrays.toString(junitArguments));
+            return JUnitRequest.createCategoryRequest(junitArguments);
+        }
     }
 
     private static String[] generateArgs(ArrayList<Class> classes, Properties props) {
