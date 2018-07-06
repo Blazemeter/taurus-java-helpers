@@ -83,7 +83,7 @@ public class CustomRunner {
         reporter.close();
     }
 
-    private static Request createRequest(ArrayList<Class> classes, Properties props) {
+    private static Request createRequest(ArrayList<Class> classes, Properties props) throws ClassNotFoundException {
         String testSuite = props.getProperty(TEST_SUITE);
         if (testSuite != null) {
             log.info("Create JUnit request for test suite: " + testSuite);
