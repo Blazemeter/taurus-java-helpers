@@ -6,6 +6,7 @@ import org.junit.experimental.categories.IncludeCategories;
 import org.junit.runner.JUnitRequest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
+import com.blazemeter.taurus.junit5.JUnit5Runner;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -51,8 +52,13 @@ public class CustomRunner {
 
         passToSystemProperties(props);
 
-        log.info("Running with classes: " + classes.toString());
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
+        if (null != props.getProperty("junit5")) {
+            JUnit5Runner.run(classes, props, reporter);
+            return;
+        }
+
+        log.info("Running with classes: " + classes.toString());
         CustomListener custom_listener = new CustomListener(reporter);
 
         JUnitCore runner = new JUnitCore();
