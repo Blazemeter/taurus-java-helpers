@@ -6,6 +6,8 @@
 
 #### [JUnit Runner](JUnitRunner.md)
 
+#### [Changelog](Changelog.md)
+
 #### License
  
     Apache License, Version 2.0
