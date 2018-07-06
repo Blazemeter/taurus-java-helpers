@@ -22,6 +22,12 @@ Custom Runner expects the following properties:
 
 - `hold_for` - duration limit in seconds (float value)
 
+- `run_items` - class names or method names, that will be run
+
+- `include_category` and `exclude_category` - category names, that will be run
+
+_NOTE: The priority for run is: run_items -> categories -> all found test classes_
+
 Also you can specify custom properties, that will be pass to Java System Properties, e.g.:
 
 ```
@@ -31,12 +37,42 @@ var2=val2
 
 #### Example 
 ```
+#
+# Set paths to *.jars
+#
 target_lib1=/home/user/tests/libs/myLib.jar
 target_lib2=C:/libs/myLib.jar
+
+#
+# Set output file
+#
 report_file=/home/user/reports/junit.xml
+
+#
+# Set execution count
+#
 iterations=1
+
+#
+# Set test duration
+#
 hold_for=60
 
+#
+# Set test classes or test methods
+#
+run_items=package.Class1,package.Class2#test2
+
+#
+# Or set categories
+#
+include_category=categories.FastTests,categories.SmokeTests
+exclude_category=categories.SlowTests
+
+
+#
+# Set custom properties
+#
 var1=value1
 var2=val2
 ```
