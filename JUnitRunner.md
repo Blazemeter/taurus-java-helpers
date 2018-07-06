@@ -22,11 +22,11 @@ Custom Runner expects the following properties:
 
 - `hold_for` - duration limit in seconds (float value)
 
-- `test_suite` - class names or method names, that will be run
+- `run_items` - class names or method names, that will be run
 
 - `include_category` and `exclude_category` - category names, that will be run
 
-_NOTE: The priority for run is: test_suite -> categories -> all found test classes_
+_NOTE: The priority for run is: run_items -> categories -> all found test classes_
 
 Also you can specify custom properties, that will be pass to Java System Properties, e.g.:
 
@@ -61,7 +61,7 @@ hold_for=60
 #
 # Set test classes or test methods
 #
-test_suite=package.Class1,package.Class2#test2
+run_items=package.Class1,package.Class2#test2
 
 #
 # Or set categories

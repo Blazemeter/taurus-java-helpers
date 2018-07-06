@@ -273,7 +273,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.TEST_SUITE, "testcases.TestClass1#flow1,testcases.TestClass2#test2,testcases.TestClass4");
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow1,testcases.TestClass2#test2,testcases.TestClass4");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();

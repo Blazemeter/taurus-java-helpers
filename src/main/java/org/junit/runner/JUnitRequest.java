@@ -14,8 +14,8 @@ public class JUnitRequest {
         return parse.createRequest(Computer.serial());
     }
 
-    public static Request createSuiteRequest(String testSuite) throws ClassNotFoundException {
-        String[] testCases = testSuite.split(",");
+    public static Request createSuiteRequest(String runItems) throws ClassNotFoundException {
+        String[] testCases = runItems.split(",");
         final List<Filter> filters = new ArrayList<>();
         final List<Class> classes = new ArrayList<>();
 

@@ -28,7 +28,7 @@ public class CustomRunner {
     public static final String HOLD = "hold_for";
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
-    public static final String TEST_SUITE = "test_suite";
+    public static final String RUN_ITEMS = "run_items";
 
     static {
         log.setLevel(Level.FINER);
@@ -84,7 +84,7 @@ public class CustomRunner {
     }
 
     private static Request createRequest(ArrayList<Class> classes, Properties props) throws ClassNotFoundException {
-        String testSuite = props.getProperty(TEST_SUITE);
+        String testSuite = props.getProperty(RUN_ITEMS);
         if (testSuite != null) {
             log.info("Create JUnit request for test suite: " + testSuite);
             return JUnitRequest.createSuiteRequest(testSuite);
@@ -134,7 +134,7 @@ public class CustomRunner {
                 || HOLD.equals(propName)
                 || INCLUDE_CATEGORY.equals(propName)
                 || EXCLUDE_CATEGORY.equals(propName)
-                || TEST_SUITE.equals(propName)
+                || RUN_ITEMS.equals(propName)
                 || propName.startsWith(TARGET_PREFIX);
     }
 
