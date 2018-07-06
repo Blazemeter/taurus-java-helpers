@@ -323,4 +323,58 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
+
+    public void testMethodNotFound() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow3,testcases.TestClass2#test2");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        try {
+            CustomRunner.main(args);
+            fail("Should be NoSuchMethodException");
+        } catch (Exception e) {
+            assertEquals("Method not found: testcases.TestClass1#flow3", e.getMessage());
+        }
+    }
+
+    public void testClassNotFound() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass77,testcases.TestClass2#test2");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        try {
+            CustomRunner.main(args);
+            fail("Should be ClassNotFoundException");
+        } catch (Exception e) {
+            assertEquals("Class not found: testcases.TestClass77", e.getMessage());
+        }
+    }
 }

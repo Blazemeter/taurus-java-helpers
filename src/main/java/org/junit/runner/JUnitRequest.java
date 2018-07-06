@@ -27,8 +27,10 @@ public class JUnitRequest {
                 if (testCase.contains("#")) {
                     String[] classAndMethod = testCase.split("#");
 
-                    Class cls = Class.forName(classAndMethod[0]);
+                    Class<?> cls = Class.forName(classAndMethod[0]);
                     classes.add(cls);
+
+                    checkMethod(cls, classAndMethod[1]);
 
                     Description description = Description.createTestDescription(cls, classAndMethod[1]);
                     filters.add(Filter.matchMethodDescription(description));
@@ -42,10 +44,17 @@ public class JUnitRequest {
             }  catch (ClassNotFoundException | NoClassDefFoundError e) {
                 log.log(Level.SEVERE, "Class not found: " + testCase, e);
                 throw new RuntimeException("Class not found: " + testCase, e);
+            } catch (NoSuchMethodException e) {
+                log.log(Level.SEVERE, "Method not found: " + testCase, e);
+                throw new RuntimeException("Method not found: " + testCase, e);
             }
         }
 
         return Request.classes(classes.toArray(new Class[0])).filterWith(new OrFilter(filters));
+    }
+
+    private static void checkMethod(Class<?> cls, String methodName) throws NoSuchMethodException {
+        cls.getDeclaredMethod(methodName);
     }
 
 }
