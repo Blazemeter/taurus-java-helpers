@@ -13,9 +13,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import static com.blazemeter.taurus.junit.CustomRunner.EXCLUDE_CATEGORY;
 import static com.blazemeter.taurus.junit.CustomRunner.HOLD;
+import static com.blazemeter.taurus.junit.CustomRunner.INCLUDE_CATEGORY;
 import static com.blazemeter.taurus.junit.CustomRunner.ITERATIONS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.TagFilter.excludeTags;
+import static org.junit.platform.launcher.TagFilter.includeTags;
 
 public class JUnit5Runner {
     private static final Logger log = Logger.getLogger(JUnit5Runner.class.getName());
@@ -27,15 +31,17 @@ public class JUnit5Runner {
             selectors.add(selectClass(cls));
         }
 
-        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
-                .selectors(
-                    selectors
-                )
-//                .filters(
-//                        includeClassNamePatterns(".*Tests")
-//                )
-                .build();
+        LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request().selectors(selectors);
 
+        if (null != props.getProperty(INCLUDE_CATEGORY)) {
+            builder.filters(includeTags(props.getProperty(INCLUDE_CATEGORY).split(",")));
+        }
+
+        if (null != props.getProperty(EXCLUDE_CATEGORY)) {
+            builder.filters(excludeTags(props.getProperty(EXCLUDE_CATEGORY).split(",")));
+        }
+
+        LauncherDiscoveryRequest request = builder.build();
         Launcher launcher = LauncherFactory.create();
         TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
         launcher.registerTestExecutionListeners(jUnit5Listener);
