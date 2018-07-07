@@ -88,15 +88,17 @@ public class JUnit5Listener implements TestExecutionListener {
             case SUCCESSFUL:
                 return Sample.STATUS_PASSED;
             case FAILED:
+                log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
                 return Sample.STATUS_FAILED;
             case ABORTED:
+                log.severe(String.format("aborted %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
                 return Sample.STATUS_BROKEN;
                 default:
+                    log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
                     return Sample.STATUS_FAILED;
         }
     }
 
-    //todo: print log about fails/abort etc..
     private void finishSample(String status, String msg, Throwable ex) {
         log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
         double duration = (System.currentTimeMillis() - started) / 1000.0;
@@ -124,6 +126,7 @@ public class JUnit5Listener implements TestExecutionListener {
     @Override
     public void executionSkipped(TestIdentifier testIdentifier, String reason) {
         startSample(testIdentifier);
+        log.warning(String.format("ignored %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
         finishSample(Sample.STATUS_SKIPPED, reason, null);
     }
 
