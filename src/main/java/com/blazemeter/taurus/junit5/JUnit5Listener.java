@@ -35,9 +35,7 @@ public class JUnit5Listener implements TestExecutionListener {
 
     @Override
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        log.info("Test Plan Finished");
-        log.info("Run Finished, successful=" + (failedCount == 0) +", run count=" + testCount);
-
+        log.info("Test Plan Finished, successful=" + (failedCount == 0) +", run count=" + testCount);
     }
 
     @Override
