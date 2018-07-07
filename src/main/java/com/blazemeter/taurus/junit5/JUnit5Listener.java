@@ -53,6 +53,7 @@ public class JUnit5Listener implements TestExecutionListener {
             if (testSource instanceof MethodSource) {
                 startSample((MethodSource) testSource);
             } else {
+                log.severe("Unsupported test source: " + testSource.getClass().getName());
                 //TODO: other test source..
             }
         }
