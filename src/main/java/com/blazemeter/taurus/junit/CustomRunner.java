@@ -30,6 +30,7 @@ public class CustomRunner {
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
     public static final String RUN_ITEMS = "run_items";
+    public static final String JUNIT_5 = "junit5";
 
     static {
         log.setLevel(Level.FINER);
@@ -53,7 +54,7 @@ public class CustomRunner {
         passToSystemProperties(props);
 
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
-        if (null != props.getProperty("junit5")) {
+        if (null != props.getProperty(JUNIT_5)) {
             JUnit5Runner.run(classes, props, reporter);
             return;
         }

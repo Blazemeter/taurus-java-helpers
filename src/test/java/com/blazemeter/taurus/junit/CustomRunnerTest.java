@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class CustomRunnerTest extends TestCase {
 
-    private static int getLinesCount(File log) throws IOException {
+    public static int getLinesCount(File log) throws IOException {
         LineNumberReader reader = new LineNumberReader(new FileReader(log));
         reader.skip(Long.MAX_VALUE);
         reader.close();
