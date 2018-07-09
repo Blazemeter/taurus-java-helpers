@@ -42,7 +42,7 @@ public class JUnitRequest {
                     Description description = Description.createSuiteDescription(cls);
                     filters.add(new ClassFilter(description));
                 }
-            }  catch (ClassNotFoundException | NoClassDefFoundError e) {
+            } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 log.log(Level.SEVERE, "Class not found: " + testCase, e);
                 throw new RuntimeException("Class not found: " + testCase, e);
             } catch (NoSuchMethodException e) {
@@ -54,7 +54,7 @@ public class JUnitRequest {
         return Request.classes(classes.toArray(new Class[0])).filterWith(new OrFilter(filters));
     }
 
-    private static void checkMethod(Class<?> cls, String methodName) throws NoSuchMethodException {
+    public static void checkMethod(Class<?> cls, String methodName) throws NoSuchMethodException {
         cls.getDeclaredMethod(methodName);
     }
 
