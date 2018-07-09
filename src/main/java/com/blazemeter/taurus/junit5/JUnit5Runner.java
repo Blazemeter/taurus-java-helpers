@@ -3,7 +3,6 @@ package com.blazemeter.taurus.junit5;
 import com.blazemeter.taurus.junit.TaurusReporter;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -44,7 +43,10 @@ public class JUnit5Runner {
         if (null != props.getProperty(EXCLUDE_CATEGORY)) {
             builder.filters(excludeTags(props.getProperty(EXCLUDE_CATEGORY).split(",")));
         }
-builder.filters(EngineFilter.excludeEngines("junit-vintage"));
+
+//         todo: do we need exclude old engine here?
+//        builder.filters(EngineFilter.excludeEngines("junit-vintage"));
+
         LauncherDiscoveryRequest request = builder.build();
         Launcher launcher = LauncherFactory.create();
         TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
@@ -120,6 +122,7 @@ builder.filters(EngineFilter.excludeEngines("junit-vintage"));
             log.log(Level.FINE, "Class not found: " + item, e);
         }
 
+        // does not work
         Package pack = Package.getPackage(item);
         if (pack == null) {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
