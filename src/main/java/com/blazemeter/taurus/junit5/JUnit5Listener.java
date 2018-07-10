@@ -113,6 +113,7 @@ public class JUnit5Listener implements TestExecutionListener {
         if (!pendingSample.isSuccessful()) {
             failedCount += 1;
         }
+        // todo: is it correct logging for skipped test(skipped=fail)
         System.out.printf(report_tmpl,
                 pendingSample.getSuite(),
                 pendingSample.getLabel(),
