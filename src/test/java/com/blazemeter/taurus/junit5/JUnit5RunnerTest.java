@@ -143,4 +143,96 @@ public class JUnit5RunnerTest {
         assertEquals(fileToString, 1, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
     }
+
+    @Test
+    public void testRunPackage() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 4, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
+    }
+
+
+    @Test
+    public void testRunClass() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 2, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+    }
+
+    @Test
+    public void testRunMethod() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2#test2");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 1, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+    }
 }
