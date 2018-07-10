@@ -48,4 +48,99 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
+
+
+    @Test
+    public void testIncludeCategories() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 5, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
+    }
+
+    @Test
+    public void testExcludeCategories() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 3, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
+    }
+
+    @Test
+    public void testIncludeAndExcludeCategories() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA");
+        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryB");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        String fileToString = readFileToString(report);
+
+        assertEquals(fileToString, 1, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
+    }
 }
