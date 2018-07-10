@@ -3,6 +3,7 @@ package com.blazemeter.taurus.junit5;
 import com.blazemeter.taurus.junit.TaurusReporter;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -23,6 +24,8 @@ import static com.blazemeter.taurus.junit.CustomRunner.RUN_ITEMS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.PackageNameFilter.excludePackageNames;
+import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.runner.JUnitRequest.checkMethod;
@@ -36,18 +39,8 @@ public class JUnit5Runner {
 
         LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request().selectors(selectors);
 
-        if (null != props.getProperty(INCLUDE_CATEGORY)) {
-            builder.filters(includeTags(props.getProperty(INCLUDE_CATEGORY).split(",")));
-        }
 
-        if (null != props.getProperty(EXCLUDE_CATEGORY)) {
-            builder.filters(excludeTags(props.getProperty(EXCLUDE_CATEGORY).split(",")));
-        }
-
-//         todo: do we need exclude old engine here?
-//        builder.filters(EngineFilter.excludeEngines("junit-vintage"));
-
-        LauncherDiscoveryRequest request = builder.build();
+        LauncherDiscoveryRequest request = addFilters(builder, props).build();
         Launcher launcher = LauncherFactory.create();
         TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
         launcher.registerTestExecutionListeners(jUnit5Listener);
@@ -74,6 +67,44 @@ public class JUnit5Runner {
 
 
         reporter.close();
+    }
+
+    private static LauncherDiscoveryRequestBuilder addFilters(LauncherDiscoveryRequestBuilder builder, Properties props) {
+        if (null != props.getProperty(INCLUDE_CATEGORY)) {
+            builder.filters(convertFilters(props.getProperty(INCLUDE_CATEGORY).split(","), true));
+        }
+
+        if (null != props.getProperty(EXCLUDE_CATEGORY)) {
+            builder.filters(convertFilters(props.getProperty(EXCLUDE_CATEGORY).split(","), false));
+        }
+
+//         todo: do we need exclude old engine here?
+//        builder.filters(EngineFilter.excludeEngines("junit-vintage"));
+        return builder;
+    }
+
+    private static Filter[] convertFilters(String[] filters, boolean isInclude) {
+        List<Filter> res = new ArrayList<>();
+        for (String filter : filters) {
+            res.add(detectFilter(filter, isInclude));
+        }
+        return res.toArray(new Filter[0]);
+    }
+
+    private static Filter detectFilter(String filter, boolean isInclude) {
+        try {
+            Classes.getClass(filter);
+            return isInclude ? includeTags(filter) : excludeTags(filter);
+        } catch (ClassNotFoundException | NoClassDefFoundError e) {
+            log.log(Level.FINER, "Filter class not found: " + filter, e);
+        }
+
+        Package pack = Package.getPackage(filter);
+        if (pack == null) {
+            log.log(Level.SEVERE, "Filter Class or Package not found: " + filter);
+            throw new RuntimeException("Filter Class or Package not found: " + filter);
+        }
+        return isInclude ? includePackageNames(filter) : excludePackageNames(filter);
     }
 
     private static List<DiscoverySelector> getSelectors(ArrayList<Class> classes, Properties props) {
@@ -128,6 +159,7 @@ public class JUnit5Runner {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
             throw new RuntimeException("Class or Package not found: " + item);
         }
+
         return selectPackage(item);
     }
 
