@@ -1,7 +1,6 @@
 package com.blazemeter.taurus.junit5;
 
 import com.blazemeter.taurus.junit.CustomRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
