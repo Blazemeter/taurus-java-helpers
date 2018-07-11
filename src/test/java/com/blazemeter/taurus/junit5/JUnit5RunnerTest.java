@@ -368,4 +368,77 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
     }
 
+    @Test
+    public void testIterations() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("dummyJUnit.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(3));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        assertEquals(3, getLinesCount(report));
+    }
+
+    @Test
+    public void testHold() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("dummyJUnit.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        assertTrue(2 < getLinesCount(report));
+    }
+
+    @Test
+    public void testHoldIterations() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("dummyJUnit.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        assertEquals(1, getLinesCount(report));
+    }
+    // test method,class,package not found
 }
