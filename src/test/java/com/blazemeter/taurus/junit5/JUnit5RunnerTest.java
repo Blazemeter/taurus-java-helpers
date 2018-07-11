@@ -145,8 +145,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
     }
 
-    // https://github.com/junit-team/junit5/issues/1493
-    @Ignore("select packages does not work for jar files")
     @Test
     public void testRunPackage() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
@@ -263,15 +261,13 @@ public class JUnit5RunnerTest {
         CustomRunner.main(args);
 
         String fileToString = readFileToString(report);
-// TODO: fix it after https://github.com/junit-team/junit5/issues/1493
-//        assertEquals(fileToString, 7, getLinesCount(report));
-        assertEquals(fileToString, 3, getLinesCount(report));
+        assertEquals(fileToString, 7, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
-//        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
-//        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
-//        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
-//        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
     }
 

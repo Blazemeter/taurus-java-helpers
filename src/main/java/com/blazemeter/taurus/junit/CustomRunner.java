@@ -174,7 +174,7 @@ public class CustomRunner {
         JarFile jarFile = new JarFile(jar_path);
         Enumeration<JarEntry> jar_entries_enum = jarFile.entries();
 
-        URL url = new URL("jar:file:" + jar_path + "!/");
+        URL url = new URL("file:" + jar_path);
         addURL(url);
         URLClassLoader cl = URLClassLoader.newInstance(new URL[] {url});
 

@@ -11,7 +11,9 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,17 +86,51 @@ public class JUnit5Runner {
     }
 
     private static Filter[] convertFilters(String[] filters, boolean isInclude) {
-        List<Filter> res = new ArrayList<>();
+        Map<FiltersType, List<String>> filtersMap = new HashMap<>();
         for (String filter : filters) {
-            res.add(detectFilter(filter, isInclude));
+            detectFilter(filter, isInclude, filtersMap);
+        }
+
+        List<Filter> res = new ArrayList<>();
+        if (filtersMap.containsKey(FiltersType.INCLUDE_TAGS)) {
+            res.add(includeTags(filtersMap.get(FiltersType.INCLUDE_TAGS)));
+        }
+
+        if (filtersMap.containsKey(FiltersType.EXCLUDE_TAGS)) {
+            res.add(excludeTags(filtersMap.get(FiltersType.EXCLUDE_TAGS)));
+        }
+
+        if (filtersMap.containsKey(FiltersType.INCLUDE_PACKAGES)) {
+            res.add(includePackageNames(filtersMap.get(FiltersType.INCLUDE_PACKAGES)));
+        }
+
+        if (filtersMap.containsKey(FiltersType.EXCLUDE_PACKAGES)) {
+            res.add(excludePackageNames(filtersMap.get(FiltersType.EXCLUDE_PACKAGES)));
         }
         return res.toArray(new Filter[0]);
     }
 
-    private static Filter detectFilter(String filter, boolean isInclude) {
+    private enum FiltersType {
+        INCLUDE_TAGS,
+        EXCLUDE_TAGS,
+        INCLUDE_PACKAGES,
+        EXCLUDE_PACKAGES
+    }
+
+    private static void addFilter(String newFilter, FiltersType filtersType, Map<FiltersType, List<String>> filtersMap) {
+        List<String> filters = filtersMap.computeIfAbsent(filtersType, k -> new ArrayList<>());
+        filters.add(newFilter);
+    }
+
+    private static void detectFilter(String filter, boolean isInclude, Map<FiltersType, List<String>> filtersMap) {
         try {
             Classes.getClass(filter);
-            return isInclude ? includeTags(filter) : excludeTags(filter);
+            if (isInclude) {
+                addFilter(filter, FiltersType.INCLUDE_TAGS, filtersMap);
+            } else {
+                addFilter(filter, FiltersType.EXCLUDE_TAGS, filtersMap);
+            }
+            return;
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             log.log(Level.FINER, "Filter class not found: " + filter, e);
         }
@@ -104,7 +140,11 @@ public class JUnit5Runner {
             log.log(Level.SEVERE, "Filter Class or Package not found: " + filter);
             throw new RuntimeException("Filter Class or Package not found: " + filter);
         }
-        return isInclude ? includePackageNames(filter) : excludePackageNames(filter);
+        if (isInclude) {
+            addFilter(filter, FiltersType.INCLUDE_PACKAGES, filtersMap);
+        } else {
+            addFilter(filter, FiltersType.EXCLUDE_PACKAGES, filtersMap);
+        }
     }
 
     private static List<DiscoverySelector> getSelectors(ArrayList<Class> classes, Properties props) {
