@@ -197,7 +197,6 @@ public class JUnit5Runner {
             log.log(Level.FINE, "Class not found: " + item, e);
         }
 
-        // does not work
         Package pack = Package.getPackage(item);
         if (pack == null) {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
