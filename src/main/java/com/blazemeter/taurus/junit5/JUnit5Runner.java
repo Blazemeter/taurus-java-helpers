@@ -72,25 +72,29 @@ public class JUnit5Runner {
     }
 
     private static LauncherDiscoveryRequestBuilder addFilters(LauncherDiscoveryRequestBuilder builder, Properties props) {
-        if (null != props.getProperty(INCLUDE_CATEGORY)) {
-            builder.filters(convertFilters(props.getProperty(INCLUDE_CATEGORY).split(","), true));
+        Map<FiltersType, List<String>> filtersMap = new HashMap<>();
+        String includeFilters = props.getProperty(INCLUDE_CATEGORY);
+        if (null != includeFilters) {
+            for (String filter : includeFilters.split(",")) {
+                detectFilter(filter, true, filtersMap);
+            }
         }
 
-        if (null != props.getProperty(EXCLUDE_CATEGORY)) {
-            builder.filters(convertFilters(props.getProperty(EXCLUDE_CATEGORY).split(","), false));
+        String excludeFilters = props.getProperty(EXCLUDE_CATEGORY);
+        if (null != excludeFilters) {
+            for (String filter : excludeFilters.split(",")) {
+                detectFilter(filter, false, filtersMap);
+            }
         }
+
+        builder.filters(convertFilters(filtersMap));
 
 //         todo: do we need exclude old engine here?
 //        builder.filters(EngineFilter.excludeEngines("junit-vintage"));
         return builder;
     }
 
-    private static Filter[] convertFilters(String[] filters, boolean isInclude) {
-        Map<FiltersType, List<String>> filtersMap = new HashMap<>();
-        for (String filter : filters) {
-            detectFilter(filter, isInclude, filtersMap);
-        }
-
+    private static Filter[] convertFilters(Map<FiltersType, List<String>> filtersMap) {
         List<Filter> res = new ArrayList<>();
         if (filtersMap.containsKey(FiltersType.INCLUDE_TAGS)) {
             res.add(includeTags(filtersMap.get(FiltersType.INCLUDE_TAGS)));
