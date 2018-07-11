@@ -74,11 +74,13 @@ public class CustomListener extends RunListener {
         pendingSample.setErrorMessage(exceptionName + ": " + failure.getMessage());
         pendingSample.setErrorTrace(Utils.getStackTrace(failure.getException()));
     }
-    //TODO: this sample is broken!!!!!!
+
     public void testIgnored(Description description) throws Exception {
         log.warning(String.format("ignored %s", description.getDisplayName()));
+        testStarted(description);
         pendingSample.setStatus(Sample.STATUS_SKIPPED);
         pendingSample.setErrorMessage(description.getDisplayName());
+        testFinished(description);
     }
 
 }
