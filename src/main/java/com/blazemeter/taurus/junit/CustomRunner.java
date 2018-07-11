@@ -1,12 +1,12 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit5.JUnit5Runner;
 import junit.framework.TestCase;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;
-import org.junit.runner.JUnitRequest;
 import org.junit.runner.JUnitCore;
+import org.junit.runner.JUnitRequest;
 import org.junit.runner.Request;
-import com.blazemeter.taurus.junit5.JUnit5Runner;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,7 +14,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
