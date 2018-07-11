@@ -22,11 +22,13 @@ Custom Runner expects the following properties:
 
 - `hold_for` - duration limit in seconds (float value)
 
-- `run_items` - class names or method names, that will be run
+- `junit5` - for run tests using JUnit 5
 
-- `include_category` and `exclude_category` - category names, that will be run
+- `run_items` - class names or method names, that will be run (and packages for JUnit 5)
 
-_NOTE: The priority for run is: run_items -> categories -> all found test classes_
+- `include_category` and `exclude_category` - category names, that will be run (tags and packages fot JUnit 5)
+
+_NOTE: The priority for run test with JUnit 4 is: run_items -> categories -> all found test classes_
 
 Also you can specify custom properties, that will be pass to Java System Properties, e.g.:
 
