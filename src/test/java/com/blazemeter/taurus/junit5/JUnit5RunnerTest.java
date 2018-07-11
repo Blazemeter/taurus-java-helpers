@@ -440,5 +440,92 @@ public class JUnit5RunnerTest {
 
         assertEquals(1, getLinesCount(report));
     }
+
+    @Test
+    public void testMethodNotFound() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow3,testcases.TestClass2#test2");
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        try {
+            CustomRunner.main(args);
+            fail("Should be NoSuchMethodException");
+        } catch (Exception e) {
+            assertEquals("Method not found: testcases.TestClass1#flow3", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testClassNotFound() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass77,testcases.TestClass2#test2");
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        try {
+            CustomRunner.main(args);
+            fail("Should be ClassNotFoundException");
+        } catch (Exception e) {
+            assertEquals("Class or Package not found: testcases.TestClass77", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testPackageNotFound() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackagE");
+        props.setProperty(CustomRunner.JUNIT_5, "");
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        try {
+            CustomRunner.main(args);
+            fail("Should be ClassNotFoundException");
+        } catch (Exception e) {
+            assertEquals("Class or Package not found: testcases.subpackagE", e.getMessage());
+        }
+    }
     // test method,class,package not found
 }
