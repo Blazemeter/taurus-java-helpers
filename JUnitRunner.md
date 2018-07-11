@@ -61,6 +61,11 @@ iterations=1
 hold_for=60
 
 #
+# Select JUnit 5 version for run tests
+#
+junit5
+
+#
 # Set test classes or test methods
 #
 run_items=package.Class1,package.Class2#test2
