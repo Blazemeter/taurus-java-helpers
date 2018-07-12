@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.junit5;
 
 import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.JUnitRunner;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
@@ -32,43 +33,22 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.runner.JUnitRequest.checkMethod;
 
-public class JUnit5Runner {
+public class JUnit5Runner implements JUnitRunner{
     private static final Logger log = Logger.getLogger(JUnit5Runner.class.getName());
 
-    public static void run(ArrayList<Class> classes, Properties props, TaurusReporter reporter) throws Exception {
-
+    @Override
+    public LauncherDiscoveryRequest createRequest(List<Class> classes, Properties props) {
         List<DiscoverySelector> selectors = getSelectors(classes, props);
-
         LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request().selectors(selectors);
+        return addFilters(builder, props).build();
+    }
 
-
-        LauncherDiscoveryRequest request = addFilters(builder, props).build();
+    @Override
+    public void executeRequest(Object requestItem, TaurusReporter reporter) {
         Launcher launcher = LauncherFactory.create();
         TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
         launcher.registerTestExecutionListeners(jUnit5Listener);
-
-        long iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
-        float hold = Float.valueOf(props.getProperty(HOLD, "0"));
-        if (iterations == 0) {
-            if (hold > 0) {
-                iterations = Long.MAX_VALUE;
-            } else {
-                iterations = 1;
-            }
-        }
-
-        long startTime = System.currentTimeMillis();
-        for (int iteration = 0; iteration < iterations; iteration++) {
-            launcher.execute(request);
-            log.info("Elapsed: " + (System.currentTimeMillis() - startTime) + ", limit: " + (hold * 1000));
-            if (hold > 0 && System.currentTimeMillis() - startTime > hold * 1000) {
-                log.info("Duration limit reached, stopping");
-                break;
-            }
-        }
-
-
-        reporter.close();
+        launcher.execute((LauncherDiscoveryRequest) requestItem);
     }
 
     private static LauncherDiscoveryRequestBuilder addFilters(LauncherDiscoveryRequestBuilder builder, Properties props) {
@@ -151,7 +131,7 @@ public class JUnit5Runner {
         }
     }
 
-    private static List<DiscoverySelector> getSelectors(ArrayList<Class> classes, Properties props) {
+    private static List<DiscoverySelector> getSelectors(List<Class> classes, Properties props) {
         final List<DiscoverySelector> selectors = new ArrayList<>();
         String runItems = props.getProperty(RUN_ITEMS);
         if (runItems != null) {

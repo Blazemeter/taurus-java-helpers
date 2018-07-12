@@ -1,6 +1,5 @@
 package com.blazemeter.taurus.junit5;
 
-import com.blazemeter.taurus.junit.CustomListener;
 import com.blazemeter.taurus.junit.Sample;
 import com.blazemeter.taurus.junit.TaurusReporter;
 import com.blazemeter.taurus.junit.Utils;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 public class JUnit5Listener implements TestExecutionListener {
-    private static final Logger log = Logger.getLogger(CustomListener.class.getName());
+    private static final Logger log = Logger.getLogger(JUnit5Listener.class.getName());
     private Sample pendingSample;
     private TaurusReporter reporter;
     private long started = 0;

@@ -1,12 +1,8 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
 import junit.framework.TestCase;
-import org.junit.experimental.categories.ExcludeCategories;
-import org.junit.experimental.categories.IncludeCategories;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.JUnitRequest;
-import org.junit.runner.Request;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -54,22 +50,14 @@ public class CustomRunner {
         if (classes.isEmpty()) {
             throw new RuntimeException("Nothing to test");
         }
+        log.info("Running with classes: " + classes.toString());
 
         passToSystemProperties(props);
 
+        JUnitRunner runner = getJUnitRunner(null != props.getProperty(JUNIT_5));
+
+        Object request = runner.createRequest(classes, props);
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
-        if (null != props.getProperty(JUNIT_5)) {
-            JUnit5Runner.run(classes, props, reporter);
-            return;
-        }
-
-        log.info("Running with classes: " + classes.toString());
-        CustomListener custom_listener = new CustomListener(reporter);
-
-        JUnitCore runner = new JUnitCore();
-        runner.addListener(custom_listener);
-
-        Request request = createRequest(classes, props);
 
         long iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
         float hold = Float.valueOf(props.getProperty(HOLD, "0"));
@@ -83,7 +71,7 @@ public class CustomRunner {
 
         long startTime = System.currentTimeMillis();
         for (int iteration = 0; iteration < iterations; iteration++) {
-            runner.run(request);
+            runner.executeRequest(request, reporter);
             log.info("Elapsed: " + (System.currentTimeMillis() - startTime) + ", limit: " + (hold * 1000));
             if (hold > 0 && System.currentTimeMillis() - startTime > hold * 1000) {
                 log.info("Duration limit reached, stopping");
@@ -94,39 +82,10 @@ public class CustomRunner {
         reporter.close();
     }
 
-    private static Request createRequest(ArrayList<Class> classes, Properties props) {
-        String runItems = props.getProperty(RUN_ITEMS);
-        if (runItems != null) {
-            log.info("Create JUnit request with following items: " + runItems);
-            return JUnitRequest.createItemsRequest(runItems);
-        } else {
-            String[] junitArguments = generateArgs(classes, props);
-            log.info("Create JUnit request with following arguments: " + Arrays.toString(junitArguments));
-            return JUnitRequest.createCategoryRequest(junitArguments);
-        }
-    }
-
-    private static String[] generateArgs(ArrayList<Class> classes, Properties props) {
-        List<String> args = new ArrayList<>();
-
-        // Category options should be first!!!
-        if (null != props.getProperty(INCLUDE_CATEGORY)) {
-            addFilter(args, IncludeCategories.class.getName(), props.getProperty(INCLUDE_CATEGORY));
-        }
-
-        if (null != props.getProperty(EXCLUDE_CATEGORY)) {
-            addFilter(args, ExcludeCategories.class.getName(), props.getProperty(EXCLUDE_CATEGORY));
-        }
-
-        for (Class c : classes) {
-            args.add(c.getName());
-        }
-
-        return args.toArray(new String[0]);
-    }
-
-    private static void addFilter(List<String> args, String name, String property) {
-        args.add("--filter=" + name + '=' + property);
+    private static JUnitRunner getJUnitRunner(boolean isJUnit5) {
+        return isJUnit5 ?
+                new JUnit5Runner() :
+                new JUnit4Runner();
     }
 
     protected static void passToSystemProperties(Properties props) {
@@ -146,6 +105,7 @@ public class CustomRunner {
                 || INCLUDE_CATEGORY.equals(propName)
                 || EXCLUDE_CATEGORY.equals(propName)
                 || RUN_ITEMS.equals(propName)
+                || JUNIT_5.equals(propName)
                 || propName.startsWith(TARGET_PREFIX);
     }
 

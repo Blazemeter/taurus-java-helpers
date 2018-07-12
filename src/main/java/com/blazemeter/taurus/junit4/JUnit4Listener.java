@@ -1,5 +1,8 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.junit4;
 
+import com.blazemeter.taurus.junit.Sample;
+import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.Utils;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -7,9 +10,9 @@ import org.junit.runner.notification.RunListener;
 
 import java.util.logging.Logger;
 
-public class CustomListener extends RunListener {
+public class JUnit4Listener extends RunListener {
 
-    private static final Logger log = Logger.getLogger(CustomListener.class.getName());
+    private static final Logger log = Logger.getLogger(JUnit4Listener.class.getName());
     private Sample pendingSample;
     private TaurusReporter reporter;
     private long started = 0;
@@ -18,7 +21,7 @@ public class CustomListener extends RunListener {
     private long failedCount = 0;
     private final static String report_tmpl = "%s.%s,Total:%d Passed:%d Failed:%d\n";
 
-    public CustomListener(TaurusReporter reporter) {
+    public JUnit4Listener(TaurusReporter reporter) {
         super();
         this.reporter = reporter;
     }
