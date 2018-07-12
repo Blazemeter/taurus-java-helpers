@@ -12,7 +12,7 @@ public class CustomListener {
     private long testCount = 0;
     private long failedCount = 0;
     private long skippedCount = 0;
-    private final static String report_tmpl = "%s.%s,Total:%d Passed:%d Failed:%d Skipped:%d\n";
+    private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
     public CustomListener(TaurusReporter reporter) {
         this.reporter = reporter;
