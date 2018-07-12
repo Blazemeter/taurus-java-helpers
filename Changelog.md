@@ -1,4 +1,4 @@
-# 1.2 ()
+# 1.2 (12th of July, 2018)
 * `Added`: support JUnit 5
 
 ## 1.1 (6th of July, 2018)

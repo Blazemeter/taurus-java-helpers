@@ -1,5 +1,6 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit.generator.Supervisor;
 import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
 import junit.framework.TestCase;
@@ -27,6 +28,10 @@ public class CustomRunner {
     public static final String TARGET_PREFIX = "target_";
     public static final String ITERATIONS = "iterations";
     public static final String HOLD = "hold_for";
+    public static final String CONCURRENCY = "concurrency";
+    public static final String STEPS = "steps";
+    public static final String RAMP_UP = "rampUp";
+    public static final String DELAY = "delay";
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
     public static final String RUN_ITEMS = "run_items";
@@ -54,47 +59,52 @@ public class CustomRunner {
 
         passToSystemProperties(props);
 
-        JUnitRunner runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
 
-        Object request = runner.createRequest(classes, props);
-        TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
+        Supervisor supervisor = new Supervisor(classes, props);
+        supervisor.start();
+        supervisor.join();
 
-        long iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
-        float hold = Float.valueOf(props.getProperty(HOLD, "0"));
-        if (iterations == 0) {
-            if (hold > 0) {
-                iterations = Long.MAX_VALUE;
-            } else {
-                iterations = 1;
-            }
-        }
+//        JUnitRunner runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
+//
+//        Object request = runner.createRequest(classes, props);
+//        TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
+//
+//        long iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
+//        float hold = Float.valueOf(props.getProperty(HOLD, "0"));
+//        if (iterations == 0) {
+//            if (hold > 0) {
+//                iterations = Long.MAX_VALUE;
+//            } else {
+//                iterations = 1;
+//            }
+//        }
 
-        long startTime = System.currentTimeMillis();
-        for (int iteration = 0; iteration < iterations; iteration++) {
-            runner.executeRequest(request, reporter);
-            log.info("Elapsed: " + (System.currentTimeMillis() - startTime) + ", limit: " + (hold * 1000));
-            if (hold > 0 && System.currentTimeMillis() - startTime > hold * 1000) {
-                log.info("Duration limit reached, stopping");
-                break;
-            }
-        }
-
-        reporter.close();
+//        long startTime = System.currentTimeMillis();
+//        for (int iteration = 0; iteration < iterations; iteration++) {
+//            runner.executeRequest(request, reporter);
+//            log.info("Elapsed: " + (System.currentTimeMillis() - startTime) + ", limit: " + (hold * 1000));
+//            if (hold > 0 && System.currentTimeMillis() - startTime > hold * 1000) {
+//                log.info("Duration limit reached, stopping");
+//                break;
+//            }
+//        }
+//
+//        reporter.close();
     }
 
-    protected static JUnitRunner getJUnitRunner(String junitVersion) {
-        log.fine("Set JUnit version = " + junitVersion);
-        if (junitVersion == null || junitVersion.isEmpty() || junitVersion.equals("4")) {
-            log.fine("Will use JUnit 4 version");
-            return new JUnit4Runner();
-        } else if (junitVersion.equals("5")) {
-            log.fine("Will use JUnit 5 version");
-            return new JUnit5Runner();
-        } else {
-            log.warning("Cannot detect JUnit version=" + junitVersion + ". Will use JUnit 4 version");
-            return new JUnit4Runner();
-        }
-    }
+//    protected static JUnitRunner getJUnitRunner(String junitVersion) {
+//        log.fine("Set JUnit version = " + junitVersion);
+//        if (junitVersion == null || junitVersion.isEmpty() || junitVersion.equals("4")) {
+//            log.fine("Will use JUnit 4 version");
+//            return new JUnit4Runner();
+//        } else if (junitVersion.equals("5")) {
+//            log.fine("Will use JUnit 5 version");
+//            return new JUnit5Runner();
+//        } else {
+//            log.warning("Cannot detect JUnit version=" + junitVersion + ". Will use JUnit 4 version");
+//            return new JUnit4Runner();
+//        }
+//    }
 
     protected static void passToSystemProperties(Properties props) {
         Enumeration<?> it = props.propertyNames();
@@ -114,6 +124,10 @@ public class CustomRunner {
                 || EXCLUDE_CATEGORY.equals(propName)
                 || RUN_ITEMS.equals(propName)
                 || JUNIT_VERSION.equals(propName)
+                || DELAY.equals(propName)
+                || CONCURRENCY.equals(propName)
+                || RAMP_UP.equals(propName)
+                || STEPS.equals(propName)
                 || propName.startsWith(TARGET_PREFIX);
     }
 
