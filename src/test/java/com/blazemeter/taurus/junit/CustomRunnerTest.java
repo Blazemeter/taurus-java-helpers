@@ -4,13 +4,17 @@ package com.blazemeter.taurus.junit;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Properties;
 
 public class CustomRunnerTest extends TestCase {
 
-    private static int getLinesCount(File log) throws IOException {
+    public static int getLinesCount(File log) throws IOException {
         LineNumberReader reader = new LineNumberReader(new FileReader(log));
         reader.skip(Long.MAX_VALUE);
         reader.close();
@@ -117,7 +121,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -138,7 +142,7 @@ public class CustomRunnerTest extends TestCase {
 
         assertEquals(fileToString, 4, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
@@ -147,7 +151,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -169,15 +173,15 @@ public class CustomRunnerTest extends TestCase {
         assertEquals(fileToString, 4, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
     public void testRunIncludeAndExcludeCategories() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -205,7 +209,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -226,8 +230,8 @@ public class CustomRunnerTest extends TestCase {
 
         assertEquals(fileToString, 5, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
@@ -236,7 +240,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -257,15 +261,15 @@ public class CustomRunnerTest extends TestCase {
 
         assertEquals(fileToString, 3, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
     public void testRunItems() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -273,7 +277,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow1,testcases.TestClass2#test2,testcases.TestClass4");
+        props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow1,testcases.subpackage.TestClass2#test2,testcases.TestClass4");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -286,7 +290,7 @@ public class CustomRunnerTest extends TestCase {
 
         assertEquals(fileToString, 4, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
@@ -295,7 +299,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -316,10 +320,10 @@ public class CustomRunnerTest extends TestCase {
         assertEquals(fileToString, 8, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass2.test2"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method1"));
-        assertTrue(fileToString, fileToString.contains("testcases.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
@@ -328,7 +332,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();
@@ -355,7 +359,7 @@ public class CustomRunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.0.jar");
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
         assert res != null;
 
         Properties props = new Properties();

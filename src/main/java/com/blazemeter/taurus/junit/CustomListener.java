@@ -1,84 +1,86 @@
 package com.blazemeter.taurus.junit;
 
-import org.junit.runner.Description;
-import org.junit.runner.Result;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunListener;
-
 import java.util.logging.Logger;
 
-public class CustomListener extends RunListener {
-
+public class CustomListener {
     private static final Logger log = Logger.getLogger(CustomListener.class.getName());
-    private Sample pendingSample;
+
+    protected Sample pendingSample;
     private TaurusReporter reporter;
     private long started = 0;
 
     private long testCount = 0;
     private long failedCount = 0;
-    private final static String report_tmpl = "%s.%s,Total:%d Passed:%d Failed:%d\n";
+    private long skippedCount = 0;
+    private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
     public CustomListener(TaurusReporter reporter) {
-        super();
         this.reporter = reporter;
     }
 
-    public void testRunStarted(Description description) {
-        log.info("Run Started: " + description.getDisplayName());
-    }
-
-    public void testRunFinished(Result result) throws Exception {
-        log.info("Run Finished, successful=" + result.wasSuccessful() + ", run count=" + result.getRunCount());
-    }
-
-    public void testStarted(Description description) throws Exception {
-        log.info(String.format("started %s", description.getDisplayName()));
+    public void startSample(String methodName, String className) {
+        testCount++;
+        log.info(String.format("started %s(%s)", methodName, className));
         started = System.currentTimeMillis();
         pendingSample = new Sample();
-        pendingSample.setLabel(description.getMethodName());
-        pendingSample.setSuite(description.getClassName());
-        pendingSample.setFullName(description.getClassName() + "." + description.getMethodName());
-        testCount += 1;
+        pendingSample.setLabel(methodName);
+        pendingSample.setSuite(className);
+        pendingSample.setFullName(className + "." + methodName);
     }
 
-    public void testFinished(Description description) throws Exception {
-        log.info(String.format("finished %s", description.getDisplayName()));
-        double duration = (System.currentTimeMillis() - started) / 1000.0;
-        pendingSample.setDuration(duration);
-        reporter.writeSample(pendingSample);
+    public void finishSample(String status, String msg, Throwable ex) {
+        long finishTime = System.currentTimeMillis();
+        pendingSample.setStatus(status);
+        pendingSample.setErrorMessage(msg);
+        if (ex != null) {
+            pendingSample.setErrorTrace(Utils.getStackTrace(ex));
+        }
+        finishSample(finishTime);
+    }
 
-        if (!pendingSample.isSuccessful()) {
+    public void finishSample() {
+        finishSample(System.currentTimeMillis());
+    }
+
+    private void finishSample(long finishTime) {
+        log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        double duration = (finishTime - started) / 1000.0;
+        pendingSample.setDuration(duration);
+
+        reporter.writeSample(pendingSample);
+        if (pendingSample.isSkipped()) {
+            skippedCount++;
+        } else if (!pendingSample.isSuccessful()) {
             failedCount += 1;
         }
-        pendingSample = null;
+
         System.out.printf(report_tmpl,
-                description.getClassName(),
-                description.getMethodName(),
+                pendingSample.getSuite(),
+                pendingSample.getLabel(),
                 testCount,
-                testCount - failedCount,
-                failedCount);
+                getPassedCount(),
+                failedCount,
+                skippedCount);
+        pendingSample = null;
     }
 
-    public void testFailure(Failure failure) throws Exception {
-        log.severe(String.format("failed %s", failure.toString()));
-        pendingSample.setStatus(Sample.STATUS_BROKEN);
-        String exceptionName = failure.getException().getClass().getName();
-        pendingSample.setErrorMessage(exceptionName + ": " + failure.getMessage());
-        pendingSample.setErrorTrace(Utils.getStackTrace(failure.getException()));
+    public Sample getPendingSample() {
+        return pendingSample;
     }
 
-    public void testAssumptionFailure(Failure failure) {
-        log.severe(String.format("assert failed %s", failure.toString()));
-        pendingSample.setStatus(Sample.STATUS_FAILED);
-        String exceptionName = failure.getException().getClass().getName();
-        pendingSample.setErrorMessage(exceptionName + ": " + failure.getMessage());
-        pendingSample.setErrorTrace(Utils.getStackTrace(failure.getException()));
+    public long getTestCount() {
+        return testCount;
     }
 
-    public void testIgnored(Description description) throws Exception {
-        log.warning(String.format("ignored %s", description.getDisplayName()));
-        pendingSample.setStatus(Sample.STATUS_SKIPPED);
-        pendingSample.setErrorMessage(description.getDisplayName());
+    public long getFailedCount() {
+        return failedCount;
     }
 
+    public long getSkippedCount() {
+        return skippedCount;
+    }
+
+    public long getPassedCount() {
+        return testCount - failedCount - skippedCount;
+    }
 }
