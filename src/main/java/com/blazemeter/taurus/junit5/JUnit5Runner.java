@@ -20,9 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.blazemeter.taurus.junit.CustomRunner.EXCLUDE_CATEGORY;
-import static com.blazemeter.taurus.junit.CustomRunner.HOLD;
 import static com.blazemeter.taurus.junit.CustomRunner.INCLUDE_CATEGORY;
-import static com.blazemeter.taurus.junit.CustomRunner.ITERATIONS;
 import static com.blazemeter.taurus.junit.CustomRunner.RUN_ITEMS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
