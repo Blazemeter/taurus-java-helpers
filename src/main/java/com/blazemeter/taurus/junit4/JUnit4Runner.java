@@ -25,11 +25,11 @@ public class JUnit4Runner implements JUnitRunner {
     public Request createRequest(List<Class> classes, Properties props) {
         String runItems = props.getProperty(RUN_ITEMS);
         if (runItems != null) {
-            log.info("Create JUnit request with following items: " + runItems);
+            log.info("Create JUnit 4 request with following items: " + runItems);
             return JUnitRequest.createItemsRequest(runItems);
         } else {
             String[] junitArguments = generateArgs(classes, props);
-            log.info("Create JUnit request with following arguments: " + Arrays.toString(junitArguments));
+            log.info("Create JUnit 4 request with following arguments: " + Arrays.toString(junitArguments));
             return JUnitRequest.createCategoryRequest(junitArguments);
         }
     }

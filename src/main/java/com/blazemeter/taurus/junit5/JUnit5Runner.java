@@ -38,6 +38,7 @@ public class JUnit5Runner implements JUnitRunner{
 
     @Override
     public LauncherDiscoveryRequest createRequest(List<Class> classes, Properties props) {
+        log.info("Create JUnit 5 request");
         List<DiscoverySelector> selectors = getSelectors(classes, props);
         LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request().selectors(selectors);
         return addFilters(builder, props).build();
