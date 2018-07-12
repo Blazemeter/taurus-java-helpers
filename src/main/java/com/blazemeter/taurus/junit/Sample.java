@@ -21,6 +21,10 @@ public class Sample {
         return this.status.equals(STATUS_PASSED);
     }
 
+    public boolean isSkipped() {
+        return this.status.equals(STATUS_SKIPPED);
+    }
+
     @Override
     public String toString() {
         return String.format("%d: %s - %s", startTime, label, status);
