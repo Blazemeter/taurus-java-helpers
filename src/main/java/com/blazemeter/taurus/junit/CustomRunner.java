@@ -30,7 +30,7 @@ public class CustomRunner {
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
     public static final String RUN_ITEMS = "run_items";
-    public static final String JUNIT_5 = "junit5";
+    public static final String JUNIT_VERSION = "junit_version";
 
     static {
         log.setLevel(Level.FINER);
@@ -54,7 +54,7 @@ public class CustomRunner {
 
         passToSystemProperties(props);
 
-        JUnitRunner runner = getJUnitRunner(null != props.getProperty(JUNIT_5));
+        JUnitRunner runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
 
         Object request = runner.createRequest(classes, props);
         TaurusReporter reporter = new TaurusReporter(props.getProperty(REPORT_FILE));
@@ -82,10 +82,18 @@ public class CustomRunner {
         reporter.close();
     }
 
-    private static JUnitRunner getJUnitRunner(boolean isJUnit5) {
-        return isJUnit5 ?
-                new JUnit5Runner() :
-                new JUnit4Runner();
+    protected static JUnitRunner getJUnitRunner(String junitVersion) {
+        log.fine("Set JUnit version = " + junitVersion);
+        if (junitVersion == null || junitVersion.isEmpty() || junitVersion.equals("4")) {
+            log.fine("Will use JUnit 4 version");
+            return new JUnit4Runner();
+        } else if (junitVersion.equals("5")) {
+            log.fine("Will use JUnit 5 version");
+            return new JUnit5Runner();
+        } else {
+            log.warning("Cannot detect JUnit version=" + junitVersion + ". Will use JUnit 4 version");
+            return new JUnit4Runner();
+        }
     }
 
     protected static void passToSystemProperties(Properties props) {
@@ -105,7 +113,7 @@ public class CustomRunner {
                 || INCLUDE_CATEGORY.equals(propName)
                 || EXCLUDE_CATEGORY.equals(propName)
                 || RUN_ITEMS.equals(propName)
-                || JUNIT_5.equals(propName)
+                || JUNIT_VERSION.equals(propName)
                 || propName.startsWith(TARGET_PREFIX);
     }
 
