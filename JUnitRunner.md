@@ -22,7 +22,7 @@ Custom Runner expects the following properties:
 
 - `hold_for` - duration limit in seconds (float value)
 
-- `junit5` - for run tests using JUnit 5
+- `junit_version` - select JUnit version (supports versions 4 and 5)
 
 - `run_items` - class names or method names, that will be run (and packages for JUnit 5)
 
@@ -63,7 +63,7 @@ hold_for=60
 #
 # Select JUnit 5 version for run tests
 #
-junit5
+junit_version=5
 
 #
 # Set test classes or test methods

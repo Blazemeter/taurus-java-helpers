@@ -27,7 +27,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -63,7 +63,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -96,7 +96,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -127,7 +127,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryB");
 
@@ -157,7 +157,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage");
 
@@ -190,7 +190,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases.subpackage");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -222,7 +222,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -254,7 +254,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -287,7 +287,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -317,7 +317,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2#test2");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -346,7 +346,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1,testcases.TestClass4#m1,testcases.subpackage");
 
         File propsFile = File.createTempFile("runner", ".properties");
@@ -379,7 +379,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(3));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -403,7 +403,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -428,7 +428,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -454,7 +454,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow3,testcases.TestClass2#test2");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -483,7 +483,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass77,testcases.TestClass2#test2");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -512,7 +512,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass12#test2");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -541,7 +541,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackagE");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -570,7 +570,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases.subpackagE");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -599,7 +599,7 @@ public class JUnit5RunnerTest {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryE");
-        props.setProperty(CustomRunner.JUNIT_5, "");
+        props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
