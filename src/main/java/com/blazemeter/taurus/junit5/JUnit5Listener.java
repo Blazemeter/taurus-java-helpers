@@ -27,7 +27,7 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
 
     @Override
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) +", run count=" + getTestCount());
+        log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) +", run count=" + (getTestCount() - getSkippedCount()));
     }
 
     @Override
