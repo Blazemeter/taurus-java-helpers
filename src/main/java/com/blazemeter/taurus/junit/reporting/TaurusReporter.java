@@ -62,11 +62,13 @@ public class TaurusReporter {
         public void run() {
             while (!isStopped) {
                 Sample sample = queue.poll();
-                try {
-                    outStream.write(formatter.formatToString(sample));
-                    outStream.flush();
-                } catch (Exception e) {
-                    log.log(Level.SEVERE, "Failed write sample: ", e);
+                if (sample != null) {
+                    try {
+                        outStream.write(formatter.formatToString(sample));
+                        outStream.flush();
+                    } catch (Exception e) {
+                        log.log(Level.SEVERE, "Failed write sample: ", e);
+                    }
                 }
             }
         }
