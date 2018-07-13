@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.junit.reporting;
 
 public class Sample {
     public static final String STATUS_PASSED = "PASSED";

@@ -1,8 +1,8 @@
 package com.blazemeter.taurus.junit4;
 
 import com.blazemeter.taurus.junit.CustomListener;
-import com.blazemeter.taurus.junit.Sample;
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.reporting.Sample;
+import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 import com.blazemeter.taurus.junit.Utils;
 import org.junit.runner.Description;
 import org.junit.runner.Result;

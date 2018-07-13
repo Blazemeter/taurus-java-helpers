@@ -1,5 +1,8 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit.reporting.Sample;
+import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+
 import java.util.logging.Logger;
 
 public class CustomListener {

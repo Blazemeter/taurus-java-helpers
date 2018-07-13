@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit5;
 
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;

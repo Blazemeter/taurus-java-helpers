@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit4;
 
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;

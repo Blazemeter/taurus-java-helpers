@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit.generator;
 
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
 import java.util.ArrayList;
 import java.util.Collections;
