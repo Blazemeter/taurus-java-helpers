@@ -12,10 +12,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.blazemeter.taurus.junit.CustomRunner.DELAY;
-import static com.blazemeter.taurus.junit.CustomRunner.HOLD;
-import static com.blazemeter.taurus.junit.CustomRunner.ITERATIONS;
-import static com.blazemeter.taurus.junit.CustomRunner.JUNIT_VERSION;
+import static com.blazemeter.taurus.junit.CustomRunner.*;
 
 public class Worker extends Thread {
     private static final Logger log = Logger.getLogger(CustomRunner.class.getName());
@@ -25,17 +22,20 @@ public class Worker extends Thread {
     private final TaurusReporter reporter;
 
     private long iterations;
-    private float hold;
-    private long delay;
+    private long workingTime;
+    private long startDelay;
 
-    public Worker(List<Class> classes, Properties properties, TaurusReporter reporter) {
+    public Worker(List<Class> classes, Properties properties, TaurusReporter reporter, long startDelay) {
         this.props.putAll(properties);
         this.classes.addAll(classes);
         this.reporter = reporter;
 
-        delay = Long.valueOf(props.getProperty(DELAY, "0"));
+        this.startDelay = startDelay * 1000;
+        float rampUp = Float.valueOf(props.getProperty(RAMP_UP, "0"));
+        float hold = Float.valueOf(props.getProperty(HOLD, "0"));
+        workingTime = (long) (rampUp + hold) * 1000;
+
         iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
-        hold = Float.valueOf(props.getProperty(HOLD, "0"));
         if (iterations == 0) {
             if (hold > 0) {
                 iterations = Long.MAX_VALUE;
@@ -43,29 +43,38 @@ public class Worker extends Thread {
                 iterations = 1;
             }
         }
+
     }
 
     @Override
     public void run() {
+        long endTime = System.currentTimeMillis() + workingTime;
+        makeDelay();
+
         JUnitRunner runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
         Object request = runner.createRequest(classes, props);
 
-        long startTime = System.currentTimeMillis();
-        for (int iteration = 0; iteration < iterations; iteration++) {
-            makeDelay(); // todo: here???
+        int iter = 0;
+        while (true) {
+            iter++;
             runner.executeRequest(request, reporter);
-            log.info("Elapsed: " + (System.currentTimeMillis() - startTime) + ", limit: " + (hold * 1000));
-            if (hold > 0 && System.currentTimeMillis() - startTime > hold * 1000) {
-                log.info("Duration limit reached, stopping");
+            long currTime = System.currentTimeMillis();
+            if (endTime <= currTime) {
+                log.info(String.format("[%s] Duration limit reached, stopping", getName()));
+                break;
+            }
+
+            if (iter >= iterations) {
+                log.info(String.format("[%s] Iteration limit reached, stopping", getName()));
                 break;
             }
         }
     }
 
     protected void makeDelay() {
-        if (delay > 0) {
+        if (startDelay > 0) {
             try {
-                sleep(delay);
+                sleep(startDelay);
             } catch (InterruptedException e) {
                 log.log(Level.SEVERE, "Worker was interrupted", e);
                 throw new RuntimeException("Worker was interrupted", e);
