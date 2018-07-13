@@ -381,4 +381,30 @@ public class CustomRunnerTest extends TestCase {
             assertEquals("Class not found: testcases.TestClass77", e.getMessage());
         }
     }
+
+    public void testConcurrency() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(0));
+        props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(10));
+        props.setProperty(CustomRunner.RAMP_UP, String.valueOf(6));
+        props.setProperty(CustomRunner.STEPS, String.valueOf(2));
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        assertTrue(10000 < getLinesCount(report));
+    }
 }
