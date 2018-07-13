@@ -14,7 +14,7 @@ import static com.blazemeter.taurus.junit.CustomRunner.RAMP_UP;
 import static com.blazemeter.taurus.junit.CustomRunner.REPORT_FILE;
 import static com.blazemeter.taurus.junit.CustomRunner.STEPS;
 
-public class Supervisor extends Thread {
+public class Supervisor {
     private static final Logger log = Logger.getLogger(Supervisor.class.getName());
 
     private final List<Worker> workers = Collections.synchronizedList(new ArrayList<>());
@@ -32,17 +32,14 @@ public class Supervisor extends Thread {
         this.classes = classes;
         this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
         initParams(properties);
-        setName(Supervisor.class.getName());
-        setDaemon(true);
     }
 
     private void initParams(Properties props) {
-        concurrency = Integer.valueOf(props.getProperty(CONCURRENCY, "0"));
+        concurrency = Integer.valueOf(props.getProperty(CONCURRENCY, "1"));
         steps = Integer.valueOf(props.getProperty(STEPS, "1"));
         rampUp = Float.valueOf(props.getProperty(RAMP_UP, "0"));
     }
 
-    @Override
     public void run() {
         for (int i = 0; i < concurrency; i++) {
             Worker worker = new Worker(classes, properties, reporter, getWorkerDelay(i));

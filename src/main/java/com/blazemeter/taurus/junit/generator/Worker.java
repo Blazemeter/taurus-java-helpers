@@ -25,6 +25,9 @@ public class Worker extends Thread {
     private long workingTime;
     private long startDelay;
 
+    private JUnitRunner runner;
+    private Object request;
+
     public Worker(List<Class> classes, Properties properties, TaurusReporter reporter, long startDelay) {
         this.props.putAll(properties);
         this.classes.addAll(classes);
@@ -43,23 +46,21 @@ public class Worker extends Thread {
                 iterations = 1;
             }
         }
-
+        runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
+        request = runner.createRequest(classes, props);
     }
 
     @Override
     public void run() {
-        long endTime = System.currentTimeMillis() + workingTime;
+        long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
         makeDelay();
-
-        JUnitRunner runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
-        Object request = runner.createRequest(classes, props);
 
         int iter = 0;
         while (true) {
             iter++;
             runner.executeRequest(request, reporter);
             long currTime = System.currentTimeMillis();
-            if (endTime <= currTime) {
+            if (0 < endTime && endTime <= currTime) {
                 log.info(String.format("[%s] Duration limit reached, stopping", getName()));
                 break;
             }
