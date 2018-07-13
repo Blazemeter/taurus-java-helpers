@@ -28,13 +28,13 @@ public class TaurusReporter {
             throw new RuntimeException("Failed to open file " + fileName, e);
         }
 
+        formatter = createFormatter(file);
+        log.info("File: " + fileName + ", formatter: " + formatter.getClass().getSimpleName());
+
         reporter = new PoolWorker();
         reporter.setName("Reporter thread");
         reporter.setDaemon(true);
         reporter.start();
-
-        formatter = createFormatter(file);
-        log.info("File: " + fileName + ", formatter: " + formatter.getClass().getSimpleName());
     }
 
     private SampleFormatter createFormatter(File file) {
