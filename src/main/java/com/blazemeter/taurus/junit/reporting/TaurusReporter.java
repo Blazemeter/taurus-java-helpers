@@ -1,14 +1,14 @@
 package com.blazemeter.taurus.junit.reporting;
 
+import com.blazemeter.taurus.junit.Utils;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.blazemeter.taurus.junit.Utils;
-import org.json.*;
 
 public class TaurusReporter {
 
@@ -67,8 +67,8 @@ public class TaurusReporter {
 
     private class PoolWorker extends Thread {
         public void run() {
-            while (!isStopped) {
-                Sample sample = queue.poll();
+            while (!isStopped || !queue.isEmpty()) {
+                Sample sample = queue.poll(); // todo: or poll with await 500 ms??
                 if (sample != null) {
                     try {
                         outStream.write(formatter.formatToString(sample));
