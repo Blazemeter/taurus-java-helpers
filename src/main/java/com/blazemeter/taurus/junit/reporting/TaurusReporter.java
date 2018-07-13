@@ -38,16 +38,23 @@ public class TaurusReporter {
     }
 
     private SampleFormatter createFormatter(File file) {
-        return (Utils.getFileExtension(file).equals("csv")) ?
-                new CSVFormatter() :
-                new JSONFormatter();
+        if (Utils.getFileExtension(file).equals("csv")) {
+            CSVFormatter formatter = new CSVFormatter();
+            try {
+                outStream.write(formatter.getHeader());
+            } catch (IOException e) {
+                log.log(Level.WARNING, "Failed to write CSV header", e);
+            }
+            return formatter;
+        }
+        return new JSONFormatter();
     }
 
     public void writeSample(Sample sample) {
         try {
             queue.put(sample);
         } catch (InterruptedException e) {
-            log.log(Level.SEVERE, "Failed put sample in queue: ", e);
+            log.log(Level.SEVERE, "Failed to put sample in queue: ", e);
         }
     }
 
@@ -67,7 +74,7 @@ public class TaurusReporter {
                         outStream.write(formatter.formatToString(sample));
                         outStream.flush();
                     } catch (Exception e) {
-                        log.log(Level.SEVERE, "Failed write sample: ", e);
+                        log.log(Level.SEVERE, "Failed to write sample: ", e);
                     }
                 }
             }
@@ -97,6 +104,12 @@ public class TaurusReporter {
     }
 
     private static class CSVFormatter implements SampleFormatter {
+        private final String CSV_HEADER = "timeStamp,elapsed,Latency,label,responseCode,responseMessage,success,allThreads,bytes";
+
+        public String getHeader() {
+            return CSV_HEADER;
+        }
+
         @Override
         public String formatToString(Sample sample) {
             return null;
