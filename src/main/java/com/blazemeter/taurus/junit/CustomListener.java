@@ -12,15 +12,26 @@ public class CustomListener {
     private long testCount = 0;
     private long failedCount = 0;
     private long skippedCount = 0;
+
+    private final boolean isVerbose;
+
     private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
     public CustomListener(TaurusReporter reporter) {
         this.reporter = reporter;
+        this.isVerbose = true;
+    }
+
+    public CustomListener(TaurusReporter reporter, boolean isVerbose) {
+        this.reporter = reporter;
+        this.isVerbose = isVerbose;
     }
 
     public void startSample(String methodName, String className) {
+        if (isVerbose) {
+            log.info(String.format("started %s(%s)", methodName, className));
+        }
         testCount++;
-        log.info(String.format("started %s(%s)", methodName, className));
         started = System.currentTimeMillis();
         pendingSample = new Sample();
         pendingSample.setLabel(methodName);
@@ -43,7 +54,9 @@ public class CustomListener {
     }
 
     private void finishSample(long finishTime) {
-        log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        if (isVerbose) {
+            log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        }
         double duration = (finishTime - started) / 1000.0;
         pendingSample.setDuration(duration);
 
@@ -54,13 +67,15 @@ public class CustomListener {
             failedCount += 1;
         }
 
-        System.out.printf(report_tmpl,
-                pendingSample.getSuite(),
-                pendingSample.getLabel(),
-                testCount,
-                getPassedCount(),
-                failedCount,
-                skippedCount);
+        if (isVerbose) {
+            System.out.printf(report_tmpl,
+                    pendingSample.getSuite(),
+                    pendingSample.getLabel(),
+                    testCount,
+                    getPassedCount(),
+                    failedCount,
+                    skippedCount);
+        }
         pendingSample = null;
     }
 
@@ -82,5 +97,9 @@ public class CustomListener {
 
     public long getPassedCount() {
         return testCount - failedCount - skippedCount;
+    }
+
+    public boolean isVerbose() {
+        return isVerbose;
     }
 }

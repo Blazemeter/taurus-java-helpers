@@ -22,12 +22,16 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
 
     @Override
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        log.info("Test Plan Started");
+        if (isVerbose()) {
+            log.info("Test Plan Started");
+        }
     }
 
     @Override
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) +", run count=" + (getTestCount() - getSkippedCount()));
+        if (isVerbose()) {
+            log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) + ", run count=" + (getTestCount() - getSkippedCount()));
+        }
     }
 
     @Override
@@ -71,13 +75,19 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
             case SUCCESSFUL:
                 return Sample.STATUS_PASSED;
             case FAILED:
-                log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                if (isVerbose()) {
+                    log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                }
                 return Sample.STATUS_FAILED;
             case ABORTED:
-                log.severe(String.format("aborted %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                if (isVerbose()) {
+                    log.severe(String.format("aborted %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                }
                 return Sample.STATUS_BROKEN;
                 default:
-                    log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                    if (isVerbose()) {
+                        log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                    }
                     return Sample.STATUS_FAILED;
         }
     }
@@ -85,7 +95,9 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
     @Override
     public void executionSkipped(TestIdentifier testIdentifier, String reason) {
         startSample(testIdentifier);
-        log.warning(String.format("ignored %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        if (isVerbose()) {
+            log.warning(String.format("ignored %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        }
         finishSample(Sample.STATUS_SKIPPED, reason, null);
     }
 
