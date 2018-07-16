@@ -21,12 +21,7 @@ public class CustomListener {
 
     public CustomListener(TaurusReporter reporter) {
         this.reporter = reporter;
-        this.isVerbose = true;
-    }
-
-    public CustomListener(TaurusReporter reporter, boolean isVerbose) {
-        this.reporter = reporter;
-        this.isVerbose = isVerbose;
+        this.isVerbose = reporter.isVerbose();
     }
 
     public void startSample(String methodName, String className) {

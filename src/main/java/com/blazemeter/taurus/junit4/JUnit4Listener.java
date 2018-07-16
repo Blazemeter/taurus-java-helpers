@@ -20,13 +20,7 @@ public class JUnit4Listener extends RunListener {
     public JUnit4Listener(TaurusReporter reporter) {
         super();
         listener = new CustomListener(reporter);
-        isVerbose = true;
-    }
-
-    public JUnit4Listener(TaurusReporter reporter, boolean isVerbose) {
-        super();
-        listener = new CustomListener(reporter, isVerbose);
-        this.isVerbose = isVerbose;
+        isVerbose = reporter.isVerbose();
     }
 
     public void testRunStarted(Description description) {

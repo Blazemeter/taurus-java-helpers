@@ -20,6 +20,8 @@ public class TaurusReporter {
     private final SampleFormatter formatter;
     private final Thread reporter;
 
+    private final boolean isVerbose;
+
     public TaurusReporter(String fileName) {
         File file = new File(fileName);
         try {
@@ -29,6 +31,7 @@ public class TaurusReporter {
         }
 
         formatter = createFormatter(file);
+        isVerbose = formatter instanceof JSONFormatter;
         log.info("File: " + fileName + ", formatter: " + formatter.getClass().getSimpleName());
 
         reporter = new PoolWorker();
@@ -128,5 +131,9 @@ public class TaurusReporter {
             builder.append(sample.getErrorMessage().getBytes().length).append("\r\n");
             return builder.toString();
         }
+    }
+
+    public boolean isVerbose() {
+        return isVerbose;
     }
 }
