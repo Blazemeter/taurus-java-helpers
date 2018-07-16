@@ -57,14 +57,29 @@ target_lib2=C:/libs/myLib.jar
 report_file=/home/user/reports/junit.xml
 
 #
-# Set execution count
+# Set target concurrency
 #
-iterations=1
+concurrency=90
+
+#
+# Set ramp-up 30 sec
+#
+ramp_up=30
+
+#
+# Set count of steps for reach target concurrency
+#
+steps=3
 
 #
 # Set test duration
 #
 hold_for=60
+
+#
+# Set execution count 
+#
+iterations=0
 
 #
 # Select JUnit 5 version for run tests
