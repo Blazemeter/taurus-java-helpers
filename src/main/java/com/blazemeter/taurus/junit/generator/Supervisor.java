@@ -52,7 +52,7 @@ public class Supervisor {
         closeReporter();
     }
 
-    private long getWorkerDelay(int i) {
+    protected long getWorkerDelay(int i) {
         float stepGranularity = rampUp / (float) steps;
         float ramp_up_per_thread = rampUp / (float) concurrency;
         float offset = i * ramp_up_per_thread / (float) concurrency;
