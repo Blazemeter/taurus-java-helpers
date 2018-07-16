@@ -29,7 +29,6 @@ public class CustomRunner {
     public static final String CONCURRENCY = "concurrency";
     public static final String STEPS = "steps";
     public static final String RAMP_UP = "rampUp";
-    public static final String DELAY = "delay";
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
     public static final String RUN_ITEMS = "run_items";
@@ -79,7 +78,6 @@ public class CustomRunner {
                 || EXCLUDE_CATEGORY.equals(propName)
                 || RUN_ITEMS.equals(propName)
                 || JUNIT_VERSION.equals(propName)
-                || DELAY.equals(propName)
                 || CONCURRENCY.equals(propName)
                 || RAMP_UP.equals(propName)
                 || STEPS.equals(propName)
