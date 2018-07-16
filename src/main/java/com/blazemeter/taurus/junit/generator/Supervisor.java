@@ -58,7 +58,7 @@ public class Supervisor {
         float offset = i * ramp_up_per_thread / (float) concurrency;
 
         float delay = offset + i * rampUp / (float) concurrency;
-        if (!(stepGranularity > 0)) {
+        if (stepGranularity < 0) {
             stepGranularity = 0;
         }
         delay -= delay % stepGranularity;
