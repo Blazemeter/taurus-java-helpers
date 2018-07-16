@@ -28,7 +28,7 @@ public class CustomRunner {
     public static final String HOLD = "hold_for";
     public static final String CONCURRENCY = "concurrency";
     public static final String STEPS = "steps";
-    public static final String RAMP_UP = "rampUp";
+    public static final String RAMP_UP = "ramp_up";
     public static final String INCLUDE_CATEGORY = "include_category";
     public static final String EXCLUDE_CATEGORY = "exclude_category";
     public static final String RUN_ITEMS = "run_items";
