@@ -16,6 +16,8 @@ public class TaurusReporter {
     private static final Logger log = Logger.getLogger(TaurusReporter.class.getName());
     private final LinkedBlockingQueue<Sample> queue = new LinkedBlockingQueue<>();
 
+    private int activeThreads = 0;
+
     private volatile boolean isStopped = false;
     private final SampleFormatter formatter;
     private final Thread reporter;
@@ -107,7 +109,7 @@ public class TaurusReporter {
         }
     }
 
-    private static class CSVFormatter implements SampleFormatter {
+    private class CSVFormatter implements SampleFormatter {
         private final String CSV_HEADER = "timeStamp,elapsed,Latency,label,responseCode,responseMessage,success,allThreads,bytes";
 
         public String getHeader() {
@@ -122,12 +124,11 @@ public class TaurusReporter {
             builder.append("0,"); //Latency
             builder.append(sample.getLabel()).append(','); // label
 
-
             builder.append(','); // responseCode
             builder.append(sample.getErrorMessage()).append(','); // responseMessage
 
             builder.append(sample.isSuccessful()).append(','); // success
-//            builder.append(sample.) // TODO! allThreads
+            builder.append(getActiveThreads()).append(","); // allThreads
             builder.append(sample.getErrorMessage().getBytes().length).append("\r\n");
             return builder.toString();
         }
@@ -135,5 +136,17 @@ public class TaurusReporter {
 
     public boolean isVerbose() {
         return isVerbose;
+    }
+
+    public synchronized void incrementActiveThreads() {
+        activeThreads++;
+    }
+
+    public synchronized void decrementActiveThreads() {
+        activeThreads--;
+    }
+
+    public synchronized int getActiveThreads() {
+        return activeThreads;
     }
 }

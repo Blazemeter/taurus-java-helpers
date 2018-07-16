@@ -54,6 +54,7 @@ public class Worker extends Thread {
     public void run() {
         long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
         makeDelay();
+        reporter.incrementActiveThreads();
 
         int iter = 0;
         while (true) {
@@ -70,6 +71,7 @@ public class Worker extends Thread {
                 break;
             }
         }
+        reporter.decrementActiveThreads();
     }
 
     protected void makeDelay() {
