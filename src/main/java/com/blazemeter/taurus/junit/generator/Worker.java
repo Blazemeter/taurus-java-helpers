@@ -85,7 +85,7 @@ public class Worker extends Thread {
         }
     }
 
-    protected static JUnitRunner getJUnitRunner(String junitVersion) {
+    protected JUnitRunner getJUnitRunner(String junitVersion) {
         log.fine("Set JUnit version = " + junitVersion);
         if (junitVersion == null || junitVersion.isEmpty() || junitVersion.equals("4")) {
             log.fine("Will use JUnit 4 version");
