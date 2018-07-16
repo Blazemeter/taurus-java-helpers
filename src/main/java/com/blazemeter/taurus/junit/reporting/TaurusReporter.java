@@ -42,6 +42,7 @@ public class TaurusReporter {
             CSVFormatter formatter = new CSVFormatter();
             try {
                 outStream.write(formatter.getHeader());
+                outStream.write("\n");
             } catch (IOException e) {
                 log.log(Level.WARNING, "Failed to write CSV header", e);
             }
@@ -91,8 +92,8 @@ public class TaurusReporter {
             JSONObject obj = new JSONObject();
             obj.put("test_case", sample.getLabel());
             obj.put("test_suite", sample.getSuite());
-            obj.put("start_time", sample.getStartTime());
-            obj.put("duration", sample.getDuration());
+            obj.put("start_time", sample.getStartTimeInSec());
+            obj.put("duration", sample.getDurationInSec());
             obj.put("status", sample.getStatus());
             obj.put("error_msg", sample.getErrorMessage());
             obj.put("error_trace", sample.getErrorTrace());
@@ -112,7 +113,20 @@ public class TaurusReporter {
 
         @Override
         public String formatToString(Sample sample) {
-            return null;
+            final StringBuilder builder = new StringBuilder();
+            builder.append(sample.getStartTime()).append(','); // timeStamp in ms
+            builder.append(sample.getDuration()).append(','); //elapsed in ms
+            builder.append("0,"); //Latency
+            builder.append(sample.getLabel()).append(','); // label
+
+
+            builder.append(','); // responseCode
+            builder.append(sample.getErrorMessage()).append(','); // responseMessage
+
+            builder.append(sample.isSuccessful()).append(','); // success
+//            builder.append(sample.) // TODO! allThreads
+            builder.append(sample.getErrorMessage().getBytes().length).append("\r\n");
+            return builder.toString();
         }
     }
 }

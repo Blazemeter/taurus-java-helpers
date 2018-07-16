@@ -10,7 +10,6 @@ public class CustomListener {
 
     protected Sample pendingSample;
     private TaurusReporter reporter;
-    private long started = 0;
 
     private long testCount = 0;
     private long failedCount = 0;
@@ -35,7 +34,6 @@ public class CustomListener {
             log.info(String.format("started %s(%s)", methodName, className));
         }
         testCount++;
-        started = System.currentTimeMillis();
         pendingSample = new Sample();
         pendingSample.setLabel(methodName);
         pendingSample.setSuite(className);
@@ -60,7 +58,7 @@ public class CustomListener {
         if (isVerbose) {
             log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
         }
-        double duration = (finishTime - started) / 1000.0;
+        long duration = finishTime - pendingSample.getStartTime();
         pendingSample.setDuration(duration);
 
         reporter.writeSample(pendingSample);

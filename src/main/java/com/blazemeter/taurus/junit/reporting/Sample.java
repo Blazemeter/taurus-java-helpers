@@ -6,8 +6,8 @@ public class Sample {
     public static final String STATUS_BROKEN = "BROKEN";
     public static final String STATUS_SKIPPED = "SKIPPED";
 
-    private final long startTime = System.currentTimeMillis() / 1000;
-    private double duration = 0;
+    private final long startTime = System.currentTimeMillis();
+    private long duration = 0;
     private String status = STATUS_PASSED;
     private String label = "";
     private String suite = "";
@@ -30,15 +30,23 @@ public class Sample {
         return String.format("%d: %s - %s", startTime, label, status);
     }
 
+    public long getStartTimeInSec() {
+        return startTime / 1000;
+    }
+
     public long getStartTime() {
         return startTime;
     }
 
-    public double getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public double getDurationInSec() {
+        return duration / 1000.0;
+    }
+
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
