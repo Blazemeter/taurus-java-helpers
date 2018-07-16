@@ -454,7 +454,7 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-
+    @Test
     public void testMethodNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -482,6 +482,7 @@ public class CustomRunnerTest {
         }
     }
 
+    @Test
     public void testClassNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -509,6 +510,7 @@ public class CustomRunnerTest {
         }
     }
 
+    @Test
     public void testConcurrency() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
