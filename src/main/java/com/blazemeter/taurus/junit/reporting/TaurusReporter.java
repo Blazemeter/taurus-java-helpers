@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,11 +30,13 @@ public class TaurusReporter {
         try {
             outStream = new FileWriter(file);
         } catch (IOException e) {
+            isStopped = true;
             throw new RuntimeException("Failed to open file " + fileName, e);
         }
 
-        formatter = createFormatter(file);
+        formatter = createFormatter(fileName);
         isVerbose = formatter instanceof JSONFormatter;
+
         log.info("File: " + fileName + ", formatter: " + formatter.getClass().getSimpleName());
 
         reporter = new PoolWorker();
@@ -42,18 +45,21 @@ public class TaurusReporter {
         reporter.start();
     }
 
-    private SampleFormatter createFormatter(File file) {
-        if (Utils.getFileExtension(file).equals("csv")) {
+    protected SampleFormatter createFormatter(String fileName) {
+        if (fileName.endsWith(".ldjson")) {
+            return new JSONFormatter();
+        } else {
             CSVFormatter formatter = new CSVFormatter();
             try {
                 outStream.write(formatter.getHeader());
                 outStream.write("\n");
             } catch (IOException e) {
-                log.log(Level.WARNING, "Failed to write CSV header", e);
+                isStopped = true;
+                log.log(Level.SEVERE, "Failed to write CSV header", e);
+                throw new RuntimeException("Failed to write CSV header", e);
             }
             return formatter;
         }
-        return new JSONFormatter();
     }
 
     public void writeSample(Sample sample) {
@@ -74,7 +80,14 @@ public class TaurusReporter {
     private class PoolWorker extends Thread {
         public void run() {
             while (!isStopped || !queue.isEmpty()) {
-                Sample sample = queue.poll(); // todo: or poll with await 500 ms??
+                Sample sample;
+                try {
+                    sample = queue.poll(100, TimeUnit.MICROSECONDS);
+                } catch (InterruptedException e) {
+                    isStopped = true;
+                    log.log(Level.SEVERE, "Reporter was interrupted", e);
+                    throw new RuntimeException("Reporter was interrupted", e);
+                }
                 if (sample != null) {
                     try {
                         outStream.write(formatter.formatToString(sample));
@@ -148,5 +161,9 @@ public class TaurusReporter {
 
     public synchronized int getActiveThreads() {
         return activeThreads;
+    }
+
+    public boolean isStopped() {
+        return isStopped;
     }
 }
