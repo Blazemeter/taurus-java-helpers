@@ -3,6 +3,8 @@ package com.blazemeter.taurus.junit.reporting;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.junit.Assert.*;
@@ -88,5 +90,43 @@ public class TaurusReporterTest {
 
         reporter.decrementActiveThreads();
         assertEquals(0, reporter.getActiveThreads());
+    }
+
+    @Test
+    public void testBadFilename() {
+        try {
+            new TaurusReporter("/");
+            fail();
+        } catch (RuntimeException ex) {
+            assertEquals("Failed to open file /", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testFilePermissions() throws Exception {
+        final File file = File.createTempFile("test", ".csv");
+        file.deleteOnExit();
+        try {
+            TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath()) {
+                @Override
+                protected FileWriter openFile(String fileName) {
+                    try {
+                        return new FileWriter(file) {
+                            @Override
+                            public void write(String str) throws IOException {
+                                throw new IOException("Opps");
+                            }
+                        };
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+            };
+            fail();
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            assertEquals("Failed to write CSV header", ex.getMessage());
+        }
     }
 }

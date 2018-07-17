@@ -26,14 +26,7 @@ public class TaurusReporter {
     private final boolean isVerbose;
 
     public TaurusReporter(String fileName) {
-        File file = new File(fileName);
-        try {
-            outStream = new FileWriter(file);
-        } catch (IOException e) {
-            isStopped = true;
-            throw new RuntimeException("Failed to open file " + fileName, e);
-        }
-
+        outStream = openFile(fileName);
         formatter = createFormatter(fileName);
         isVerbose = formatter instanceof JSONFormatter;
 
@@ -43,6 +36,15 @@ public class TaurusReporter {
         reporter.setName("Reporter thread");
         reporter.setDaemon(true);
         reporter.start();
+    }
+
+    protected FileWriter openFile(String fileName) {
+        try {
+            return new FileWriter(new File(fileName));
+        } catch (IOException e) {
+            isStopped = true;
+            throw new RuntimeException("Failed to open file " + fileName, e);
+        }
     }
 
     protected SampleFormatter createFormatter(String fileName) {
