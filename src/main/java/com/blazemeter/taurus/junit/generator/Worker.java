@@ -54,24 +54,27 @@ public class Worker extends Thread {
     public void run() {
         long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
         makeDelay();
-        reporter.incrementActiveThreads();
+        try {
+            reporter.incrementActiveThreads();
 
-        int iter = 0;
-        while (true) {
-            iter++;
-            runner.executeRequest(request, reporter);
-            long currTime = System.currentTimeMillis();
-            if (0 < endTime && endTime <= currTime) {
-                log.info(String.format("[%s] Duration limit reached, stopping", getName()));
-                break;
-            }
+            int iter = 0;
+            while (true) {
+                iter++;
+                runner.executeRequest(request, reporter);
+                long currTime = System.currentTimeMillis();
+                if (0 < endTime && endTime <= currTime) {
+                    log.info(String.format("[%s] Duration limit reached, stopping", getName()));
+                    break;
+                }
 
-            if (iter >= iterations) {
-                log.info(String.format("[%s] Iteration limit reached, stopping", getName()));
-                break;
+                if (iter >= iterations) {
+                    log.info(String.format("[%s] Iteration limit reached, stopping", getName()));
+                    break;
+                }
             }
+        } finally {
+            reporter.decrementActiveThreads();
         }
-        reporter.decrementActiveThreads();
     }
 
     protected void makeDelay() {
@@ -79,7 +82,7 @@ public class Worker extends Thread {
             try {
                 sleep(startDelay);
             } catch (InterruptedException e) {
-                log.log(Level.SEVERE, "Worker was interrupted", e);
+                log.log(Level.INFO, "Worker was interrupted", e);
                 throw new RuntimeException("Worker was interrupted", e);
             }
         }
@@ -87,14 +90,9 @@ public class Worker extends Thread {
 
     protected JUnitRunner getJUnitRunner(String junitVersion) {
         log.fine("Set JUnit version = " + junitVersion);
-        if (junitVersion == null || junitVersion.isEmpty() || junitVersion.equals("4")) {
-            log.fine("Will use JUnit 4 version");
-            return new JUnit4Runner();
-        } else if (junitVersion.equals("5")) {
-            log.fine("Will use JUnit 5 version");
+        if ("5".equals(junitVersion)) {
             return new JUnit5Runner();
         } else {
-            log.warning("Cannot detect JUnit version=" + junitVersion + ". Will use JUnit 4 version");
             return new JUnit4Runner();
         }
     }
