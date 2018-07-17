@@ -107,7 +107,7 @@ public class TaurusReporterTest {
         final File file = File.createTempFile("test", ".csv");
         file.deleteOnExit();
         try {
-            TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath()) {
+            new TaurusReporter(file.getAbsolutePath()) {
                 @Override
                 protected FileWriter openFile(String fileName) {
                     try {
