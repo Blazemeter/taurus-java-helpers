@@ -1,5 +1,6 @@
 package com.blazemeter.taurus.junit.generator;
 
+import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
 import java.util.ArrayList;

@@ -1,7 +1,6 @@
 package com.blazemeter.taurus.junit;
 
 import com.blazemeter.taurus.junit.reporting.Sample;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
 import java.util.logging.Logger;
 
@@ -9,7 +8,7 @@ public class CustomListener {
     private static final Logger log = Logger.getLogger(CustomListener.class.getName());
 
     protected Sample pendingSample;
-    private TaurusReporter reporter;
+    private Reporter reporter;
 
     private long testCount = 0;
     private long failedCount = 0;
@@ -19,7 +18,7 @@ public class CustomListener {
 
     private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
-    public CustomListener(TaurusReporter reporter) {
+    public CustomListener(Reporter reporter) {
         this.reporter = reporter;
         this.isVerbose = reporter.isVerbose();
     }

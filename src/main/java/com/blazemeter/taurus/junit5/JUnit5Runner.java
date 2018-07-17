@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit5;
 
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
@@ -43,7 +43,7 @@ public class JUnit5Runner implements JUnitRunner{
     }
 
     @Override
-    public void executeRequest(Object requestItem, TaurusReporter reporter) {
+    public void executeRequest(Object requestItem, Reporter reporter) {
         Launcher launcher = LauncherFactory.create();
         TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
         launcher.registerTestExecutionListeners(jUnit5Listener);

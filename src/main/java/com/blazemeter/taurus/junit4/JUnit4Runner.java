@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit4;
 
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;
@@ -35,7 +35,7 @@ public class JUnit4Runner implements JUnitRunner {
     }
 
     @Override
-    public void executeRequest(Object requestItem, TaurusReporter reporter) {
+    public void executeRequest(Object requestItem, Reporter reporter) {
         JUnit4Listener listener = new JUnit4Listener(reporter);
         JUnitCore runner = new JUnitCore();
         runner.addListener(listener);

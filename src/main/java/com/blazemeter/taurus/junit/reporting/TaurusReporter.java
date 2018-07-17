@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.junit.reporting;
 
-import com.blazemeter.taurus.junit.Utils;
+import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TaurusReporter {
+public class TaurusReporter implements Reporter, ThreadCounter {
 
     private FileWriter outStream;
     private static final Logger log = Logger.getLogger(TaurusReporter.class.getName());
