@@ -34,7 +34,6 @@ public class CustomListener {
         pendingSample.setLabel(methodName);
         pendingSample.setSuite(className);
         pendingSample.setFullName(className + "." + methodName);
-        pendingSample.setActiveThreads(counter.getActiveThreads());
     }
 
     public void finishSample(String status, String msg, Throwable ex) {
@@ -57,6 +56,7 @@ public class CustomListener {
         }
         long duration = finishTime - pendingSample.getStartTime();
         pendingSample.setDuration(duration);
+        pendingSample.setActiveThreads(counter.getActiveThreads());
 
         reporter.writeSample(pendingSample);
         if (pendingSample.isSkipped()) {
