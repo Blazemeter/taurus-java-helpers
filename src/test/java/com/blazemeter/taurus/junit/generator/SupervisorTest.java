@@ -78,4 +78,28 @@ public class SupervisorTest {
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(0, supervisor.getWorkerDelay(9));
     }
+
+    @Test
+    public void testDelayCalculationWithoutSteps() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(0));
+        props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(5));
+        props.setProperty(CustomRunner.RAMP_UP, String.valueOf(10));
+
+        Supervisor supervisor = new Supervisor(new ArrayList<>(), props);
+        assertEquals(0, supervisor.getWorkerDelay(0));
+        assertEquals(2, supervisor.getWorkerDelay(1));
+        assertEquals(4, supervisor.getWorkerDelay(2));
+        assertEquals(7, supervisor.getWorkerDelay(3));
+        assertEquals(9, supervisor.getWorkerDelay(4));
+    }
 }

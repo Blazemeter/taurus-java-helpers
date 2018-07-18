@@ -59,7 +59,7 @@ public class Supervisor {
 
     private void initParams(Properties props) {
         concurrency = Integer.valueOf(props.getProperty(CONCURRENCY, "1"));
-        steps = Integer.valueOf(props.getProperty(STEPS, "1"));
+        steps = Integer.valueOf(props.getProperty(STEPS, String.valueOf(Integer.MAX_VALUE)));
         rampUp = Float.valueOf(props.getProperty(RAMP_UP, "0"));
         hold = Float.valueOf(props.getProperty(HOLD, "0"));
         iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
