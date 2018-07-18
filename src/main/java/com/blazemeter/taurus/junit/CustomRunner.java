@@ -57,7 +57,7 @@ public class CustomRunner {
         passToSystemProperties(props);
 
         Supervisor supervisor = new Supervisor(classes, props);
-        supervisor.run();
+        supervisor.execute();
     }
 
     protected static void passToSystemProperties(Properties props) {

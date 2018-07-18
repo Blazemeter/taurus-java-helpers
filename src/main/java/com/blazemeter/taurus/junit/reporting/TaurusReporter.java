@@ -1,7 +1,6 @@
 package com.blazemeter.taurus.junit.reporting;
 
 import com.blazemeter.taurus.junit.Reporter;
-import com.blazemeter.taurus.junit.ThreadCounter;
 import org.json.JSONObject;
 
 import java.io.File;

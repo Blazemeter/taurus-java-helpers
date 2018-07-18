@@ -72,7 +72,7 @@ public class Supervisor {
         }
     }
 
-    public void run() {
+    public void execute() {
         for (int i = 0; i < concurrency; i++) {
             Worker worker = new Worker(classes, properties, reporter, counter, getWorkerDelay(i), iterations);
             worker.setName("Worker #" + i);
