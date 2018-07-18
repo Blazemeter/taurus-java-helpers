@@ -76,6 +76,7 @@ public class Worker extends Thread {
     }
 
     protected void makeDelay() {
+        log.fine(String.format("[%s] start delay %s", getName(), startDelay));
         if (startDelay > 0) {
             try {
                 sleep(startDelay);
