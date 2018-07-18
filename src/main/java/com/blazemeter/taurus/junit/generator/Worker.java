@@ -2,7 +2,8 @@ package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
 import com.blazemeter.taurus.junit.JUnitRunner;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
 
@@ -19,7 +20,8 @@ public class Worker extends Thread {
 
     private final Properties props = new Properties();
     private final List<Class> classes = new ArrayList<>();
-    private final TaurusReporter reporter;
+    private final Reporter reporter;
+    private final ThreadCounter counter;
 
     private long iterations;
     private long startDelay;
@@ -29,10 +31,13 @@ public class Worker extends Thread {
 
     private boolean isStopped = false;
 
-    public Worker(List<Class> classes, Properties properties, TaurusReporter reporter, long startDelay, long iterations) {
+    public Worker(List<Class> classes, Properties properties,
+                  Reporter reporter, ThreadCounter counter,
+                  long startDelay, long iterations) {
         this.props.putAll(properties);
         this.classes.addAll(classes);
         this.reporter = reporter;
+        this.counter = counter;
 
         this.startDelay = startDelay * 1000;
         this.iterations = iterations;
@@ -49,11 +54,11 @@ public class Worker extends Thread {
     public void run() {
         makeDelay();
         try {
-            reporter.incrementActiveThreads();
+            counter.incrementActiveThreads();
             int iter = 0;
             while (true) {
                 iter++;
-                runner.executeRequest(request, reporter);
+                runner.executeRequest(request, reporter, counter);
                 if (isStopped()) {
                     log.info(String.format("[%s] was stopped", getName()));
                     break;
@@ -66,7 +71,7 @@ public class Worker extends Thread {
                 }
             }
         } finally {
-            reporter.decrementActiveThreads();
+            counter.decrementActiveThreads();
         }
     }
 

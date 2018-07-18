@@ -1,5 +1,7 @@
 package com.blazemeter.taurus.junit.generator;
 
+import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
 import java.util.ArrayList;
@@ -24,7 +26,8 @@ public class Supervisor {
 
     private final List<Class> classes;
     private final Properties properties;
-    private final TaurusReporter reporter;
+    private final Reporter reporter;
+    private final ThreadCounter counter;
 
     private int concurrency;
     private int steps;
@@ -39,6 +42,7 @@ public class Supervisor {
         this.properties = properties;
         this.classes = classes;
         this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
+        this.counter = new Counter();
         initParams(properties);
         addShutdownHook();
     }
@@ -70,7 +74,7 @@ public class Supervisor {
 
     public void run() {
         for (int i = 0; i < concurrency; i++) {
-            Worker worker = new Worker(classes, properties, reporter, getWorkerDelay(i), iterations);
+            Worker worker = new Worker(classes, properties, reporter, counter, getWorkerDelay(i), iterations);
             worker.setName("Worker #" + i);
             worker.setDaemon(false);
             workers.add(worker);
@@ -101,14 +105,7 @@ public class Supervisor {
                 break;
             }
 
-            boolean isFinished = true;
-            for (Worker w : workers) {
-                if (!w.isStopped()) {
-                    isFinished = false;
-                    break;
-                }
-            }
-            if (isFinished) {
+            if (0 == counter.getActiveThreads()) {
                 log.info("All workers finished, stopping");
                 stop();
                 break;

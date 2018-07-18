@@ -17,6 +17,8 @@ public class Sample {
     private String errorTrace = "";
     private String description = "";
 
+    private int activeThreads;
+
     public boolean isSuccessful() {
         return this.status.equals(STATUS_PASSED);
     }
@@ -113,6 +115,14 @@ public class Sample {
 
     public void setSuite(String suite) {
         this.suite = suite == null ? "" : suite;
+    }
+
+    public int getActiveThreads() {
+        return activeThreads;
+    }
+
+    public void setActiveThreads(int activeThreads) {
+        this.activeThreads = activeThreads;
     }
 }
 

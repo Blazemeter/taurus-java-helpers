@@ -9,6 +9,7 @@ public class CustomListener {
 
     protected Sample pendingSample;
     private Reporter reporter;
+    private ThreadCounter counter;
 
     private long testCount = 0;
     private long failedCount = 0;
@@ -18,9 +19,10 @@ public class CustomListener {
 
     private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
-    public CustomListener(Reporter reporter) {
+    public CustomListener(Reporter reporter, ThreadCounter counter) {
         this.reporter = reporter;
         this.isVerbose = reporter.isVerbose();
+        this.counter = counter;
     }
 
     public void startSample(String methodName, String className) {
@@ -32,6 +34,7 @@ public class CustomListener {
         pendingSample.setLabel(methodName);
         pendingSample.setSuite(className);
         pendingSample.setFullName(className + "." + methodName);
+        pendingSample.setActiveThreads(counter.getActiveThreads());
     }
 
     public void finishSample(String status, String msg, Throwable ex) {

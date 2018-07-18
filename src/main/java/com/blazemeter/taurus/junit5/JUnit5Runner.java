@@ -2,6 +2,7 @@ package com.blazemeter.taurus.junit5;
 
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
@@ -31,7 +32,7 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.runner.JUnitRequest.checkMethod;
 
-public class JUnit5Runner implements JUnitRunner{
+public class JUnit5Runner implements JUnitRunner {
     private static final Logger log = Logger.getLogger(JUnit5Runner.class.getName());
 
     @Override
@@ -43,9 +44,9 @@ public class JUnit5Runner implements JUnitRunner{
     }
 
     @Override
-    public void executeRequest(Object requestItem, Reporter reporter) {
+    public void executeRequest(Object requestItem, Reporter reporter, ThreadCounter counter) {
         Launcher launcher = LauncherFactory.create();
-        TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
+        TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter, counter);
         launcher.registerTestExecutionListeners(jUnit5Listener);
         launcher.execute((LauncherDiscoveryRequest) requestItem);
     }

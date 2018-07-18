@@ -12,13 +12,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TaurusReporter implements Reporter, ThreadCounter {
+public class TaurusReporter implements Reporter {
 
     private FileWriter outStream;
     private static final Logger log = Logger.getLogger(TaurusReporter.class.getName());
     private final LinkedBlockingQueue<Sample> queue = new LinkedBlockingQueue<>();
-
-    private int activeThreads = 0;
 
     private volatile boolean isStopped = false;
     private final SampleFormatter formatter;
@@ -144,7 +142,7 @@ public class TaurusReporter implements Reporter, ThreadCounter {
             builder.append(sample.getErrorMessage()).append(','); // responseMessage
 
             builder.append(sample.isSuccessful()).append(','); // success
-            builder.append(getActiveThreads()).append(","); // allThreads
+            builder.append(sample.getActiveThreads()).append(","); // allThreads
             builder.append(sample.getErrorMessage().getBytes().length).append("\r\n");
             return builder.toString();
         }
@@ -152,18 +150,6 @@ public class TaurusReporter implements Reporter, ThreadCounter {
 
     public boolean isVerbose() {
         return isVerbose;
-    }
-
-    public synchronized void incrementActiveThreads() {
-        activeThreads++;
-    }
-
-    public synchronized void decrementActiveThreads() {
-        activeThreads--;
-    }
-
-    public synchronized int getActiveThreads() {
-        return activeThreads;
     }
 
     public boolean isStopped() {

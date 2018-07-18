@@ -17,15 +17,12 @@ public class TaurusReporterTest {
         file.deleteOnExit();
 
         TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath());
-        reporter.incrementActiveThreads();
-        reporter.incrementActiveThreads();
-        reporter.incrementActiveThreads();
-        reporter.incrementActiveThreads();
 
         assertFalse(reporter.isVerbose());
 
         long t1 = System.currentTimeMillis();
         Sample sample = new Sample();
+        sample.setActiveThreads(4);
         long t2 = System.currentTimeMillis();
         long startTime = sample.getStartTime();
         assertTrue(startTime >= t1);
@@ -76,20 +73,6 @@ public class TaurusReporterTest {
 
         String actual = readFileToString(file);
         assertEquals(expect.toString(), actual);
-    }
-
-    @Test
-    public void testActiveThreads() throws Exception {
-        File file = File.createTempFile("report", ".ldjson");
-        file.deleteOnExit();
-
-        TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath());
-        reporter.incrementActiveThreads();
-
-        assertEquals(1, reporter.getActiveThreads());
-
-        reporter.decrementActiveThreads();
-        assertEquals(0, reporter.getActiveThreads());
     }
 
     @Test

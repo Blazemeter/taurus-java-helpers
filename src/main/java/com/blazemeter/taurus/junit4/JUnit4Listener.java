@@ -2,6 +2,7 @@ package com.blazemeter.taurus.junit4;
 
 import com.blazemeter.taurus.junit.CustomListener;
 import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit.reporting.Sample;
 import com.blazemeter.taurus.junit.Utils;
 import org.junit.runner.Description;
@@ -17,9 +18,9 @@ public class JUnit4Listener extends RunListener {
     private final CustomListener listener;
     private final boolean isVerbose;
 
-    public JUnit4Listener(Reporter reporter) {
+    public JUnit4Listener(Reporter reporter, ThreadCounter counter) {
         super();
-        listener = new CustomListener(reporter);
+        listener = new CustomListener(reporter, counter);
         isVerbose = reporter.isVerbose();
     }
 

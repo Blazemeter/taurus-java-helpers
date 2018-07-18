@@ -2,6 +2,7 @@ package com.blazemeter.taurus.junit4;
 
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
+import com.blazemeter.taurus.junit.ThreadCounter;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;
 import org.junit.runner.JUnitCore;
@@ -35,8 +36,8 @@ public class JUnit4Runner implements JUnitRunner {
     }
 
     @Override
-    public void executeRequest(Object requestItem, Reporter reporter) {
-        JUnit4Listener listener = new JUnit4Listener(reporter);
+    public void executeRequest(Object requestItem, Reporter reporter, ThreadCounter counter) {
+        JUnit4Listener listener = new JUnit4Listener(reporter, counter);
         JUnitCore runner = new JUnitCore();
         runner.addListener(listener);
         runner.run((Request) requestItem);
