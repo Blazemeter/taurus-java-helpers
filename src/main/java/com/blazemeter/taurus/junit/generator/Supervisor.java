@@ -1,16 +1,18 @@
 package com.blazemeter.taurus.junit.generator;
 
-import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.blazemeter.taurus.junit.CustomRunner.CONCURRENCY;
+import static com.blazemeter.taurus.junit.CustomRunner.HOLD;
+import static com.blazemeter.taurus.junit.CustomRunner.ITERATIONS;
 import static com.blazemeter.taurus.junit.CustomRunner.RAMP_UP;
 import static com.blazemeter.taurus.junit.CustomRunner.REPORT_FILE;
 import static com.blazemeter.taurus.junit.CustomRunner.STEPS;
@@ -26,31 +28,114 @@ public class Supervisor {
 
     private int concurrency;
     private int steps;
+    private long iterations;
     private float rampUp;
+    private float hold;
+
+    private volatile boolean isInterrupted = false;
+    private final AtomicBoolean isStopped = new AtomicBoolean(false);
 
     public Supervisor(List<Class> classes, Properties properties) {
         this.properties = properties;
         this.classes = classes;
         this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
         initParams(properties);
+        addShutdownHook();
     }
+
+    private void addShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            isInterrupted = true;
+//            System.out.println("Shutting down");
+            stop();
+//            System.out.println("Shutdown complete");
+        }));
+    }
+
 
     private void initParams(Properties props) {
         concurrency = Integer.valueOf(props.getProperty(CONCURRENCY, "1"));
         steps = Integer.valueOf(props.getProperty(STEPS, "1"));
         rampUp = Float.valueOf(props.getProperty(RAMP_UP, "0"));
+        hold = Float.valueOf(props.getProperty(HOLD, "0"));
+        iterations = Long.valueOf(props.getProperty(ITERATIONS, "0"));
+        if (iterations == 0) {
+            if (hold > 0) {
+                iterations = Long.MAX_VALUE;
+            } else {
+                iterations = 1;
+            }
+        }
     }
 
     public void run() {
         for (int i = 0; i < concurrency; i++) {
-            Worker worker = new Worker(classes, properties, reporter, getWorkerDelay(i));
-            worker.setName("Worker #" +i);
-            worker.start();
+            Worker worker = new Worker(classes, properties, reporter, getWorkerDelay(i), iterations);
+            worker.setName("Worker #" + i);
+            worker.setDaemon(false);
             workers.add(worker);
         }
 
-        workers.forEach(this::waitThreadStopped);
-        closeReporter();
+        long workingTime = (long) (rampUp + hold) * 1000;
+        long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
+
+        workers.forEach(Thread::start);
+        while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                isInterrupted = true;
+                log.warning("Supervisor was interrupted");
+            }
+
+            if (isInterrupted) {
+                log.fine("Supervisor was interrupted. Break loop.");
+                stop();
+                break;
+            }
+
+            long currTime = System.currentTimeMillis();
+            if (0 < endTime && endTime <= currTime) {
+                log.info("Duration limit reached, stopping");
+                stop();
+                break;
+            }
+
+            boolean isFinished = true;
+            for (Worker w : workers) {
+                if (!w.isStopped()) {
+                    isFinished = false;
+                    break;
+                }
+            }
+            if (isFinished) {
+                log.info("All workers finished, stopping");
+                stop();
+                break;
+            }
+        }
+    }
+
+    protected void stop() {
+        if (isStopped.compareAndSet(false, true)) {
+            workers.forEach(Worker::stopWorker);
+            workers.forEach(this::waitWorkerStopped);
+            closeReporter();
+        }
+    }
+
+    private void waitWorkerStopped(Worker worker) {
+        if (worker == null) {
+            return;
+        }
+
+        while (worker.isAlive()) {
+            try {
+                worker.join(1000);
+            } catch (InterruptedException e) {
+                log.log(Level.SEVERE, "Interrupted while wait for finish " + worker.getName());
+            }
+        }
     }
 
     protected long getWorkerDelay(int i) {
@@ -65,21 +150,6 @@ public class Supervisor {
         delay -= delay % stepGranularity;
         return (long) delay;
     }
-
-
-    private void waitThreadStopped(Thread thread) {
-        if (thread == null) {
-            return;
-        }
-        while (thread.isAlive()) {
-            try {
-                thread.join(5000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
 
     private void closeReporter() {
         try {

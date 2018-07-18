@@ -15,7 +15,7 @@ public class WorkerTest {
 
     @Test
     public void testJUnitVersion() {
-        Worker worker = new Worker(new ArrayList<>(), new Properties(), null, 8888);
+        Worker worker = new Worker(new ArrayList<>(), new Properties(), null, 8888, 9999);
 
         JUnitRunner jUnitRunner = worker.getJUnitRunner(null);
 
