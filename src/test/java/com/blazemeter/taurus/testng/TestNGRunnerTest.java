@@ -1,13 +1,16 @@
 package com.blazemeter.taurus.testng;
 
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 
-public class TestNGRunnerTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class TestNGRunnerTest {
 
     private static int getLinesCount(File log) throws IOException {
         LineNumberReader reader = new LineNumberReader(new FileReader(log));
@@ -16,6 +19,7 @@ public class TestNGRunnerTest extends TestCase {
         return reader.getLineNumber();
     }
 
+    @Test
     public void testMain() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -37,6 +41,7 @@ public class TestNGRunnerTest extends TestCase {
         assertEquals(3, getLinesCount(report));
     }
 
+    @Test
     public void testIterations() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -59,6 +64,7 @@ public class TestNGRunnerTest extends TestCase {
         assertEquals(3 * 3, getLinesCount(report));
     }
 
+    @Test
     public void testHold() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -81,6 +87,7 @@ public class TestNGRunnerTest extends TestCase {
         assertTrue(3 < getLinesCount(report));
     }
 
+    @Test
     public void testHoldIterations() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
