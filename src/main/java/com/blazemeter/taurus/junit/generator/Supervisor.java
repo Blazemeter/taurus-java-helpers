@@ -77,18 +77,24 @@ public class Supervisor {
         }
     }
 
-    public void execute() {
+    private void createWorkers() {
         for (int i = 0; i < concurrency; i++) {
             Worker worker = new Worker(classes, properties, reporter, counter, getWorkerDelay(i), iterations);
             worker.setName("Worker #" + i);
             worker.setDaemon(false);
             workers.add(worker);
         }
+    }
 
+    public void execute() {
+        createWorkers();
         long workingTime = (long) (rampUp + hold) * 1000;
         long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
-
         workers.forEach(Thread::start);
+        waitForFinish(endTime);
+    }
+
+    private void waitForFinish(long endTime) {
         while (true) {
             try {
                 Thread.sleep(1000);
