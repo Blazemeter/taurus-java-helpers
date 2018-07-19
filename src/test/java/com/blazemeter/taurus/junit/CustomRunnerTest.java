@@ -549,7 +549,7 @@ public class CustomRunnerTest {
     }
 
     @Test
-    public void testNoClasses() throws IOException {
+    public void testNoClasses() throws Exception {
         URL res = Thread.currentThread().getContextClassLoader().getResource("empty.jar");
         assert res != null;
 
@@ -565,8 +565,7 @@ public class CustomRunnerTest {
         try {
             CustomRunner.main(args);
             fail("jar contains 0 Test classes, can not continue");
-        } catch (Exception e) {
-            assertTrue(e instanceof CustomRunnerException);
+        } catch (CustomRunnerException e) {
             assertEquals("Nothing to test", e.getMessage());
         }
     }
