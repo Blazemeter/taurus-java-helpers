@@ -1,5 +1,6 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit.generator.Supervisor;
 import junit.framework.TestCase;
 
@@ -50,7 +51,7 @@ public class CustomRunner {
         ArrayList<Class> classes = getClasses(props);
 
         if (classes.isEmpty()) {
-            throw new RuntimeException("Nothing to test");
+            throw new CustomRunnerException("Nothing to test");
         }
         log.info("Running with classes: " + classes.toString());
 

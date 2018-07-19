@@ -80,7 +80,7 @@ public class TaurusReporterTest {
         try {
             new TaurusReporter("/");
             fail();
-        } catch (RuntimeException ex) {
+        } catch (IOException ex) {
             assertEquals("Failed to open file /", ex.getMessage());
         }
     }
@@ -107,7 +107,7 @@ public class TaurusReporterTest {
                 }
             };
             fail();
-        } catch (RuntimeException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
             assertEquals("Failed to write CSV header", ex.getMessage());
         }

@@ -4,6 +4,7 @@ import com.blazemeter.taurus.junit.CustomRunner;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
 
@@ -82,7 +83,7 @@ public class Worker extends Thread {
                 sleep(startDelay);
             } catch (InterruptedException e) {
                 log.log(Level.INFO, "Worker was interrupted", e);
-                throw new RuntimeException("Worker was interrupted", e);
+                throw new CustomRunnerException("Worker was interrupted", e);
             }
         }
     }

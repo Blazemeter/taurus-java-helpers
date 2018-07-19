@@ -2,8 +2,10 @@ package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +43,12 @@ public class Supervisor {
     public Supervisor(List<Class> classes, Properties properties) {
         this.properties = properties;
         this.classes = classes;
-        this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
+        try {
+            this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Failed to create reporter", e);
+            throw new CustomRunnerException("Failed to create reporter", e);
+        }
         this.counter = new Counter();
         initParams(properties);
         addShutdownHook();
@@ -50,9 +57,7 @@ public class Supervisor {
     private void addShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             isInterrupted = true;
-//            System.out.println("Shutting down");
             stop();
-//            System.out.println("Shutdown complete");
         }));
     }
 

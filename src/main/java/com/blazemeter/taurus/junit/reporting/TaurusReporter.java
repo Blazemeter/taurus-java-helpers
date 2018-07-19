@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.junit.reporting;
 
 import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class TaurusReporter implements Reporter {
 
     private final boolean isVerbose;
 
-    public TaurusReporter(String fileName) {
+    public TaurusReporter(String fileName) throws IOException {
         outStream = openFile(fileName);
         formatter = createFormatter(fileName);
         isVerbose = formatter instanceof JSONFormatter;
@@ -36,16 +37,16 @@ public class TaurusReporter implements Reporter {
         reporter.start();
     }
 
-    protected FileWriter openFile(String fileName) {
+    protected FileWriter openFile(String fileName) throws IOException {
         try {
             return new FileWriter(new File(fileName));
         } catch (IOException e) {
             isStopped = true;
-            throw new RuntimeException("Failed to open file " + fileName, e);
+            throw new IOException("Failed to open file " + fileName, e);
         }
     }
 
-    protected SampleFormatter createFormatter(String fileName) {
+    protected SampleFormatter createFormatter(String fileName) throws IOException {
         if (fileName.endsWith(".ldjson")) {
             return new JSONFormatter();
         } else {
@@ -56,7 +57,7 @@ public class TaurusReporter implements Reporter {
             } catch (IOException e) {
                 isStopped = true;
                 log.log(Level.SEVERE, "Failed to write CSV header", e);
-                throw new RuntimeException("Failed to write CSV header", e);
+                throw new IOException("Failed to write CSV header", e);
             }
             return formatter;
         }
@@ -86,7 +87,7 @@ public class TaurusReporter implements Reporter {
                 } catch (InterruptedException e) {
                     isStopped = true;
                     log.log(Level.SEVERE, "Reporter was interrupted", e);
-                    throw new RuntimeException("Reporter was interrupted", e);
+                    throw new CustomRunnerException("Reporter was interrupted", e);
                 }
                 if (sample != null) {
                     try {

@@ -3,6 +3,7 @@ package com.blazemeter.taurus.junit5;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
@@ -122,7 +123,7 @@ public class JUnit5Runner implements JUnitRunner {
         Package pack = Package.getPackage(filter);
         if (pack == null) {
             log.log(Level.SEVERE, "Filter Class or Package not found: " + filter);
-            throw new RuntimeException("Filter Class or Package not found: " + filter);
+            throw new CustomRunnerException("Filter Class or Package not found: " + filter);
         }
         if (isInclude) {
             addFilter(filter, FiltersType.INCLUDE_PACKAGES, filtersMap);
@@ -162,10 +163,10 @@ public class JUnit5Runner implements JUnitRunner {
             }
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             log.log(Level.SEVERE, "Class not found: " + item, e);
-            throw new RuntimeException("Class not found: " + item, e);
+            throw new CustomRunnerException("Class not found: " + item, e);
         } catch (NoSuchMethodException e) {
             log.log(Level.SEVERE, "Method not found: " + item, e);
-            throw new RuntimeException("Method not found: " + item, e);
+            throw new CustomRunnerException("Method not found: " + item, e);
         }
     }
 
@@ -180,7 +181,7 @@ public class JUnit5Runner implements JUnitRunner {
         Package pack = Package.getPackage(item);
         if (pack == null) {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
-            throw new RuntimeException("Class or Package not found: " + item);
+            throw new CustomRunnerException("Class or Package not found: " + item);
         }
 
         return selectPackage(item);
