@@ -1,6 +1,7 @@
 package org.junit.runner.filter;
 
-import org.junit.Test;
+//import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Description;
 
 import static org.junit.Assert.*;
