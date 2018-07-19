@@ -3,7 +3,6 @@ package com.blazemeter.taurus.junit.generator;
 import com.blazemeter.taurus.junit.CustomRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import net.grinder.script.Grinder;
 import net.grinder.script.Test;
 
 public class TestRegistryAccessorTest extends TestCase {
-    public void testNewTests_empty() {
+    public void testNewTestsEmpty() {
         Grinder.grinder = TestRegistryAccessor.getDummyScriptContext();
         assertEquals(0, TestRegistryAccessor.getNewTests().size());
         new Test(1, "label");
