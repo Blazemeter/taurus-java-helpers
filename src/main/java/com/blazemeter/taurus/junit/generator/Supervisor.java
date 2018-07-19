@@ -93,7 +93,9 @@ public class Supervisor {
         createWorkers();
         long workingTime = (long) (rampUp + hold) * 1000;
         long endTime = (workingTime == 0) ? 0 : (System.currentTimeMillis() + workingTime);
-        workers.forEach(Thread::start);
+        for (Worker w : workers) {
+            w.start();
+        }
         waitForFinish(endTime);
     }
 
@@ -129,8 +131,12 @@ public class Supervisor {
 
     protected void stopWorkers() {
         if (isStopped.compareAndSet(false, true)) {
-            workers.forEach(Worker::stopWorker);
-            workers.forEach(this::waitWorkerStopped);
+            for (Worker w : workers) {
+                w.stopWorker();
+            }
+            for (Worker w : workers) {
+                waitWorkerStopped(w);
+            }
             closeReporter();
         }
     }

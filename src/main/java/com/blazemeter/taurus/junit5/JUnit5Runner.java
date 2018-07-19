@@ -103,7 +103,10 @@ public class JUnit5Runner implements JUnitRunner {
     }
 
     private static void addFilter(String newFilter, FiltersType filtersType, Map<FiltersType, List<String>> filtersMap) {
-        List<String> filters = filtersMap.computeIfAbsent(filtersType, k -> new ArrayList<>());
+        List<String> filters = filtersMap.get(filtersType);
+        if (filters == null) {
+            filters = new ArrayList<>();
+        }
         filters.add(newFilter);
     }
 
