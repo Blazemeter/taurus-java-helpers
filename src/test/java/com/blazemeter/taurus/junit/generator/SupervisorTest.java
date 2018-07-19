@@ -1,9 +1,11 @@
 package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -101,5 +103,22 @@ public class SupervisorTest {
         assertEquals(4, supervisor.getWorkerDelay(2));
         assertEquals(7, supervisor.getWorkerDelay(3));
         assertEquals(9, supervisor.getWorkerDelay(4));
+    }
+
+    @Test
+    public void testFailedToCreateReporter() throws IOException {
+        File report = File.createTempFile("report", ".ldjson");
+        report.setWritable(false);
+        report.deleteOnExit();
+
+        Properties properties = new Properties();
+        properties.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+
+        try {
+            new Supervisor(null, properties);
+            fail("failed to create reporter");
+        } catch (CustomRunnerException e) {
+            assertEquals("Failed to create reporter", e.getMessage());
+        }
     }
 }

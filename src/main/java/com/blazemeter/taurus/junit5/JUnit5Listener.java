@@ -71,7 +71,7 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
         }
     }
 
-    private String getStatus(TestExecutionResult.Status status) {
+    protected String getStatus(TestExecutionResult.Status status) {
         switch (status) {
             case SUCCESSFUL:
                 return Sample.STATUS_PASSED;

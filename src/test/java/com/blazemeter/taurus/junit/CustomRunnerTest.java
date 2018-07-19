@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.junit;
 
 
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class CustomRunnerTest {
         return reader.getLineNumber();
     }
 
-    private static String readFileToString(File log) throws IOException {
+    public static String readFileToString(File log) throws IOException {
         return FileUtils.readFileToString(log);
     }
 
@@ -535,5 +536,38 @@ public class CustomRunnerTest {
         CustomRunner.main(args);
 
         assertTrue(10000 < getLinesCount(report));
+    }
+
+    @Test
+    public void testRunWithoutArgs() {
+        try {
+            CustomRunner.main(new String[0]);
+            fail("Cannot work without path to properties file");
+        } catch (Exception e) {
+            assertEquals("Usage requires 1 parameter, containing path to properties file", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testNoClasses() throws IOException {
+        URL res = Thread.currentThread().getContextClassLoader().getResource("empty.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+
+        try {
+            CustomRunner.main(args);
+            fail("jar contains 0 Test classes, can not continue");
+        } catch (Exception e) {
+            assertTrue(e instanceof CustomRunnerException);
+            assertEquals("Nothing to test", e.getMessage());
+        }
     }
 }

@@ -37,6 +37,7 @@ public class TaurusReporterTest {
 
         reporter.writeSample(sample);
         reporter.close();
+        assertTrue(reporter.isStopped());
 
         StringBuilder expect = new StringBuilder("timeStamp,elapsed,Latency,label,responseCode,responseMessage,success,allThreads,bytes\n");
         expect.append(startTime).append(',');
