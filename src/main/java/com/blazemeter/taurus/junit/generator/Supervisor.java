@@ -55,10 +55,13 @@ public class Supervisor {
     }
 
     private void addShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            isInterrupted = true;
-            stop();
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                isInterrupted = true;
+                stopWorkers();
+            }
+        });
     }
 
 
@@ -105,26 +108,26 @@ public class Supervisor {
 
             if (isInterrupted) {
                 log.fine("Supervisor was interrupted. Break loop.");
-                stop();
+                stopWorkers();
                 break;
             }
 
             long currTime = System.currentTimeMillis();
             if (0 < endTime && endTime <= currTime) {
                 log.info("Duration limit reached, stopping");
-                stop();
+                stopWorkers();
                 break;
             }
 
             if (0 == counter.getActiveThreads()) {
                 log.info("All workers finished, stopping");
-                stop();
+                stopWorkers();
                 break;
             }
         }
     }
 
-    protected void stop() {
+    protected void stopWorkers() {
         if (isStopped.compareAndSet(false, true)) {
             workers.forEach(Worker::stopWorker);
             workers.forEach(this::waitWorkerStopped);
