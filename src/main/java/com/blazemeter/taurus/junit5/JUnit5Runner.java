@@ -106,6 +106,7 @@ public class JUnit5Runner implements JUnitRunner {
         List<String> filters = filtersMap.get(filtersType);
         if (filters == null) {
             filters = new ArrayList<>();
+            filtersMap.put(filtersType, filters);
         }
         filters.add(newFilter);
     }
