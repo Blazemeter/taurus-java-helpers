@@ -3,17 +3,15 @@ package com.blazemeter.taurus.junit.generator;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
 
-public class WorkerTest {
+public class WorkerTest extends TestCase {
 
 
-    @Test
     public void testJUnitVersion() {
         Worker worker = new Worker(new ArrayList<>(), new Properties(), null, null, 8888, 9999);
 

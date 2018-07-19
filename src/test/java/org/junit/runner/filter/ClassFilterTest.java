@@ -1,14 +1,10 @@
 package org.junit.runner.filter;
 
-//import org.junit.Test;
-import org.junit.jupiter.api.Test;
+import junit.framework.TestCase;
 import org.junit.runner.Description;
 
-import static org.junit.Assert.*;
+public class ClassFilterTest extends TestCase {
 
-public class ClassFilterTest {
-
-    @Test
     public void testFlow() {
         Description description = Description.createSuiteDescription(ClassFilterTest.class);
         ClassFilter filter = new ClassFilter(description);

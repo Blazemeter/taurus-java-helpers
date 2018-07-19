@@ -3,16 +3,13 @@ package com.blazemeter.taurus.junit4;
 import com.blazemeter.taurus.junit.CustomRunnerTest;
 import com.blazemeter.taurus.junit.generator.Counter;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
-import org.junit.Test;
+import junit.framework.TestCase;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
-
-public class JUnit4ListenerTest {
-    @Test
+public class JUnit4ListenerTest extends TestCase {
     public void test() throws Exception {
         File tmp = File.createTempFile("tmp", ".ldjson");
         tmp.deleteOnExit();

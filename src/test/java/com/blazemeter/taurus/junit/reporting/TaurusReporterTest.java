@@ -1,17 +1,15 @@
 package com.blazemeter.taurus.junit.reporting;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.junit.Assert.*;
 
-public class TaurusReporterTest {
+public class TaurusReporterTest extends TestCase {
 
-    @Test
     public void testCSV() throws Exception {
         File file = File.createTempFile("report", ".csv");
         file.deleteOnExit();
@@ -49,7 +47,6 @@ public class TaurusReporterTest {
         assertEquals(expect.toString(), actual);
     }
 
-    @Test
     public void testLDJSON() throws Exception {
         File file = File.createTempFile("report", ".ldjson");
         file.deleteOnExit();
@@ -76,7 +73,6 @@ public class TaurusReporterTest {
         assertEquals(expect.toString(), actual);
     }
 
-    @Test
     public void testBadFilename() {
         try {
             new TaurusReporter("/");
@@ -86,7 +82,6 @@ public class TaurusReporterTest {
         }
     }
 
-    @Test
     public void testFilePermissions() throws Exception {
         final File file = File.createTempFile("test", ".csv");
         file.deleteOnExit();

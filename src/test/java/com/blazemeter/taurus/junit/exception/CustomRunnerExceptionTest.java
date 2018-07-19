@@ -1,12 +1,9 @@
 package com.blazemeter.taurus.junit.exception;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 
-import static org.junit.Assert.*;
+public class CustomRunnerExceptionTest extends TestCase {
 
-public class CustomRunnerExceptionTest {
-
-    @Test
     public void test() {
         CustomRunnerException exception = new CustomRunnerException();
         assertNotNull(exception);

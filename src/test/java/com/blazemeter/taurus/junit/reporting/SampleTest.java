@@ -1,12 +1,9 @@
 package com.blazemeter.taurus.junit.reporting;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 
-import static org.junit.Assert.*;
+public class SampleTest extends TestCase {
 
-public class SampleTest {
-
-    @Test
     public void test() {
         long t1 = System.currentTimeMillis();
         Sample sample = new Sample();

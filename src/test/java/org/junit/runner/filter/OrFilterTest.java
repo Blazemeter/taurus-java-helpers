@@ -1,17 +1,14 @@
 package org.junit.runner.filter;
 
-import org.junit.Test;
+import junit.framework.TestCase;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+public class OrFilterTest extends TestCase {
 
-public class OrFilterTest {
-
-    @Test
     public void testFlow() {
         Description description1 = Description.createSuiteDescription(ClassFilterTest.class);
         ClassFilter classFilter1 = new ClassFilter(description1);

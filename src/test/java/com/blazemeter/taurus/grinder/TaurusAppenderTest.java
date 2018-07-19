@@ -2,19 +2,16 @@ package com.blazemeter.taurus.grinder;
 
 import ch.qos.logback.classic.spi.LoggerContextVO;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import junit.framework.TestCase;
 import net.grinder.engine.process.TestRegistryAccessor;
 import net.grinder.script.Grinder;
 import net.grinder.util.logback.BufferedEchoMessageEncoder;
-import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-
-public class TaurusAppenderTest {
-    @Test
-    public void writeOut() throws Exception {
+public class TaurusAppenderTest extends TestCase {
+    public void testWriteOut() throws Exception {
         Grinder.grinder = TestRegistryAccessor.getDummyScriptContext();
 
         new net.grinder.script.Test(1, "label");

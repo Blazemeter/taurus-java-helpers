@@ -1,13 +1,11 @@
 package net.grinder.engine.process;
 
+import junit.framework.TestCase;
 import net.grinder.script.Grinder;
 import net.grinder.script.Test;
 
-import static org.junit.Assert.assertEquals;
-
-public class TestRegistryAccessorTest {
-    @org.junit.Test
-    public void getNewTests_empty() throws Exception {
+public class TestRegistryAccessorTest extends TestCase {
+    public void testNewTests_empty() {
         Grinder.grinder = TestRegistryAccessor.getDummyScriptContext();
         assertEquals(0, TestRegistryAccessor.getNewTests().size());
         new Test(1, "label");

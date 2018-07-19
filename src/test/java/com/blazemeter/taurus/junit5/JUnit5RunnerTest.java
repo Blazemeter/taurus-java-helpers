@@ -1,7 +1,7 @@
 package com.blazemeter.taurus.junit5;
 
 import com.blazemeter.taurus.junit.CustomRunner;
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,11 +10,9 @@ import java.util.Properties;
 
 import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.junit.Assert.*;
 
-public class JUnit5RunnerTest {
+public class JUnit5RunnerTest extends TestCase {
 
-    @Test
     public void testFlow() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -49,8 +47,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-
-    @Test
     public void testIncludeAndExcludePackages() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -83,7 +79,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testIncludePackages() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -115,7 +110,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
     }
 
-    @Test
     public void testExcludePackages() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -147,7 +141,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testRunPackage() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -179,8 +172,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
     }
 
-
-    @Test
     public void testRunClass() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -210,7 +201,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
     }
 
-    @Test
     public void testRunMethod() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -239,7 +229,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
     }
 
-    @Test
     public void testRunAllItems() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -273,7 +262,6 @@ public class JUnit5RunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m1"));
     }
 
-    @Test
     public void testMethodNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -302,7 +290,6 @@ public class JUnit5RunnerTest {
         }
     }
 
-    @Test
     public void testClassNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -331,7 +318,6 @@ public class JUnit5RunnerTest {
         }
     }
 
-    @Test
     public void testClassNotFound1() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -360,7 +346,6 @@ public class JUnit5RunnerTest {
         }
     }
 
-    @Test
     public void testPackageNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -389,7 +374,6 @@ public class JUnit5RunnerTest {
         }
     }
 
-    @Test
     public void testPackageFilterNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -418,7 +402,6 @@ public class JUnit5RunnerTest {
         }
     }
 
-    @Test
     public void testClassFilterNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();

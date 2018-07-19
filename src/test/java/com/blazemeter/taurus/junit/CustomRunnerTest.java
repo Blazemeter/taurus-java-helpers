@@ -2,8 +2,8 @@ package com.blazemeter.taurus.junit;
 
 
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
+import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,12 +13,8 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.testng.Assert.assertNull;
 
-public class CustomRunnerTest {
+public class CustomRunnerTest extends TestCase {
 
     public static int getLinesCount(File log) throws IOException {
         LineNumberReader reader = new LineNumberReader(new FileReader(log));
@@ -31,12 +27,10 @@ public class CustomRunnerTest {
         return FileUtils.readFileToString(log);
     }
 
-    @Test
     public void testMainJUnit4() throws Exception {
         testMain("4");
     }
 
-    @Test
     public void testMainJUnit5() throws Exception {
         testMain("5");
     }
@@ -67,12 +61,10 @@ public class CustomRunnerTest {
         assertEquals("myValue", System.getProperty("myProperty"));
     }
 
-    @Test
     public void testIterationsJUnit4() throws Exception {
         testIterations("4");
     }
 
-    @Test
     public void testIterationsJUnit5() throws Exception {
         testIterations("5");
     }
@@ -100,12 +92,10 @@ public class CustomRunnerTest {
         assertEquals(3, getLinesCount(report));
     }
 
-    @Test
     public void testHoldJUnit4() throws Exception {
         testHold("4");
     }
 
-    @Test
     public void testHoldJUnit5() throws Exception {
         testHold("5");
     }
@@ -133,12 +123,10 @@ public class CustomRunnerTest {
         assertTrue(2 < getLinesCount(report));
     }
 
-    @Test
     public void testHoldIterationsJUnit4() throws Exception {
         testHoldIterations("4");
     }
 
-    @Test
     public void testHoldIterationsJUnit5() throws Exception {
         testHoldIterations("5");
     }
@@ -167,12 +155,10 @@ public class CustomRunnerTest {
         assertEquals(1, getLinesCount(report));
     }
 
-    @Test
     public void testRunIncludeCategoriesJUnit4() throws Exception {
         testRunIncludeCategories("4");
     }
 
-    @Test
     public void testRunIncludeCategoriesJUnit5() throws Exception {
         testRunIncludeCategories("5");
     }
@@ -208,12 +194,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testRunExcludeCategoriesJUnit4() throws Exception {
         testRunExcludeCategories("4");
     }
 
-    @Test
     public void testRunExcludeCategoriesJUnit5() throws Exception {
         testRunExcludeCategories("5");
     }
@@ -249,12 +233,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
-    @Test
     public void testRunIncludeAndExcludeCategoriesJUnit4() throws Exception {
         testRunIncludeAndExcludeCategories("4");
     }
 
-    @Test
     public void testRunIncludeAndExcludeCategoriesJUnit5() throws Exception {
         testRunIncludeAndExcludeCategories("5");
     }
@@ -288,12 +270,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
     }
 
-    @Test
     public void testRunIncludeAllCategoriesJUnit4() throws Exception {
         testRunIncludeAllCategories("4");
     }
 
-    @Test
     public void testRunIncludeAllCategoriesJUnit5() throws Exception {
         testRunIncludeAllCategories("5");
     }
@@ -330,12 +310,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testRunExcludeAllCategoriesJUnit4() throws Exception {
         testRunExcludeAllCategories("4");
     }
 
-    @Test
     public void testRunExcludeAllCategoriesJUnit5() throws Exception {
         testRunExcludeAllCategories("5");
     }
@@ -370,12 +348,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
-    @Test
     public void testRunItemsJUnit4() throws Exception {
         testRunItems("4");
     }
 
-    @Test
     public void testRunItemsJUnit5() throws Exception {
         testRunItems("5");
     }
@@ -411,12 +387,10 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testRunAllJUnit4() throws Exception {
         testRunAll("4");
     }
 
-    @Test
     public void testRunAllJUnit5() throws Exception {
         testRunAll("5");
     }
@@ -455,7 +429,6 @@ public class CustomRunnerTest {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    @Test
     public void testMethodNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -483,7 +456,6 @@ public class CustomRunnerTest {
         }
     }
 
-    @Test
     public void testClassNotFound() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -511,7 +483,6 @@ public class CustomRunnerTest {
         }
     }
 
-    @Test
     public void testConcurrency() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -538,7 +509,6 @@ public class CustomRunnerTest {
         assertTrue(10000 < getLinesCount(report));
     }
 
-    @Test
     public void testRunWithoutArgs() {
         try {
             CustomRunner.main(new String[0]);
@@ -548,7 +518,6 @@ public class CustomRunnerTest {
         }
     }
 
-    @Test
     public void testNoClasses() throws Exception {
         URL res = Thread.currentThread().getContextClassLoader().getResource("empty.jar");
         assert res != null;

@@ -1,14 +1,11 @@
 package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.ThreadCounter;
-import org.junit.Test;
+import junit.framework.TestCase;
 
-import static org.junit.Assert.assertEquals;
+public class CounterTest extends TestCase {
 
-public class CounterTest {
-
-    @Test
-    public void testActiveThreads() throws Exception {
+    public void testActiveThreads() {
 
         ThreadCounter counter = new Counter();
         counter.incrementActiveThreads();

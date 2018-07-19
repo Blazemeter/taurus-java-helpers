@@ -3,16 +3,14 @@ package com.blazemeter.taurus.junit5;
 import com.blazemeter.taurus.junit.generator.Counter;
 import com.blazemeter.taurus.junit.reporting.Sample;
 import com.blazemeter.taurus.junit.reporting.TaurusReporter;
-import org.junit.Test;
+import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.*;
 import static org.junit.platform.engine.TestExecutionResult.*;
 
-public class JUnit5ListenerTest {
-    @Test
+public class JUnit5ListenerTest extends TestCase {
     public void test() throws IOException {
         File tmp = File.createTempFile("tmp", ".ldjson");
         tmp.deleteOnExit();

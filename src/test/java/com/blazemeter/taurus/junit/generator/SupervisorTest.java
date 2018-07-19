@@ -2,6 +2,7 @@ package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,11 +11,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+public class SupervisorTest extends TestCase {
 
-public class SupervisorTest {
-
-    @Test
     public void testDelayCalculation() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -81,7 +79,6 @@ public class SupervisorTest {
         assertEquals(0, supervisor.getWorkerDelay(9));
     }
 
-    @Test
     public void testDelayCalculationWithoutSteps() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
@@ -105,7 +102,6 @@ public class SupervisorTest {
         assertEquals(9, supervisor.getWorkerDelay(4));
     }
 
-    @Test
     public void testFailedToCreateReporter() throws IOException {
         File report = File.createTempFile("report", ".ldjson");
         report.setWritable(false);
