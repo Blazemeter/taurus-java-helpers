@@ -101,13 +101,6 @@ public class Supervisor {
 
     private void waitForFinish(long endTime) {
         while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                isInterrupted = true;
-                log.warning("Supervisor was interrupted");
-            }
-
             if (isInterrupted) {
                 log.fine("Supervisor was interrupted. Break loop.");
                 stopWorkers();
@@ -122,9 +115,25 @@ public class Supervisor {
             }
 
             if (0 == counter.getActiveThreads()) {
-                log.info("All workers finished, stopping");
-                stopWorkers();
-                break;
+                boolean isFinished = true;
+                for (Worker w : workers) {
+                    if (!w.isStopped()) {
+                        isFinished = false;
+                        break;
+                    }
+                }
+                if (isFinished) {
+                    log.info("All workers finished, stopping");
+                    stopWorkers();
+                    break;
+                }
+            }
+
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                isInterrupted = true;
+                log.warning("Supervisor was interrupted");
             }
         }
     }
