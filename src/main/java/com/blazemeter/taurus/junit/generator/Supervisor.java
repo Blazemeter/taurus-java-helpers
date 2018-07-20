@@ -114,19 +114,10 @@ public class Supervisor {
                 break;
             }
 
-            if (0 == counter.getActiveThreads()) {
-                boolean isFinished = true;
-                for (Worker w : workers) {
-                    if (!w.isStopped()) {
-                        isFinished = false;
-                        break;
-                    }
-                }
-                if (isFinished) {
-                    log.info("All workers finished, stopping");
-                    stopWorkers();
-                    break;
-                }
+            if (!isWorkersAlive()) {
+                log.info("All workers finished, stopping");
+                stopWorkers();
+                break;
             }
 
             try {
@@ -136,6 +127,15 @@ public class Supervisor {
                 log.warning("Supervisor was interrupted");
             }
         }
+    }
+
+    private boolean isWorkersAlive() {
+        for (Worker w : workers) {
+            if (w.isAlive()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void stopWorkers() {
