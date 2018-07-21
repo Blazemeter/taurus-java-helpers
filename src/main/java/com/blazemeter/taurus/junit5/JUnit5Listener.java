@@ -1,8 +1,9 @@
 package com.blazemeter.taurus.junit5;
 
 import com.blazemeter.taurus.junit.CustomListener;
-import com.blazemeter.taurus.junit.Sample;
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.reporting.Sample;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -16,18 +17,22 @@ import java.util.logging.Logger;
 public class JUnit5Listener extends CustomListener implements TestExecutionListener {
     private static final Logger log = Logger.getLogger(JUnit5Listener.class.getName());
 
-    public JUnit5Listener(TaurusReporter reporter) {
-        super(reporter);
+    public JUnit5Listener(Reporter reporter, ThreadCounter counter) {
+        super(reporter, counter);
     }
 
     @Override
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        log.info("Test Plan Started");
+        if (isVerbose()) {
+            log.info("Test Plan Started");
+        }
     }
 
     @Override
     public void testPlanExecutionFinished(TestPlan testPlan) {
-        log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) +", run count=" + (getTestCount() - getSkippedCount()));
+        if (isVerbose()) {
+            log.info("Test Plan Finished, successful=" + (getFailedCount() == 0) + ", run count=" + (getTestCount() - getSkippedCount()));
+        }
     }
 
     @Override
@@ -66,18 +71,24 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
         }
     }
 
-    private String getStatus(TestExecutionResult.Status status) {
+    protected String getStatus(TestExecutionResult.Status status) {
         switch (status) {
             case SUCCESSFUL:
                 return Sample.STATUS_PASSED;
             case FAILED:
-                log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                if (isVerbose()) {
+                    log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                }
                 return Sample.STATUS_FAILED;
             case ABORTED:
-                log.severe(String.format("aborted %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                if (isVerbose()) {
+                    log.severe(String.format("aborted %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                }
                 return Sample.STATUS_BROKEN;
                 default:
-                    log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                    if (isVerbose()) {
+                        log.severe(String.format("failed %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+                    }
                     return Sample.STATUS_FAILED;
         }
     }
@@ -85,7 +96,9 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
     @Override
     public void executionSkipped(TestIdentifier testIdentifier, String reason) {
         startSample(testIdentifier);
-        log.warning(String.format("ignored %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        if (isVerbose()) {
+            log.warning(String.format("ignored %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        }
         finishSample(Sample.STATUS_SKIPPED, reason, null);
     }
 

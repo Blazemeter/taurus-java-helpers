@@ -1,7 +1,9 @@
 package com.blazemeter.taurus.junit5;
 
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
+import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
@@ -31,7 +33,7 @@ import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.runner.JUnitRequest.checkMethod;
 
-public class JUnit5Runner implements JUnitRunner{
+public class JUnit5Runner implements JUnitRunner {
     private static final Logger log = Logger.getLogger(JUnit5Runner.class.getName());
 
     @Override
@@ -43,9 +45,9 @@ public class JUnit5Runner implements JUnitRunner{
     }
 
     @Override
-    public void executeRequest(Object requestItem, TaurusReporter reporter) {
+    public void executeRequest(Object requestItem, Reporter reporter, ThreadCounter counter) {
         Launcher launcher = LauncherFactory.create();
-        TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter);
+        TestExecutionListener jUnit5Listener = new JUnit5Listener(reporter, counter);
         launcher.registerTestExecutionListeners(jUnit5Listener);
         launcher.execute((LauncherDiscoveryRequest) requestItem);
     }
@@ -101,7 +103,11 @@ public class JUnit5Runner implements JUnitRunner{
     }
 
     private static void addFilter(String newFilter, FiltersType filtersType, Map<FiltersType, List<String>> filtersMap) {
-        List<String> filters = filtersMap.computeIfAbsent(filtersType, k -> new ArrayList<>());
+        List<String> filters = filtersMap.get(filtersType);
+        if (filters == null) {
+            filters = new ArrayList<>();
+            filtersMap.put(filtersType, filters);
+        }
         filters.add(newFilter);
     }
 
@@ -121,7 +127,7 @@ public class JUnit5Runner implements JUnitRunner{
         Package pack = Package.getPackage(filter);
         if (pack == null) {
             log.log(Level.SEVERE, "Filter Class or Package not found: " + filter);
-            throw new RuntimeException("Filter Class or Package not found: " + filter);
+            throw new CustomRunnerException("Filter Class or Package not found: " + filter);
         }
         if (isInclude) {
             addFilter(filter, FiltersType.INCLUDE_PACKAGES, filtersMap);
@@ -161,10 +167,10 @@ public class JUnit5Runner implements JUnitRunner{
             }
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             log.log(Level.SEVERE, "Class not found: " + item, e);
-            throw new RuntimeException("Class not found: " + item, e);
+            throw new CustomRunnerException("Class not found: " + item, e);
         } catch (NoSuchMethodException e) {
             log.log(Level.SEVERE, "Method not found: " + item, e);
-            throw new RuntimeException("Method not found: " + item, e);
+            throw new CustomRunnerException("Method not found: " + item, e);
         }
     }
 
@@ -179,7 +185,7 @@ public class JUnit5Runner implements JUnitRunner{
         Package pack = Package.getPackage(item);
         if (pack == null) {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
-            throw new RuntimeException("Class or Package not found: " + item);
+            throw new CustomRunnerException("Class or Package not found: " + item);
         }
 
         return selectPackage(item);

@@ -1,8 +1,9 @@
 package com.blazemeter.taurus.junit4;
 
 import com.blazemeter.taurus.junit.CustomListener;
-import com.blazemeter.taurus.junit.Sample;
-import com.blazemeter.taurus.junit.TaurusReporter;
+import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.reporting.Sample;
 import com.blazemeter.taurus.junit.Utils;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -15,18 +16,24 @@ public class JUnit4Listener extends RunListener {
 
     private static final Logger log = Logger.getLogger(JUnit4Listener.class.getName());
     private final CustomListener listener;
+    private final boolean isVerbose;
 
-    public JUnit4Listener(TaurusReporter reporter) {
+    public JUnit4Listener(Reporter reporter, ThreadCounter counter) {
         super();
-        listener = new CustomListener(reporter);
+        listener = new CustomListener(reporter, counter);
+        isVerbose = reporter.isVerbose();
     }
 
     public void testRunStarted(Description description) {
-        log.info("Run Started: " + description.getDisplayName());
+        if (isVerbose) {
+            log.info("Run Started: " + description.getDisplayName());
+        }
     }
 
     public void testRunFinished(Result result) throws Exception {
-        log.info("Run Finished, successful=" + result.wasSuccessful() + ", run count=" + result.getRunCount());
+        if (isVerbose) {
+            log.info("Run Finished, successful=" + result.wasSuccessful() + ", run count=" + result.getRunCount());
+        }
     }
 
     public void testStarted(Description description) throws Exception {
@@ -38,7 +45,9 @@ public class JUnit4Listener extends RunListener {
     }
 
     public void testFailure(Failure failure) throws Exception {
-        log.severe(String.format("failed %s", failure.toString()));
+        if (isVerbose) {
+            log.severe(String.format("failed %s", failure.toString()));
+        }
         listener.getPendingSample().setStatus(Sample.STATUS_BROKEN);
         String exceptionName = failure.getException().getClass().getName();
         listener.getPendingSample().setErrorMessage(exceptionName + ": " + failure.getMessage());
@@ -46,7 +55,9 @@ public class JUnit4Listener extends RunListener {
     }
 
     public void testAssumptionFailure(Failure failure) {
-        log.severe(String.format("assert failed %s", failure.toString()));
+        if (isVerbose) {
+            log.severe(String.format("assert failed %s", failure.toString()));
+        }
         listener.getPendingSample().setStatus(Sample.STATUS_FAILED);
         String exceptionName = failure.getException().getClass().getName();
         listener.getPendingSample().setErrorMessage(exceptionName + ": " + failure.getMessage());
@@ -54,7 +65,9 @@ public class JUnit4Listener extends RunListener {
     }
 
     public void testIgnored(Description description) throws Exception {
-        log.warning(String.format("ignored %s", description.getDisplayName()));
+        if (isVerbose) {
+            log.warning(String.format("ignored %s", description.getDisplayName()));
+        }
         testStarted(description);
         listener.finishSample(Sample.STATUS_SKIPPED, description.getDisplayName(), null);
     }

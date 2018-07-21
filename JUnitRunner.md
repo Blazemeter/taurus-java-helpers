@@ -18,9 +18,15 @@ Custom Runner expects the following properties:
 
 - `report_file` - path to report file
 
-- `iterations` - execution count of Test Suite (long value)
+- `concurrency` - number of target concurrent virtual users
 
-- `hold_for` - duration limit in seconds (float value)
+- `ramp_up` - ramp-up time to reach target concurrency in seconds (float value)
+
+- `hold_for` - time to hold target concurrency in seconds (float value)
+
+- `iterations` - limit Test Suite iterations number (long value)
+
+- `steps` - allows users to apply stepping ramp-up for concurrency, requires `ramp-up` (int value)
 
 - `junit_version` - select JUnit version (supports versions 4 and 5)
 
@@ -51,14 +57,29 @@ target_lib2=C:/libs/myLib.jar
 report_file=/home/user/reports/junit.xml
 
 #
-# Set execution count
+# Set target concurrency
 #
-iterations=1
+concurrency=90
+
+#
+# Set ramp-up 30 sec
+#
+ramp_up=30
+
+#
+# Set count of steps for reach target concurrency
+#
+steps=3
 
 #
 # Set test duration
 #
 hold_for=60
+
+#
+# Set execution count 
+#
+iterations=0
 
 #
 # Select JUnit 5 version for run tests

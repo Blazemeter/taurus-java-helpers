@@ -1,5 +1,6 @@
 package org.junit.runner;
 
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.internal.Classes;
 import org.junit.runner.filter.ClassFilter;
 import org.junit.runner.filter.OrFilter;
@@ -44,10 +45,10 @@ public class JUnitRequest {
                 }
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 log.log(Level.SEVERE, "Class not found: " + testCase, e);
-                throw new RuntimeException("Class not found: " + testCase, e);
+                throw new CustomRunnerException("Class not found: " + testCase, e);
             } catch (NoSuchMethodException e) {
                 log.log(Level.SEVERE, "Method not found: " + testCase, e);
-                throw new RuntimeException("Method not found: " + testCase, e);
+                throw new CustomRunnerException("Method not found: " + testCase, e);
             }
         }
 

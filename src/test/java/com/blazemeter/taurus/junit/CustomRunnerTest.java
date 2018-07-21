@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.junit;
 
 
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 
@@ -12,6 +13,7 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Properties;
 
+
 public class CustomRunnerTest extends TestCase {
 
     public static int getLinesCount(File log) throws IOException {
@@ -21,11 +23,19 @@ public class CustomRunnerTest extends TestCase {
         return reader.getLineNumber();
     }
 
-    private static String readFileToString(File log) throws IOException {
+    public static String readFileToString(File log) throws IOException {
         return FileUtils.readFileToString(log);
     }
 
-    public void testMain() throws Exception {
+    public void testMainJUnit4() throws Exception {
+        testMain("4");
+    }
+
+    public void testMainJUnit5() throws Exception {
+        testMain("5");
+    }
+
+    private void testMain(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -36,6 +46,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty("myProperty", "myValue");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -50,7 +61,15 @@ public class CustomRunnerTest extends TestCase {
         assertEquals("myValue", System.getProperty("myProperty"));
     }
 
-    public void testIterations() throws Exception {
+    public void testIterationsJUnit4() throws Exception {
+        testIterations("4");
+    }
+
+    public void testIterationsJUnit5() throws Exception {
+        testIterations("5");
+    }
+
+    private void testIterations(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -61,6 +80,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(3));
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -72,7 +92,15 @@ public class CustomRunnerTest extends TestCase {
         assertEquals(3, getLinesCount(report));
     }
 
-    public void testHold() throws Exception {
+    public void testHoldJUnit4() throws Exception {
+        testHold("4");
+    }
+
+    public void testHoldJUnit5() throws Exception {
+        testHold("5");
+    }
+
+    private void testHold(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -83,6 +111,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -94,7 +123,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(2 < getLinesCount(report));
     }
 
-    public void testHoldIterations() throws Exception {
+    public void testHoldIterationsJUnit4() throws Exception {
+        testHoldIterations("4");
+    }
+
+    public void testHoldIterationsJUnit5() throws Exception {
+        testHoldIterations("5");
+    }
+
+    private void testHoldIterations(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -106,6 +143,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -117,7 +155,15 @@ public class CustomRunnerTest extends TestCase {
         assertEquals(1, getLinesCount(report));
     }
 
-    public void testRunIncludeCategories() throws Exception {
+    public void testRunIncludeCategoriesJUnit4() throws Exception {
+        testRunIncludeCategories("4");
+    }
+
+    public void testRunIncludeCategoriesJUnit5() throws Exception {
+        testRunIncludeCategories("5");
+    }
+
+    private void testRunIncludeCategories(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -130,6 +176,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -147,7 +194,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    public void testRunExcludeCategories() throws Exception {
+    public void testRunExcludeCategoriesJUnit4() throws Exception {
+        testRunExcludeCategories("4");
+    }
+
+    public void testRunExcludeCategoriesJUnit5() throws Exception {
+        testRunExcludeCategories("5");
+    }
+
+    private void testRunExcludeCategories(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -160,6 +215,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryB");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -177,7 +233,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
-    public void testRunIncludeAndExcludeCategories() throws Exception {
+    public void testRunIncludeAndExcludeCategoriesJUnit4() throws Exception {
+        testRunIncludeAndExcludeCategories("4");
+    }
+
+    public void testRunIncludeAndExcludeCategoriesJUnit5() throws Exception {
+        testRunIncludeAndExcludeCategories("5");
+    }
+
+    private void testRunIncludeAndExcludeCategories(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -191,6 +255,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryB");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -205,7 +270,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
     }
 
-    public void testRunIncludeAllCategories() throws Exception {
+    public void testRunIncludeAllCategoriesJUnit4() throws Exception {
+        testRunIncludeAllCategories("4");
+    }
+
+    public void testRunIncludeAllCategoriesJUnit5() throws Exception {
+        testRunIncludeAllCategories("5");
+    }
+
+    private void testRunIncludeAllCategories(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -218,6 +291,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -236,7 +310,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    public void testRunExcludeAllCategories() throws Exception {
+    public void testRunExcludeAllCategoriesJUnit4() throws Exception {
+        testRunExcludeAllCategories("4");
+    }
+
+    public void testRunExcludeAllCategoriesJUnit5() throws Exception {
+        testRunExcludeAllCategories("5");
+    }
+
+    private void testRunExcludeAllCategories(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -249,6 +331,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "categories.CategoryA,categories.CategoryB");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -265,7 +348,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
     }
 
-    public void testRunItems() throws Exception {
+    public void testRunItemsJUnit4() throws Exception {
+        testRunItems("4");
+    }
+
+    public void testRunItemsJUnit5() throws Exception {
+        testRunItems("5");
+    }
+
+    private void testRunItems(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -278,6 +369,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow1,testcases.subpackage.TestClass2#test2,testcases.TestClass4");
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -295,7 +387,15 @@ public class CustomRunnerTest extends TestCase {
         assertTrue(fileToString, fileToString.contains("testcases.TestClass4.m2"));
     }
 
-    public void testRunAll() throws Exception {
+    public void testRunAllJUnit4() throws Exception {
+        testRunAll("4");
+    }
+
+    public void testRunAllJUnit5() throws Exception {
+        testRunAll("5");
+    }
+
+    private void testRunAll(String junitVersion) throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
@@ -307,6 +407,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+        props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -379,6 +480,62 @@ public class CustomRunnerTest extends TestCase {
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Class not found: testcases.TestClass77", e.getMessage());
+        }
+    }
+
+    public void testConcurrency() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(0));
+        props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(10));
+        props.setProperty(CustomRunner.RAMP_UP, String.valueOf(6));
+        props.setProperty(CustomRunner.STEPS, String.valueOf(2));
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+        CustomRunner.main(args);
+
+        assertTrue(10000 < getLinesCount(report));
+    }
+
+    public void testRunWithoutArgs() {
+        try {
+            CustomRunner.main(new String[0]);
+            fail("Cannot work without path to properties file");
+        } catch (Exception e) {
+            assertEquals("Usage requires 1 parameter, containing path to properties file", e.getMessage());
+        }
+    }
+
+    public void testNoClasses() throws Exception {
+        URL res = Thread.currentThread().getContextClassLoader().getResource("empty.jar");
+        assert res != null;
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
+
+        File propsFile = File.createTempFile("runner", ".properties");
+        propsFile.deleteOnExit();
+        props.store(new FileWriter(propsFile), "test");
+
+        String[] args = {propsFile.getAbsolutePath()};
+
+        try {
+            CustomRunner.main(args);
+            fail("jar contains 0 Test classes, can not continue");
+        } catch (CustomRunnerException e) {
+            assertEquals("Nothing to test", e.getMessage());
         }
     }
 }

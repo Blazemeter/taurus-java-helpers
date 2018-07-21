@@ -7,5 +7,5 @@ public interface JUnitRunner {
 
     Object createRequest(List<Class> classes, Properties props);
 
-    void executeRequest(Object requestItem, TaurusReporter reporter);
+    void executeRequest(Object requestItem, Reporter reporter, ThreadCounter counter);
 }

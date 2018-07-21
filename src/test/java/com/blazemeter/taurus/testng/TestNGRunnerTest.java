@@ -3,7 +3,11 @@ package com.blazemeter.taurus.testng;
 
 import junit.framework.TestCase;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Properties;
 

@@ -1,27 +1,35 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit.reporting.Sample;
+
 import java.util.logging.Logger;
 
 public class CustomListener {
     private static final Logger log = Logger.getLogger(CustomListener.class.getName());
 
     protected Sample pendingSample;
-    private TaurusReporter reporter;
-    private long started = 0;
+    private Reporter reporter;
+    private ThreadCounter counter;
 
     private long testCount = 0;
     private long failedCount = 0;
     private long skippedCount = 0;
+
+    private final boolean isVerbose;
+
     private final static String report_tmpl = "%s.%s, Total:%d Passed:%d Failed:%d Skipped:%d\n";
 
-    public CustomListener(TaurusReporter reporter) {
+    public CustomListener(Reporter reporter, ThreadCounter counter) {
         this.reporter = reporter;
+        this.isVerbose = reporter.isVerbose();
+        this.counter = counter;
     }
 
     public void startSample(String methodName, String className) {
+        if (isVerbose) {
+            log.info(String.format("started %s(%s)", methodName, className));
+        }
         testCount++;
-        log.info(String.format("started %s(%s)", methodName, className));
-        started = System.currentTimeMillis();
         pendingSample = new Sample();
         pendingSample.setLabel(methodName);
         pendingSample.setSuite(className);
@@ -43,9 +51,12 @@ public class CustomListener {
     }
 
     private void finishSample(long finishTime) {
-        log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
-        double duration = (finishTime - started) / 1000.0;
+        if (isVerbose) {
+            log.info(String.format("finished %s(%s)", pendingSample.getLabel(), pendingSample.getSuite()));
+        }
+        long duration = finishTime - pendingSample.getStartTime();
         pendingSample.setDuration(duration);
+        pendingSample.setActiveThreads(counter.getActiveThreads());
 
         reporter.writeSample(pendingSample);
         if (pendingSample.isSkipped()) {
@@ -54,13 +65,15 @@ public class CustomListener {
             failedCount += 1;
         }
 
-        System.out.printf(report_tmpl,
-                pendingSample.getSuite(),
-                pendingSample.getLabel(),
-                testCount,
-                getPassedCount(),
-                failedCount,
-                skippedCount);
+        if (isVerbose) {
+            System.out.printf(report_tmpl,
+                    pendingSample.getSuite(),
+                    pendingSample.getLabel(),
+                    testCount,
+                    getPassedCount(),
+                    failedCount,
+                    skippedCount);
+        }
         pendingSample = null;
     }
 
@@ -82,5 +95,9 @@ public class CustomListener {
 
     public long getPassedCount() {
         return testCount - failedCount - skippedCount;
+    }
+
+    public boolean isVerbose() {
+        return isVerbose;
     }
 }
