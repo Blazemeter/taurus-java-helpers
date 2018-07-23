@@ -1,4 +1,4 @@
-# 1.3 ()
+# 1.3 (23th of July, 2018)
 * `Added`: parallelize tests
 
 # 1.2 (12th of July, 2018)
