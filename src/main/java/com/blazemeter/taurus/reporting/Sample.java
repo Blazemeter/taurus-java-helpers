@@ -6,7 +6,7 @@ public class Sample {
     public static final String STATUS_BROKEN = "BROKEN";
     public static final String STATUS_SKIPPED = "SKIPPED";
 
-    private final long startTime = System.currentTimeMillis();
+    private long startTime = System.currentTimeMillis();
     private long duration = 0;
     private String status = STATUS_PASSED;
     private String label = "";
@@ -30,6 +30,10 @@ public class Sample {
     @Override
     public String toString() {
         return String.format("%d: %s - %s", startTime, label, status);
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
     public long getStartTimeInSec() {

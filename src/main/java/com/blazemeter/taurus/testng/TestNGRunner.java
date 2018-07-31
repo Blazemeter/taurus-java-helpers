@@ -1,5 +1,6 @@
 package com.blazemeter.taurus.testng;
 
+import com.blazemeter.taurus.reporting.TaurusReporter;
 import org.testng.TestNG;
 import org.testng.collections.Lists;
 
