@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit.generator;
 
-import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.api.ThreadCounter;
 import junit.framework.TestCase;
 
 public class CounterTest extends TestCase {

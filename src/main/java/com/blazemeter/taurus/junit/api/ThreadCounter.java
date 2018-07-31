@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.junit.api;
 
 public interface ThreadCounter {
     void incrementActiveThreads();

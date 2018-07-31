@@ -1,5 +1,8 @@
 package com.blazemeter.taurus.junit;
 
+import com.blazemeter.taurus.junit.api.JUnitRunner;
+import com.blazemeter.taurus.junit.api.Reporter;
+import com.blazemeter.taurus.junit.api.ThreadCounter;
 import com.blazemeter.taurus.reporting.Sample;
 
 import java.util.Properties;

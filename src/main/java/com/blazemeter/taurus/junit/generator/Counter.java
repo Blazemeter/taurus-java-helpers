@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit.generator;
 
-import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.api.ThreadCounter;
 
 public class Counter implements ThreadCounter {
 

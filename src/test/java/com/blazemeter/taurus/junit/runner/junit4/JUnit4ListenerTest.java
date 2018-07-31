@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.junit4;
+package com.blazemeter.taurus.junit.runner.junit4;
 
 import com.blazemeter.taurus.junit.CustomRunnerTest;
 import com.blazemeter.taurus.junit.generator.Counter;

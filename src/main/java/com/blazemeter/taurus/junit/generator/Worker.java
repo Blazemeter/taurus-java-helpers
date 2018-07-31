@@ -1,15 +1,13 @@
 package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
-import com.blazemeter.taurus.junit.JUnitRunner;
-import com.blazemeter.taurus.junit.Reporter;
-import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.api.JUnitRunner;
+import com.blazemeter.taurus.junit.api.Reporter;
+import com.blazemeter.taurus.junit.api.ThreadCounter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import com.blazemeter.taurus.junit4.JUnit4Runner;
-import com.blazemeter.taurus.junit5.JUnit5Runner;
+import com.blazemeter.taurus.junit.runner.junit4.JUnit4Runner;
+import com.blazemeter.taurus.junit.runner.junit5.JUnit5Runner;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
