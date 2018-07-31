@@ -348,4 +348,9 @@ public class JUnit5RunnerTest extends TestCase {
             assertEquals("Filter Class or Package not found: categories.CategoryE", e.getMessage());
         }
     }
+
+    public void testGetClassLoader() {
+        JUnit5Runner runner = new JUnit5Runner();
+        assertEquals(ClassLoader.getSystemClassLoader(), runner.getClassLoader());
+    }
 }
