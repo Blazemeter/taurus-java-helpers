@@ -26,7 +26,6 @@ public class Supervisor {
 
     private final List<Worker> workers = Collections.synchronizedList(new ArrayList<>());
 
-    private final List<Class> classes;
     private final Properties properties;
     private final Reporter reporter;
     private final ThreadCounter counter;
@@ -40,9 +39,8 @@ public class Supervisor {
     private volatile boolean isInterrupted = false;
     private final AtomicBoolean isStopped = new AtomicBoolean(false);
 
-    public Supervisor(List<Class> classes, Properties properties) {
+    public Supervisor(Properties properties) {
         this.properties = properties;
-        this.classes = classes;
         try {
             this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
         } catch (IOException e) {
@@ -82,7 +80,7 @@ public class Supervisor {
 
     private void createWorkers() {
         for (int i = 0; i < concurrency; i++) {
-            Worker worker = new Worker(classes, properties, reporter, counter, getWorkerDelay(i), iterations);
+            Worker worker = new Worker(properties, reporter, counter, getWorkerDelay(i), iterations);
             worker.setName("Worker #" + i);
             worker.setDaemon(false);
             workers.add(worker);

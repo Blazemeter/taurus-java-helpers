@@ -20,7 +20,6 @@ public class Worker extends Thread {
     private static final Logger log = Logger.getLogger(CustomRunner.class.getName());
 
     private final Properties props = new Properties();
-    private final List<Class> classes = new ArrayList<>();
     private final Reporter reporter;
     private final ThreadCounter counter;
 
@@ -32,11 +31,10 @@ public class Worker extends Thread {
 
     private boolean isStopped = false;
 
-    public Worker(List<Class> classes, Properties properties,
+    public Worker(Properties properties,
                   Reporter reporter, ThreadCounter counter,
                   long startDelay, long iterations) {
         this.props.putAll(properties);
-        this.classes.addAll(classes);
         this.reporter = reporter;
         this.counter = counter;
 
@@ -48,7 +46,7 @@ public class Worker extends Thread {
 
     protected void initJUnit() {
         runner = getJUnitRunner(props.getProperty(JUNIT_VERSION));
-        request = runner.createRequest(this.classes, this.props);
+        request = runner.createRequest(this.props);
     }
 
     @Override
