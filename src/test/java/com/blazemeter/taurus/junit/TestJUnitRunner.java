@@ -1,6 +1,6 @@
 package com.blazemeter.taurus.junit;
 
-import com.blazemeter.taurus.junit.reporting.Sample;
+import com.blazemeter.taurus.reporting.Sample;
 
 import java.util.Properties;
 

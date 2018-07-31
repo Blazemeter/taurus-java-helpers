@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.junit.reporting;
+package com.blazemeter.taurus.reporting;
 
 import junit.framework.TestCase;
 

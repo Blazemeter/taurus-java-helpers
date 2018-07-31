@@ -3,7 +3,7 @@ package com.blazemeter.taurus.junit4;
 import com.blazemeter.taurus.junit.CustomListener;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.ThreadCounter;
-import com.blazemeter.taurus.junit.reporting.Sample;
+import com.blazemeter.taurus.reporting.Sample;
 import com.blazemeter.taurus.utils.Utils;
 import org.junit.runner.Description;
 import org.junit.runner.Result;

@@ -3,7 +3,7 @@ package com.blazemeter.taurus.junit.generator;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.reporting.TaurusReporter;
 
 import java.io.IOException;
 import java.util.ArrayList;
