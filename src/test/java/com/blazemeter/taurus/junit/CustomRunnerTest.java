@@ -596,7 +596,7 @@ public class CustomRunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, junitVersion);
 
         try {
-            process("4", res.getPath(), props, report);
+            process(junitVersion, res.getPath(), props, report);
             fail("jar contains 0 Test classes, can not continue");
         } catch (CustomRunnerException e) {
             assertEquals("Nothing to test", e.getMessage());
