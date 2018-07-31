@@ -20,7 +20,6 @@ public class SupervisorTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(0));
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(10));
@@ -86,7 +85,6 @@ public class SupervisorTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
         props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(0));
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(5));

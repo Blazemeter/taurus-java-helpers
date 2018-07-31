@@ -39,7 +39,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
@@ -67,8 +66,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases");
@@ -94,8 +91,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases.subpackage");
@@ -120,8 +115,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage");
@@ -146,8 +139,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage");
@@ -172,8 +163,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2");
@@ -196,8 +185,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2#test2");
@@ -219,8 +206,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1,testcases.TestClass4#m1,testcases.subpackage");
@@ -247,8 +232,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1#flow3,testcases.TestClass2#test2");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
@@ -270,8 +253,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass77,testcases.TestClass2#test2");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
@@ -293,8 +274,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass12#test2");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
@@ -316,8 +295,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackagE");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
@@ -339,8 +316,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases.subpackagE");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
@@ -362,8 +337,6 @@ public class JUnit5RunnerTest extends TestCase {
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
-        props.setProperty(CustomRunner.TARGET_PREFIX + "jar", res.getPath());
-        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "categories.CategoryE");
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");

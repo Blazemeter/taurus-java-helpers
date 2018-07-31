@@ -1,22 +1,11 @@
 package com.blazemeter.taurus.junit;
 
-import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit.generator.Supervisor;
-import junit.framework.TestCase;
 
 import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +13,6 @@ import java.util.logging.Logger;
 public class CustomRunner {
     private static final Logger log = Logger.getLogger(CustomRunner.class.getName());
     public static final String REPORT_FILE = "report_file";
-    public static final String TARGET_PREFIX = "target_";
     public static final String ITERATIONS = "iterations";
     public static final String HOLD = "hold_for";
     public static final String CONCURRENCY = "concurrency";
@@ -47,13 +35,6 @@ public class CustomRunner {
 
         Properties props = new Properties();
         props.load(new FileReader(args[0]));
-
-//        ArrayList<Class> classes = getClasses(props);
-//
-//        if (classes.isEmpty()) {
-//            throw new CustomRunnerException("Nothing to test");
-//        }
-//        log.info("Running with classes: " + classes.toString());
 
         passToSystemProperties(props);
 
@@ -82,83 +63,6 @@ public class CustomRunner {
                 || CONCURRENCY.equals(propName)
                 || RAMP_UP.equals(propName)
                 || STEPS.equals(propName);
-//                || propName.startsWith(TARGET_PREFIX);
     }
-
-//    protected static ArrayList<Class> getClasses(Properties props) {
-//        ArrayList<Class> result = new ArrayList<>(0);
-//
-//        Enumeration<?> it = props.propertyNames();
-//        while (it.hasMoreElements()) {
-//            String propName = (String) it.nextElement();
-//            if (propName.startsWith(TARGET_PREFIX)) {
-//                result.addAll(getClasses(props.getProperty(propName)));
-//            }
-//        }
-//
-//        return result;
-//    }
-
-//    protected static List<Class<?>> getClasses(String jar_path) {
-//        List<Class<?>> test_classes = new ArrayList<>(); //List of loaded classes
-//        try {
-//            processJAR(test_classes, jar_path);
-//        } catch (IOException | ReflectiveOperationException e) {
-//            log.warning("Failed to add " + jar_path + "\n" + Utils.getStackTrace(e));
-//        }
-//        return test_classes;
-//    }
-
-//    protected static void processJAR(List<Class<?>> test_classes, String jar_path) throws IOException, ReflectiveOperationException {
-//        log.info("Processing JAR: " + jar_path);
-//        JarFile jarFile = new JarFile(jar_path);
-//        Enumeration<JarEntry> jar_entries_enum = jarFile.entries();
-//
-//        URL url = new URL("file:" + jar_path);
-//        addURL(url);
-//        URLClassLoader cl = URLClassLoader.newInstance(new URL[] {url});
-//
-//        while (jar_entries_enum.hasMoreElements()) {
-//            JarEntry jar_entry = jar_entries_enum.nextElement();
-//            if (jar_entry.isDirectory() || !jar_entry.getName().endsWith(".class")) {
-//                continue;
-//            }
-//
-//            String className = jar_entry.getName().substring(0, jar_entry.getName().length() - ".class".length());
-//            className = className.replace('/', '.');
-//
-//            Class<?> c = cl.loadClass(className);
-//            log.info("TestCase.class.isAssignableFrom(" + c.getCanonicalName() + ") = " + TestCase.class.isAssignableFrom(c));
-//            log.info("hasAnnotations(" + c.getCanonicalName() + ") = " + hasAnnotations(c));
-//
-//            if (Modifier.isAbstract(c.getModifiers())) {
-//                log.info("Skip because of abstract");
-//                continue;
-//            }
-//
-//            if (TestCase.class.isAssignableFrom(c) || hasAnnotations(c)) {
-//                test_classes.add(c);
-//                log.info("class added to tests: " + c.getCanonicalName());
-//            }
-//        }
-//        jarFile.close();
-//    }
-//
-//    private static void addURL(URL url) throws ReflectiveOperationException {
-//        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-//        Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-//        method.setAccessible(true);
-//        method.invoke(systemClassLoader, url);
-//    }
-//
-//    protected static boolean hasAnnotations(Class<?> c) {
-//        for (Method method : c.getMethods()) {
-//            if (method.isAnnotationPresent(org.junit.Test.class)) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
 
 }

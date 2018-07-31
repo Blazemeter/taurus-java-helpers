@@ -2,7 +2,6 @@ package org.junit.runner;
 
 import com.blazemeter.taurus.classpath.ClasspathScanner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import org.junit.internal.Classes;
 import org.junit.runner.filter.ClassFilter;
 import org.junit.runner.filter.OrFilter;
 import org.junit.runner.manipulation.Filter;

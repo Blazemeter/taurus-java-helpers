@@ -6,7 +6,6 @@ import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
