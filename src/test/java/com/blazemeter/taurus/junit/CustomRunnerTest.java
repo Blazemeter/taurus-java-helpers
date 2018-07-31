@@ -2,11 +2,12 @@ package com.blazemeter.taurus.junit;
 
 
 import com.blazemeter.taurus.classpath.ClasspathScanner;
+import com.blazemeter.taurus.junit.api.JUnitRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit.generator.Counter;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
-import com.blazemeter.taurus.junit4.JUnit4Runner;
-import com.blazemeter.taurus.junit5.JUnit5Runner;
+import com.blazemeter.taurus.reporting.TaurusReporter;
+import com.blazemeter.taurus.junit.runner.junit4.JUnit4Runner;
+import com.blazemeter.taurus.junit.runner.junit5.JUnit5Runner;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;
 

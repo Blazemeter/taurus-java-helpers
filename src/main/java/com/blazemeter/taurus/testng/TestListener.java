@@ -2,6 +2,9 @@ package com.blazemeter.taurus.testng;
 
 import java.util.logging.Logger;
 
+import com.blazemeter.taurus.reporting.Sample;
+import com.blazemeter.taurus.reporting.TaurusReporter;
+import com.blazemeter.taurus.utils.Utils;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.internal.IResultListener;
@@ -36,9 +39,9 @@ public class TestListener implements IResultListener {
         sample.setLabel(methodName);
         sample.setSuite(testClass.getSimpleName());
         sample.setFullName(testClass.getName() + "." + methodName);
-        sample.setStartTime(tr.getStartMillis() / 1000);
-        double durationMs = tr.getEndMillis() - tr.getStartMillis();
-        sample.setDuration(durationMs / 1000.0);
+        sample.setStartTime(tr.getStartMillis());
+        long durationMs = tr.getEndMillis() - tr.getStartMillis();
+        sample.setDuration(durationMs);
         switch (tr.getStatus()) {
             case ITestResult.FAILURE:
                 sample.setStatus(Sample.STATUS_FAILED);

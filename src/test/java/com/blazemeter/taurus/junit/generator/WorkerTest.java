@@ -1,8 +1,8 @@
 package com.blazemeter.taurus.junit.generator;
 
-import com.blazemeter.taurus.junit.JUnitRunner;
-import com.blazemeter.taurus.junit4.JUnit4Runner;
-import com.blazemeter.taurus.junit5.JUnit5Runner;
+import com.blazemeter.taurus.junit.api.JUnitRunner;
+import com.blazemeter.taurus.junit.runner.junit4.JUnit4Runner;
+import com.blazemeter.taurus.junit.runner.junit5.JUnit5Runner;
 import junit.framework.TestCase;
 
 import java.util.Properties;

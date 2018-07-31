@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.testng;
+package com.blazemeter.taurus.reporting;
 
 public class Sample {
     public static final String STATUS_PASSED = "PASSED";
@@ -6,8 +6,8 @@ public class Sample {
     public static final String STATUS_BROKEN = "BROKEN";
     public static final String STATUS_SKIPPED = "SKIPPED";
 
-    private long startTime = 0;
-    private double duration = 0;
+    private long startTime = System.currentTimeMillis();
+    private long duration = 0;
     private String status = STATUS_PASSED;
     private String label = "";
     private String suite = "";
@@ -17,8 +17,14 @@ public class Sample {
     private String errorTrace = "";
     private String description = "";
 
+    private int activeThreads;
+
     public boolean isSuccessful() {
         return this.status.equals(STATUS_PASSED);
+    }
+
+    public boolean isSkipped() {
+        return this.status.equals(STATUS_SKIPPED);
     }
 
     @Override
@@ -26,19 +32,27 @@ public class Sample {
         return String.format("%d: %s - %s", startTime, label, status);
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public double getDuration() {
+    public long getStartTimeInSec() {
+        return startTime / 1000;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(double duration) {
+    public double getDurationInSec() {
+        return duration / 1000.0;
+    }
+
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
@@ -105,6 +119,14 @@ public class Sample {
 
     public void setSuite(String suite) {
         this.suite = suite == null ? "" : suite;
+    }
+
+    public int getActiveThreads() {
+        return activeThreads;
+    }
+
+    public void setActiveThreads(int activeThreads) {
+        this.activeThreads = activeThreads;
     }
 }
 

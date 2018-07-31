@@ -1,4 +1,4 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.junit.api;
 
 import java.util.Properties;
 

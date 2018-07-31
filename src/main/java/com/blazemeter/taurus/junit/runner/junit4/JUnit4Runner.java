@@ -1,10 +1,10 @@
-package com.blazemeter.taurus.junit4;
+package com.blazemeter.taurus.junit.runner.junit4;
 
 import com.blazemeter.taurus.classpath.ClasspathScanner;
 import com.blazemeter.taurus.junit.ClassFilter;
-import com.blazemeter.taurus.junit.Reporter;
-import com.blazemeter.taurus.junit.JUnitRunner;
-import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.api.Reporter;
+import com.blazemeter.taurus.junit.api.JUnitRunner;
+import com.blazemeter.taurus.junit.api.ThreadCounter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;

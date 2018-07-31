@@ -1,7 +1,7 @@
 package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
-import com.blazemeter.taurus.junit.JUnitRunner;
+import com.blazemeter.taurus.junit.api.JUnitRunner;
 import com.blazemeter.taurus.junit.TestJUnitRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import junit.framework.TestCase;

@@ -1,8 +1,8 @@
-package com.blazemeter.taurus.junit5;
+package com.blazemeter.taurus.junit.runner.junit5;
 
 import com.blazemeter.taurus.junit.generator.Counter;
-import com.blazemeter.taurus.junit.reporting.Sample;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.reporting.Sample;
+import com.blazemeter.taurus.reporting.TaurusReporter;
 import junit.framework.TestCase;
 
 import java.io.File;

@@ -1,5 +1,6 @@
 package com.blazemeter.taurus.testng;
 
+import com.blazemeter.taurus.reporting.TaurusReporter;
 import org.testng.TestNG;
 import org.testng.collections.Lists;
 
@@ -107,7 +108,7 @@ public class TestNGRunner {
         try {
             processJAR(testClasses, jarPath);
         } catch (IOException | ClassNotFoundException | NoClassDefFoundError | VerifyError e) {
-            log.warning("Failed to add " + jarPath + "\n" + Utils.getStackTrace(e));
+            log.log(Level.WARNING, "Failed to add " + jarPath + "\n", e);
         }
         return testClasses;
     }

@@ -1,8 +1,8 @@
-package com.blazemeter.taurus.junit4;
+package com.blazemeter.taurus.junit.runner.junit4;
 
 import com.blazemeter.taurus.junit.CustomRunnerTest;
 import com.blazemeter.taurus.junit.generator.Counter;
-import com.blazemeter.taurus.junit.reporting.TaurusReporter;
+import com.blazemeter.taurus.reporting.TaurusReporter;
 import junit.framework.TestCase;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;

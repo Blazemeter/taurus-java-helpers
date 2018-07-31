@@ -1,6 +1,6 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.junit.api;
 
-import com.blazemeter.taurus.junit.reporting.Sample;
+import com.blazemeter.taurus.reporting.Sample;
 
 public interface Reporter {
     void writeSample(Sample sample);

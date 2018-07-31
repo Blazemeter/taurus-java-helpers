@@ -1,6 +1,6 @@
-package com.blazemeter.taurus.junit.reporting;
+package com.blazemeter.taurus.reporting;
 
-import com.blazemeter.taurus.junit.Reporter;
+import com.blazemeter.taurus.junit.api.Reporter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.json.JSONObject;
 
