@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Properties;
 
 public class SupervisorTest extends TestCase {
@@ -28,7 +27,7 @@ public class SupervisorTest extends TestCase {
         props.setProperty(CustomRunner.RAMP_UP, String.valueOf(14));
         props.setProperty(CustomRunner.STEPS, String.valueOf(3));
 
-        Supervisor supervisor = new Supervisor(new ArrayList<>(), props);
+        Supervisor supervisor = new Supervisor(props);
         // step 1
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(0, supervisor.getWorkerDelay(3));
@@ -43,7 +42,7 @@ public class SupervisorTest extends TestCase {
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(400));
         props.setProperty(CustomRunner.RAMP_UP, String.valueOf(200));
         props.setProperty(CustomRunner.STEPS, String.valueOf(4));
-        supervisor = new Supervisor(new ArrayList<>(), props);
+        supervisor = new Supervisor(props);
 
         // step 1
         assertEquals(0, supervisor.getWorkerDelay(0));
@@ -62,7 +61,7 @@ public class SupervisorTest extends TestCase {
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(10));
         props.setProperty(CustomRunner.RAMP_UP, String.valueOf(0));
         props.setProperty(CustomRunner.STEPS, String.valueOf(4));
-        supervisor = new Supervisor(new ArrayList<>(), props);
+        supervisor = new Supervisor(props);
 
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(0, supervisor.getWorkerDelay(5));
@@ -72,7 +71,7 @@ public class SupervisorTest extends TestCase {
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(10));
         props.setProperty(CustomRunner.RAMP_UP, String.valueOf(50));
         props.setProperty(CustomRunner.STEPS, String.valueOf(1));
-        supervisor = new Supervisor(new ArrayList<>(), props);
+        supervisor = new Supervisor(props);
 
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(0, supervisor.getWorkerDelay(9));
@@ -93,7 +92,7 @@ public class SupervisorTest extends TestCase {
         props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(5));
         props.setProperty(CustomRunner.RAMP_UP, String.valueOf(10));
 
-        Supervisor supervisor = new Supervisor(new ArrayList<>(), props);
+        Supervisor supervisor = new Supervisor(props);
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(2, supervisor.getWorkerDelay(1));
         assertEquals(4, supervisor.getWorkerDelay(2));
@@ -110,7 +109,7 @@ public class SupervisorTest extends TestCase {
         properties.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
 
         try {
-            new Supervisor(null, properties);
+            new Supervisor(properties);
             fail("failed to create reporter");
         } catch (CustomRunnerException e) {
             assertEquals("Failed to create reporter", e.getMessage());

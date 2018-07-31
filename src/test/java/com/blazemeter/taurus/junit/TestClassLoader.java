@@ -1,6 +1,5 @@
 package com.blazemeter.taurus.junit;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
