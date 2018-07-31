@@ -68,5 +68,8 @@ public class SampleTest extends TestCase {
 
         assertEquals(start + ": label - SKIPPED", sample.toString());
         assertEquals(Sample.STATUS_SKIPPED, sample.getStatus());
+
+        sample.setStartTime(999);
+        assertEquals(999, sample.getStartTime());
     }
 }
