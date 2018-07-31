@@ -1,5 +1,7 @@
 package com.blazemeter.taurus.classpath;
 
+import org.junit.internal.Classes;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -26,6 +28,14 @@ public class ClasspathScanner {
             classFiles.addAll(getClassesFromPath(file, cl));
         }
         return classFiles;
+    }
+
+    public Package getPackage(String packageName) {
+        return Package.getPackage(packageName);
+    }
+
+    public Class getClass(String className) throws ClassNotFoundException {
+        return Classes.getClass(className);
     }
 
     private List<Class> getClassesFromPath(File path, ClassLoader cl) {
@@ -129,16 +139,13 @@ public class ClasspathScanner {
     }
 
     protected void processClass(List<Class> classes, String className, ClassLoader cl) {
-        Class<?> c;
         try {
-            c = cl.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            log.log(Level.SEVERE, "Failed to load class: " + className);
-            return;
-        }
-
-        if (filter.shouldAdd(c)) {
-            classes.add(c);
+            Class c = cl.loadClass(className);
+            if (filter.shouldAdd(c)) {
+                classes.add(c);
+            }
+        } catch (Throwable e) {
+            log.log(Level.SEVERE, "Failed to process class: " + className);
         }
     }
 }
