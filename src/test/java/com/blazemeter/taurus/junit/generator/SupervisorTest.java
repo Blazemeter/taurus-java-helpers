@@ -1,6 +1,8 @@
 package com.blazemeter.taurus.junit.generator;
 
 import com.blazemeter.taurus.junit.CustomRunner;
+import com.blazemeter.taurus.junit.JUnitRunner;
+import com.blazemeter.taurus.junit.TestJUnitRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import junit.framework.TestCase;
 
@@ -8,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
+
+import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 
 public class SupervisorTest extends TestCase {
 
@@ -113,4 +117,134 @@ public class SupervisorTest extends TestCase {
             assertEquals("Failed to create reporter", e.getMessage());
         }
     }
+
+    public void testHold() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertTrue(2 < getLinesCount(report));
+    }
+
+    public void testHoldAndIterations() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.HOLD, String.valueOf(5));
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertEquals(1, getLinesCount(report));
+    }
+
+    public void testIterations() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(3));
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertEquals(3, getLinesCount(report));
+    }
+
+    public void testMain() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertEquals(1, getLinesCount(report));
+    }
+
+
+    public void testConcurrency() throws Exception {
+        File report = File.createTempFile("report", ".csv");
+        report.deleteOnExit();
+
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.CONCURRENCY, "10");
+        props.setProperty(CustomRunner.ITERATIONS, "5");
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertEquals(51, getLinesCount(report)); // 5 * 10 - reports line + header
+    }
+
+
+
 }

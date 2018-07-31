@@ -26,13 +26,13 @@ public class Supervisor {
 
     private final List<Worker> workers = Collections.synchronizedList(new ArrayList<>());
 
-    private final Properties properties;
-    private final Reporter reporter;
-    private final ThreadCounter counter;
+    protected final Properties properties;
+    protected final Reporter reporter;
+    protected final ThreadCounter counter;
 
     private int concurrency;
     private int steps;
-    private long iterations;
+    protected long iterations;
     private float rampUp;
     private float hold;
 
@@ -78,13 +78,17 @@ public class Supervisor {
         }
     }
 
-    private void createWorkers() {
+    protected void createWorkers() {
         for (int i = 0; i < concurrency; i++) {
-            Worker worker = new Worker(properties, reporter, counter, getWorkerDelay(i), iterations);
+            Worker worker = createWorker(i);
             worker.setName("Worker #" + i);
             worker.setDaemon(false);
             workers.add(worker);
         }
+    }
+
+    protected Worker createWorker(int workerId) {
+        return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations);
     }
 
     public void execute() {
