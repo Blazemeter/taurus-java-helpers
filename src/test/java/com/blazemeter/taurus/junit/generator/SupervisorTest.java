@@ -250,5 +250,30 @@ public class SupervisorTest extends TestCase {
     }
 
 
+    public void testRampUp() throws Exception {
+        File report = File.createTempFile("report", ".ldjson");
+        report.deleteOnExit();
 
+        Properties props = new Properties();
+        props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
+        props.setProperty(CustomRunner.ITERATIONS, String.valueOf(5));
+        props.setProperty(CustomRunner.RAMP_UP, String.valueOf(3));
+        props.setProperty(CustomRunner.CONCURRENCY, String.valueOf(3));
+
+        Supervisor supervisor = new Supervisor(props) {
+            @Override
+            protected Worker createWorker(int workerId) {
+                return new Worker(properties, reporter, counter, getWorkerDelay(workerId), iterations) {
+                    @Override
+                    protected JUnitRunner getJUnitRunner(String junitVersion) {
+                        return new TestJUnitRunner();
+                    }
+                };
+
+            }
+        };
+
+        supervisor.execute();
+        assertTrue(3 < getLinesCount(report));
+    }
 }
