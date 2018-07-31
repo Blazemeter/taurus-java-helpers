@@ -3,8 +3,10 @@ package com.blazemeter.taurus.testng;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.blazemeter.taurus.utils.Utils;
 import org.json.*;
 
 public class TaurusReporter {
@@ -37,7 +39,7 @@ public class TaurusReporter {
             outStream.write(obj.toString() + "\n");
             outStream.flush();
         } catch (Exception e) {
-            log.severe("Ex: " + Utils.getStackTrace(e));
+            log.log(Level.SEVERE, "Failed to write sampler ", e);
         }
     }
 

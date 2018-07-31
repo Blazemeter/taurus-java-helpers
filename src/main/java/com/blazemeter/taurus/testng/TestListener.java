@@ -2,6 +2,7 @@ package com.blazemeter.taurus.testng;
 
 import java.util.logging.Logger;
 
+import com.blazemeter.taurus.utils.Utils;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.internal.IResultListener;
