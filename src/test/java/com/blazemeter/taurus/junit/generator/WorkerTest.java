@@ -9,10 +9,13 @@ import java.util.Properties;
 
 
 public class WorkerTest extends TestCase {
-
-
     public void testJUnitVersion() {
-        Worker worker = new Worker(new Properties(), null, null, 8888, 9999);
+        Worker worker = new Worker(new Properties(), null, null, 8888, 9999) {
+            @Override
+            protected void initJUnit() {
+                // NOOP
+            }
+        };
 
         JUnitRunner jUnitRunner = worker.getJUnitRunner(null);
 
