@@ -1,10 +1,11 @@
 package com.blazemeter.taurus.junit5;
 
+import com.blazemeter.taurus.classpath.ClasspathScanner;
+import com.blazemeter.taurus.junit.ClassFilter;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit.ThreadCounter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import org.junit.internal.Classes;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.launcher.Launcher;
@@ -36,10 +37,16 @@ import static org.junit.runner.JUnitRequest.checkMethod;
 public class JUnit5Runner implements JUnitRunner {
     private static final Logger log = Logger.getLogger(JUnit5Runner.class.getName());
 
+    private final ClasspathScanner classpathScanner;
+
+    public JUnit5Runner() {
+        classpathScanner = createClasspathScanner();
+    }
+
     @Override
-    public LauncherDiscoveryRequest createRequest(List<Class> classes, Properties props) {
+    public LauncherDiscoveryRequest createRequest(Properties props) {
         log.info("Create JUnit 5 request");
-        List<DiscoverySelector> selectors = getSelectors(classes, props);
+        List<DiscoverySelector> selectors = getSelectors(props);
         LauncherDiscoveryRequestBuilder builder = LauncherDiscoveryRequestBuilder.request().selectors(selectors);
         return addFilters(builder, props).build();
     }
@@ -52,7 +59,7 @@ public class JUnit5Runner implements JUnitRunner {
         launcher.execute((LauncherDiscoveryRequest) requestItem);
     }
 
-    private static LauncherDiscoveryRequestBuilder addFilters(LauncherDiscoveryRequestBuilder builder, Properties props) {
+    private LauncherDiscoveryRequestBuilder addFilters(LauncherDiscoveryRequestBuilder builder, Properties props) {
         Map<FiltersType, List<String>> filtersMap = new HashMap<>();
         String includeFilters = props.getProperty(INCLUDE_CATEGORY);
         if (null != includeFilters) {
@@ -111,9 +118,9 @@ public class JUnit5Runner implements JUnitRunner {
         filters.add(newFilter);
     }
 
-    private static void detectFilter(String filter, boolean isInclude, Map<FiltersType, List<String>> filtersMap) {
+    private void detectFilter(String filter, boolean isInclude, Map<FiltersType, List<String>> filtersMap) {
         try {
-            Classes.getClass(filter);
+            classpathScanner.getClass(filter);
             if (isInclude) {
                 addFilter(filter, FiltersType.INCLUDE_TAGS, filtersMap);
             } else {
@@ -124,7 +131,7 @@ public class JUnit5Runner implements JUnitRunner {
             log.log(Level.FINER, "Filter class not found: " + filter, e);
         }
 
-        Package pack = Package.getPackage(filter);
+        Package pack = classpathScanner.getPackage(filter);
         if (pack == null) {
             log.log(Level.SEVERE, "Filter Class or Package not found: " + filter);
             throw new CustomRunnerException("Filter Class or Package not found: " + filter);
@@ -136,7 +143,7 @@ public class JUnit5Runner implements JUnitRunner {
         }
     }
 
-    private static List<DiscoverySelector> getSelectors(List<Class> classes, Properties props) {
+    private List<DiscoverySelector> getSelectors(Properties props) {
         final List<DiscoverySelector> selectors = new ArrayList<>();
         String runItems = props.getProperty(RUN_ITEMS);
         if (runItems != null) {
@@ -146,6 +153,11 @@ public class JUnit5Runner implements JUnitRunner {
                 selectors.add(getSelector(item));
             }
         } else {
+            List<Class> classes = classpathScanner.getAllTestClasses(getClassLoader());
+            if (classes.isEmpty()) {
+                throw new CustomRunnerException("Nothing to test");
+            }
+
             for (Class cls : classes) {
                 selectors.add(selectClass(cls));
             }
@@ -154,11 +166,19 @@ public class JUnit5Runner implements JUnitRunner {
         return selectors;
     }
 
-    private static DiscoverySelector getSelector(String item) {
+    protected ClasspathScanner createClasspathScanner() {
+        return new ClasspathScanner(new ClassFilter());
+    }
+
+    protected ClassLoader getClassLoader() {
+        return ClassLoader.getSystemClassLoader();
+    }
+
+    private DiscoverySelector getSelector(String item) {
         try {
             if (item.contains("#")) {
                 String[] classAndMethod = item.split("#");
-                Class<?> cls = Classes.getClass(classAndMethod[0]);
+                Class<?> cls = classpathScanner.getClass(classAndMethod[0]);
 
                 checkMethod(cls, classAndMethod[1]);
                 return selectMethod(cls, classAndMethod[1]);
@@ -174,15 +194,15 @@ public class JUnit5Runner implements JUnitRunner {
         }
     }
 
-    private static DiscoverySelector getClassOrPackageSelector(String item) {
+    private DiscoverySelector getClassOrPackageSelector(String item) {
         try {
-            Class<?> cls = Classes.getClass(item);
+            Class<?> cls = classpathScanner.getClass(item);
             return selectClass(cls);
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             log.log(Level.FINE, "Class not found: " + item, e);
         }
 
-        Package pack = Package.getPackage(item);
+        Package pack = classpathScanner.getPackage(item);
         if (pack == null) {
             log.log(Level.SEVERE, "Class or Package not found: " + item);
             throw new CustomRunnerException("Class or Package not found: " + item);

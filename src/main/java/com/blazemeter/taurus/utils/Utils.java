@@ -1,9 +1,10 @@
-package com.blazemeter.taurus.junit;
+package com.blazemeter.taurus.utils;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class Utils {
+
     public static String getStackTrace(final Throwable throwable) {
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw, true);

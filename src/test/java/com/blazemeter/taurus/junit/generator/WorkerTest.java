@@ -5,15 +5,17 @@ import com.blazemeter.taurus.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit5.JUnit5Runner;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
 import java.util.Properties;
 
 
 public class WorkerTest extends TestCase {
-
-
     public void testJUnitVersion() {
-        Worker worker = new Worker(new ArrayList<>(), new Properties(), null, null, 8888, 9999);
+        Worker worker = new Worker(new Properties(), null, null, 8888, 9999) {
+            @Override
+            protected void initJUnit() {
+                // NOOP
+            }
+        };
 
         JUnitRunner jUnitRunner = worker.getJUnitRunner(null);
 

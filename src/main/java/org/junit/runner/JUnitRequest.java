@@ -1,7 +1,7 @@
 package org.junit.runner;
 
+import com.blazemeter.taurus.classpath.ClasspathScanner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
-import org.junit.internal.Classes;
 import org.junit.runner.filter.ClassFilter;
 import org.junit.runner.filter.OrFilter;
 import org.junit.runner.manipulation.Filter;
@@ -19,7 +19,7 @@ public class JUnitRequest {
         return parse.createRequest(Computer.serial());
     }
 
-    public static Request createItemsRequest(String runItems) {
+    public static Request createItemsRequest(String runItems, ClasspathScanner classpathScanner) {
         String[] testCases = runItems.split(",");
         final List<Filter> filters = new ArrayList<>();
         final List<Class> classes = new ArrayList<>();
@@ -29,7 +29,7 @@ public class JUnitRequest {
                 if (testCase.contains("#")) {
                     String[] classAndMethod = testCase.split("#");
 
-                    Class<?> cls = Classes.getClass(classAndMethod[0]);
+                    Class<?> cls = classpathScanner.getClass(classAndMethod[0]);
                     classes.add(cls);
 
                     checkMethod(cls, classAndMethod[1]);
@@ -37,7 +37,7 @@ public class JUnitRequest {
                     Description description = Description.createTestDescription(cls, classAndMethod[1]);
                     filters.add(Filter.matchMethodDescription(description));
                 } else {
-                    Class cls = Classes.getClass(testCase);
+                    Class cls = classpathScanner.getClass(testCase);
                     classes.add(cls);
 
                     Description description = Description.createSuiteDescription(cls);

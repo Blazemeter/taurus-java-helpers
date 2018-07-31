@@ -1,8 +1,11 @@
 package com.blazemeter.taurus.junit4;
 
+import com.blazemeter.taurus.classpath.ClasspathScanner;
+import com.blazemeter.taurus.junit.ClassFilter;
 import com.blazemeter.taurus.junit.Reporter;
 import com.blazemeter.taurus.junit.JUnitRunner;
 import com.blazemeter.taurus.junit.ThreadCounter;
+import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import org.junit.experimental.categories.ExcludeCategories;
 import org.junit.experimental.categories.IncludeCategories;
 import org.junit.runner.JUnitCore;
@@ -22,14 +25,21 @@ import static com.blazemeter.taurus.junit.CustomRunner.RUN_ITEMS;
 public class JUnit4Runner implements JUnitRunner {
     private static final Logger log = Logger.getLogger(JUnit4Runner.class.getName());
 
+    private final ClasspathScanner classpathScanner;
+
+    public JUnit4Runner() {
+        classpathScanner = createClasspathScanner();
+    }
+
+
     @Override
-    public Request createRequest(List<Class> classes, Properties props) {
+    public Request createRequest(Properties props) {
         String runItems = props.getProperty(RUN_ITEMS);
         if (runItems != null) {
             log.info("Create JUnit 4 request with following items: " + runItems);
-            return JUnitRequest.createItemsRequest(runItems);
+            return JUnitRequest.createItemsRequest(runItems, classpathScanner);
         } else {
-            String[] junitArguments = generateArgs(classes, props);
+            String[] junitArguments = generateArgs(props);
             log.info("Create JUnit 4 request with following arguments: " + Arrays.toString(junitArguments));
             return JUnitRequest.createCategoryRequest(junitArguments);
         }
@@ -43,7 +53,7 @@ public class JUnit4Runner implements JUnitRunner {
         runner.run((Request) requestItem);
     }
 
-    private static String[] generateArgs(List<Class> classes, Properties props) {
+    private String[] generateArgs(Properties props) {
         List<String> args = new ArrayList<>();
 
         // Category options should be first!!!
@@ -55,11 +65,23 @@ public class JUnit4Runner implements JUnitRunner {
             addFilter(args, ExcludeCategories.class.getName(), props.getProperty(EXCLUDE_CATEGORY));
         }
 
+        List<Class> classes = classpathScanner.getAllTestClasses(getClassLoader());
+        if (classes.isEmpty()) {
+            throw new CustomRunnerException("Nothing to test");
+        }
         for (Class c : classes) {
             args.add(c.getName());
         }
 
         return args.toArray(new String[0]);
+    }
+
+    protected ClasspathScanner createClasspathScanner() {
+        return new ClasspathScanner(new ClassFilter());
+    }
+
+    protected ClassLoader getClassLoader() {
+        return ClassLoader.getSystemClassLoader();
     }
 
     private static void addFilter(List<String> args, String name, String property) {
