@@ -78,6 +78,10 @@ public class SupervisorTest extends TestCase {
 
         assertEquals(0, supervisor.getWorkerDelay(0));
         assertEquals(0, supervisor.getWorkerDelay(9));
+
+        props.setProperty(CustomRunner.STEPS, "-10");
+        supervisor = new Supervisor(props);
+        assertEquals(0, supervisor.getWorkerDelay(4));
     }
 
     public void testDelayCalculationWithoutSteps() throws Exception {
