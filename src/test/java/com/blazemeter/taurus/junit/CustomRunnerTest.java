@@ -125,7 +125,7 @@ public class CustomRunnerTest extends TestCase {
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty("myProperty", "myValue");
-        props.put(CustomRunner.RUN_ITEMS, "");
+        props.put(CustomRunner.RUN_ITEMS, EmptyTestClass.class.getName());
 
         File propsFile = File.createTempFile("runner", ".properties");
         propsFile.deleteOnExit();
@@ -133,12 +133,9 @@ public class CustomRunnerTest extends TestCase {
 
         String[] args = {propsFile.getAbsolutePath()};
         System.clearProperty("myProperty");
-        try {
-            CustomRunner.main(args);
-        } catch (CustomRunnerException e) {
-            assertEquals("Class not found: ", e.getMessage());
-        }
+        CustomRunner.main(args);
         assertEquals("myValue", System.getProperty("myProperty"));
+        assertEquals(1, getLinesCount(report));
     }
 
     public void testRunIncludeCategoriesJUnit4() throws Exception {
