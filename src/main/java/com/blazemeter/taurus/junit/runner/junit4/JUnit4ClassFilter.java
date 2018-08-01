@@ -19,12 +19,16 @@ public class JUnit4ClassFilter implements Filter {
             return false;
         }
 
-        if (isTestClass(c)) {
+        if (isTestClass(c) && !isExcludedClass(c)) {
             log.info(String.format("Class '%s' added to tests", c.getName()));
             return true;
         }
 
         return false;
+    }
+
+    protected boolean isExcludedClass(Class c) {
+        return "junit.framework.TestSuite$1".equals(c.getName());
     }
 
     protected boolean isTestClass(Class c) {

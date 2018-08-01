@@ -27,6 +27,7 @@ public class ClasspathScanner {
         for (File file : classLocations) {
             classFiles.addAll(getClassesFromPath(file, cl));
         }
+        log.info("Found " + classFiles.size() + " classes");
         return classFiles;
     }
 
