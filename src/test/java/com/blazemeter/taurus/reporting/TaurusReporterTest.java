@@ -48,7 +48,7 @@ public class TaurusReporterTest extends TestCase {
     }
 
     public void testLDJSON() throws Exception {
-        File file = File.createTempFile("report", ".ldjson");
+        File file = File.createTempFile("report", ".lDjsOn");
         file.deleteOnExit();
 
         TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath());
