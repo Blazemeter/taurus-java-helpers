@@ -32,7 +32,7 @@ public class JUnit4ClassFilter implements Filter {
     }
 
     protected boolean hasAnnotations(Class c, Class annotationCls) {
-        for (Method method : c.getMethods()) {
+        for (Method method : c.getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotationCls)) {
                 return true;
             }
