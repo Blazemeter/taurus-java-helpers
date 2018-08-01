@@ -3,8 +3,11 @@ package com.blazemeter.taurus.junit;
 
 import com.blazemeter.taurus.classpath.ClasspathScanner;
 import com.blazemeter.taurus.junit.api.JUnitRunner;
+import com.blazemeter.taurus.junit.demotests.EmptyTestClass;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import com.blazemeter.taurus.junit.generator.Counter;
+import com.blazemeter.taurus.junit.runner.junit4.JUnit4ClassFilter;
+import com.blazemeter.taurus.junit.runner.junit5.JUnit5ClassFilter;
 import com.blazemeter.taurus.reporting.TaurusReporter;
 import com.blazemeter.taurus.junit.runner.junit4.JUnit4Runner;
 import com.blazemeter.taurus.junit.runner.junit5.JUnit5Runner;
@@ -55,7 +58,7 @@ public class CustomRunnerTest extends TestCase {
 
             @Override
             protected ClasspathScanner createClasspathScanner() {
-                return new ClasspathScanner(new ClassFilter()) {
+                return new ClasspathScanner(new JUnit5ClassFilter()) {
                     @Override
                     protected String getClassPath() {
                         return classpath;
@@ -86,7 +89,7 @@ public class CustomRunnerTest extends TestCase {
 
             @Override
             protected ClasspathScanner createClasspathScanner() {
-                return new ClasspathScanner(new ClassFilter()) {
+                return new ClasspathScanner(new JUnit4ClassFilter()) {
                     @Override
                     protected String getClassPath() {
                         return classpath;

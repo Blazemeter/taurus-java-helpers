@@ -1,7 +1,6 @@
 package com.blazemeter.taurus.junit.runner.junit5;
 
 import com.blazemeter.taurus.classpath.ClasspathScanner;
-import com.blazemeter.taurus.junit.ClassFilter;
 import com.blazemeter.taurus.junit.api.Reporter;
 import com.blazemeter.taurus.junit.api.JUnitRunner;
 import com.blazemeter.taurus.junit.api.ThreadCounter;
@@ -167,7 +166,7 @@ public class JUnit5Runner implements JUnitRunner {
     }
 
     protected ClasspathScanner createClasspathScanner() {
-        return new ClasspathScanner(new ClassFilter());
+        return new ClasspathScanner(new JUnit5ClassFilter());
     }
 
     protected ClassLoader getClassLoader() {
