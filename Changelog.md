@@ -1,4 +1,4 @@
-# 1.4 ()
+# 1.4 (1st of August, 2018)
 * `Changes`: remove `target_` property. All target *.jar files should be included in CLASSPATH
 * `Changes`: TestNG listener write samplers in background thread
 * `Fixed`: detect JUnit 5 test methods
