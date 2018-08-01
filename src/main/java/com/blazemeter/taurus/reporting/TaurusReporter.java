@@ -47,7 +47,7 @@ public class TaurusReporter implements Reporter {
     }
 
     protected SampleFormatter createFormatter(String fileName) throws IOException {
-        if (fileName.endsWith(".ldjson")) {
+        if (fileName.toLowerCase().endsWith(".ldjson")) {
             return new JSONFormatter();
         } else {
             CSVFormatter formatter = new CSVFormatter();

@@ -12,19 +12,27 @@ public class JUnit4ClassFilter implements Filter {
 
     @Override
     public boolean shouldAdd(Class c) {
-        log.info("Checking class " + c.getName());
+        log("Checking class " + c.getName());
 
         if (Modifier.isAbstract(c.getModifiers())) {
-            log.info("Skip because of abstract");
+            log("Skip because of abstract");
             return false;
         }
 
-        if (isTestClass(c)) {
-            log.info(String.format("Class '%s' added to tests", c.getName()));
+        if (isTestClass(c) && !isExcludedClass(c)) {
+            log(String.format("Class '%s' added to tests", c.getName()));
             return true;
         }
 
         return false;
+    }
+
+    protected void log(String msg) {
+        log.info(msg);
+    }
+
+    protected boolean isExcludedClass(Class c) {
+        return "junit.framework.TestSuite$1".equals(c.getName());
     }
 
     protected boolean isTestClass(Class c) {
