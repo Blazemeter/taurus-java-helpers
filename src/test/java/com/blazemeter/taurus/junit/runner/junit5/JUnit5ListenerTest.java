@@ -1,15 +1,18 @@
 package com.blazemeter.taurus.junit.runner.junit5;
 
+import categories.TestCategory;
 import com.blazemeter.taurus.junit.generator.Counter;
 import com.blazemeter.taurus.reporting.Sample;
 import com.blazemeter.taurus.reporting.TaurusReporter;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.junit.platform.engine.TestExecutionResult.*;
 
+@Category(TestCategory.class)
 public class JUnit5ListenerTest extends TestCase {
     public void test() throws IOException {
         File tmp = File.createTempFile("tmp", ".ldjson");

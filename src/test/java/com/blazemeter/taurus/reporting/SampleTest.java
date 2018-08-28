@@ -1,7 +1,10 @@
 package com.blazemeter.taurus.reporting;
 
+import categories.TestCategory;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
+@Category(TestCategory.class)
 public class SampleTest extends TestCase {
 
     public void test() {

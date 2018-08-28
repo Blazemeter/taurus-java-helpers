@@ -1,6 +1,8 @@
 package com.blazemeter.taurus.reporting;
 
+import categories.TestCategory;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,6 +10,7 @@ import java.io.IOException;
 
 import static org.apache.commons.io.FileUtils.readFileToString;
 
+@Category(TestCategory.class)
 public class TaurusReporterTest extends TestCase {
 
     public void testCSV() throws Exception {
