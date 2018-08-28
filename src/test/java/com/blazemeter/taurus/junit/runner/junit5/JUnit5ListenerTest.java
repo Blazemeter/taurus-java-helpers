@@ -7,6 +7,7 @@ import com.blazemeter.taurus.reporting.Sample;
 import com.blazemeter.taurus.reporting.TaurusReporter;
 import junit.framework.TestCase;
 import org.junit.experimental.categories.Category;
+import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -43,6 +44,7 @@ public class JUnit5ListenerTest extends TestCase {
         JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
         Method method = TestCase5.class.getDeclaredMethod("testJUnit5Method");
         TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method));
+        listener.startSample(TestIdentifier.from(new ClassTestDescriptor(UniqueId.forEngine("123"), TestCase5.class)));
         listener.executionStarted(identifier);
         listener.executionFinished(identifier, TestExecutionResult.failed(new RuntimeException("failed")));
 
