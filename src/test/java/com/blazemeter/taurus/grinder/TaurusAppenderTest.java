@@ -1,15 +1,18 @@
 package com.blazemeter.taurus.grinder;
 
+import categories.TestCategory;
 import ch.qos.logback.classic.spi.LoggerContextVO;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import junit.framework.TestCase;
 import net.grinder.engine.process.TestRegistryAccessor;
 import net.grinder.script.Grinder;
 import net.grinder.util.logback.BufferedEchoMessageEncoder;
+import org.junit.experimental.categories.Category;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
+@Category(TestCategory.class)
 public class TaurusAppenderTest extends TestCase {
     public void testWriteOut() throws Exception {
         Grinder.grinder = TestRegistryAccessor.getDummyScriptContext();

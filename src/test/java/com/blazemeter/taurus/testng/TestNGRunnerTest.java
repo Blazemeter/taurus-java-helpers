@@ -1,7 +1,9 @@
 package com.blazemeter.taurus.testng;
 
 
+import categories.TestCategory;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.io.FileReader;
@@ -11,6 +13,7 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.Properties;
 
+@Category(TestCategory.class)
 public class TestNGRunnerTest extends TestCase {
 
     private static int getLinesCount(File log) throws IOException {

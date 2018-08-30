@@ -1,26 +1,25 @@
 package com.blazemeter.taurus.junit.generator;
 
+import categories.TestCategory;
 import com.blazemeter.taurus.junit.CustomRunner;
 import com.blazemeter.taurus.junit.api.JUnitRunner;
 import com.blazemeter.taurus.junit.TestJUnitRunner;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Properties;
 
 import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 
+@Category(TestCategory.class)
 public class SupervisorTest extends TestCase {
 
     public void testDelayCalculation() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
-
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
@@ -87,9 +86,6 @@ public class SupervisorTest extends TestCase {
     public void testDelayCalculationWithoutSteps() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
-
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
 
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());

@@ -1,54 +1,39 @@
 package com.blazemeter.taurus.junit.runner.junit5;
 
+import categories.TestCategory;
 import com.blazemeter.taurus.junit.CustomRunner;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 
 import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Properties;
 
+import static com.blazemeter.taurus.junit.CustomRunnerTest.EXCLUDE_TEST_FOLDERS;
 import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 import static com.blazemeter.taurus.junit.CustomRunnerTest.process;
 import static org.apache.commons.io.FileUtils.readFileToString;
 
+@Category(TestCategory.class)
 public class JUnit5RunnerTest extends TestCase {
-
-    @Override
-    protected void setUp() throws Exception {
-        //TODO: BAD BAD BAD HACK
-        // we should remove it and rewrite tests where we use Package.getPackage() and Class.forName() in JUnit5Runner
-        addURL(Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar"));
-    }
-
-    private static void addURL(URL url) throws ReflectiveOperationException {
-        URLClassLoader systemClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-        method.setAccessible(true);
-        method.invoke(systemClassLoader, url);
-    }
-
 
     public void testFlow() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
+        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, EXCLUDE_TEST_FOLDERS);
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
-        assertEquals(fileToString, 8, getLinesCount(report));
+        assertEquals(fileToString, 9, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestCase5.testJUnit5Method"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
@@ -61,17 +46,14 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases");
-        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage");
+        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage," + EXCLUDE_TEST_FOLDERS);
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
@@ -86,40 +68,35 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.INCLUDE_CATEGORY, "testcases.subpackage");
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
-        assertEquals(fileToString, 4, getLinesCount(report));
+        assertEquals(fileToString, 5, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestCase5.testJUnit5Method"));
     }
 
     public void testExcludePackages() throws Exception {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
-        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage");
+        props.setProperty(CustomRunner.EXCLUDE_CATEGORY, "testcases.subpackage," + EXCLUDE_TEST_FOLDERS);
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
@@ -134,20 +111,18 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage");
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
-        assertEquals(fileToString, 4, getLinesCount(report));
+        assertEquals(fileToString, 5, getLinesCount(report));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestCase5.testJUnit5Method"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
@@ -158,16 +133,13 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2");
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
@@ -180,16 +152,13 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.subpackage.TestClass2#test2");
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
 
@@ -201,21 +170,19 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
         props.setProperty(CustomRunner.RUN_ITEMS, "testcases.TestClass1,testcases.TestClass4#m1,testcases.subpackage");
 
-        process("5", res.getPath(), props, report);
+        process("5", props, report);
 
         String fileToString = readFileToString(report);
-        assertEquals(fileToString, 7, getLinesCount(report));
+        assertEquals(fileToString, 8, getLinesCount(report));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow1"));
         assertTrue(fileToString, fileToString.contains("testcases.TestClass1.flow2"));
+        assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestCase5.testJUnit5Method"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test1"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass2.test2"));
         assertTrue(fileToString, fileToString.contains("testcases.subpackage.TestClass3.method1"));
@@ -227,9 +194,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -237,7 +201,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be NoSuchMethodException");
         } catch (Exception e) {
             assertEquals("Method not found: testcases.TestClass1#flow3", e.getMessage());
@@ -248,9 +212,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -258,7 +219,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Class or Package not found: testcases.TestClass77", e.getMessage());
@@ -269,9 +230,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -279,7 +237,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Class not found: testcases.TestClass12#test2", e.getMessage());
@@ -290,9 +248,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -300,7 +255,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Class or Package not found: testcases.subpackagE", e.getMessage());
@@ -311,9 +266,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -321,7 +273,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Filter Class or Package not found: testcases.subpackagE", e.getMessage());
@@ -332,9 +284,6 @@ public class JUnit5RunnerTest extends TestCase {
         File report = File.createTempFile("report", ".ldjson");
         report.deleteOnExit();
 
-        URL res = Thread.currentThread().getContextClassLoader().getResource("junit-test-1.1.jar");
-        assert res != null;
-
         Properties props = new Properties();
         props.setProperty(CustomRunner.REPORT_FILE, report.getAbsolutePath());
         props.setProperty(CustomRunner.ITERATIONS, String.valueOf(1));
@@ -342,7 +291,7 @@ public class JUnit5RunnerTest extends TestCase {
         props.setProperty(CustomRunner.JUNIT_VERSION, "5");
 
         try {
-            process("5", res.getPath(), props, report);
+            process("5", props, report);
             fail("Should be ClassNotFoundException");
         } catch (Exception e) {
             assertEquals("Filter Class or Package not found: categories.CategoryE", e.getMessage());

@@ -1,12 +1,15 @@
 package org.junit.runner.filter;
 
+import categories.TestCategory;
 import junit.framework.TestCase;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Category(TestCategory.class)
 public class OrFilterTest extends TestCase {
 
     public void testFlow() {
