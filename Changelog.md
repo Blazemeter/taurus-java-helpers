@@ -1,4 +1,4 @@
-# 1.5 (upcomig)
+# 1.5 (19th of Septamber, 2018)
 * `Changes` : use `FINE` level logging in ClassFilter
 * `Fixed` : JUnit 4 runner set `STATUS_BROKEN` instead of `STATUS_FAILED`
 
