@@ -1,3 +1,7 @@
+# 1.5 (upcomig)
+* `Changes` : use `FINE` level logging in ClassFilter
+* `Fixed` : JUnit 4 runner set `STATUS_BROKEN` instead of `STATUS_FAILED`
+
 # 1.4 (1st of August, 2018)
 * `Changes`: remove `target_` property. All target *.jar files should be included in CLASSPATH
 * `Changes`: TestNG listener write samplers in background thread
