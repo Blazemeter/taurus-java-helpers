@@ -10,7 +10,7 @@ public class JUnit5ClassFilter extends JUnit4ClassFilter {
     private static final Logger log = Logger.getLogger(JUnit5ClassFilter.class.getName());
 
     protected void log(String msg) {
-        log.info(msg);
+        log.fine(msg);
     }
 
     protected boolean isTestClass(Class c) {

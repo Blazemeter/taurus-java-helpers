@@ -28,7 +28,7 @@ public class JUnit4ClassFilter implements Filter {
     }
 
     protected void log(String msg) {
-        log.info(msg);
+        log.fine(msg);
     }
 
     protected boolean isExcludedClass(Class c) {
