@@ -10,6 +10,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.opentest4j.AssertionFailedError;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -64,11 +65,18 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
             if (optional.isPresent()) {
                 Throwable throwable = optional.get();
                 String exceptionName = throwable.getClass().getName();
-                finishSample(status, exceptionName + ": " + throwable.getMessage(), throwable);
+                finishSample(getStatusFromThrowableType(throwable), exceptionName + ": " + throwable.getMessage(), throwable);
             } else {
                 finishSample(status, null, null);
             }
         }
+    }
+
+    protected String getStatusFromThrowableType(Throwable exception) {
+        if (exception instanceof AssertionFailedError) {
+            return Sample.STATUS_FAILED;
+        }
+        return Sample.STATUS_BROKEN;
     }
 
     protected String getStatus(TestExecutionResult.Status status) {

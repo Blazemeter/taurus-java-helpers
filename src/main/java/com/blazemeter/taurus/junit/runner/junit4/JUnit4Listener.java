@@ -48,10 +48,18 @@ public class JUnit4Listener extends RunListener {
         if (isVerbose) {
             log.severe(String.format("failed %s", failure.toString()));
         }
-        listener.getPendingSample().setStatus(Sample.STATUS_FAILED);
-        String exceptionName = failure.getException().getClass().getName();
+        Throwable exception = failure.getException();
+        listener.getPendingSample().setStatus(getStatusFromThrowableType(exception));
+        String exceptionName = exception.getClass().getName();
         listener.getPendingSample().setErrorMessage(exceptionName + ": " + failure.getMessage());
         listener.getPendingSample().setErrorTrace(Utils.getStackTrace(failure.getException()));
+    }
+
+    protected String getStatusFromThrowableType(Throwable exception) {
+        if (exception instanceof AssertionError) {
+            return Sample.STATUS_FAILED;
+        }
+        return Sample.STATUS_BROKEN;
     }
 
     public void testAssumptionFailure(Failure failure) {
