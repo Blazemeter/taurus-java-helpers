@@ -53,4 +53,23 @@ public class JUnit5ListenerTest extends TestCase {
         String s = CustomRunnerTest.readFileToString(tmp);
         assertTrue(s, s.contains("RuntimeException: failed"));
     }
+
+    public void testTestStatus() throws IOException {
+        Throwable e = null;
+        try {
+            org.junit.jupiter.api.Assertions.assertEquals("1", "");
+        } catch (Throwable ex) {
+            e = ex;
+        }
+        assertNotNull(e);
+        File tmp = File.createTempFile("tmp", ".ldjson");
+        tmp.deleteOnExit();
+        TaurusReporter reporter = new TaurusReporter(tmp.getAbsolutePath());
+        JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
+        String status = listener.getStatusFromThrowableType(e);
+        assertEquals(Sample.STATUS_FAILED, status);
+
+        status = listener.getStatusFromThrowableType(new RuntimeException(""));
+        assertEquals(Sample.STATUS_BROKEN, status);
+    }
 }
