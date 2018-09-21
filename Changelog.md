@@ -1,4 +1,4 @@
-# 1.5 (21th of Septamber, 2018)
+# 1.6 (21th of Septamber, 2018)
 * `Fixed` : detect `ERROR` or `FAILED` sampler from Exception type
 
 # 1.5 (19th of Septamber, 2018)
