@@ -1,5 +1,7 @@
 package com.blazemeter.taurus.reporting;
 
+import java.math.BigDecimal;
+
 public class Sample {
     public static final String STATUS_PASSED = "PASSED";
     public static final String STATUS_FAILED = "FAILED";
@@ -13,8 +15,8 @@ public class Sample {
     private String suite = "";
     private String file = "";
     private String fullName = "";
-    private String errorMessage = "";
-    private String errorTrace = "";
+    private String errorMessage;
+    private String errorTrace;
     private String description = "";
 
     private int activeThreads;
@@ -36,8 +38,9 @@ public class Sample {
         this.startTime = startTime;
     }
 
-    public long getStartTimeInSec() {
-        return startTime / 1000;
+    //using BigDecimal to avoid losing information due to double and float precision issues
+    public BigDecimal getStartTimeInSec() {
+        return BigDecimal.valueOf(startTime, 3);
     }
 
     public long getStartTime() {
@@ -77,7 +80,7 @@ public class Sample {
     }
 
     public void setErrorMessage(String message) {
-        this.errorMessage = message == null ? "" : message;
+        this.errorMessage = message;
     }
 
     public String getErrorTrace() {
@@ -85,7 +88,7 @@ public class Sample {
     }
 
     public void setErrorTrace(String trace) {
-        this.errorTrace = trace == null ? "" : trace;
+        this.errorTrace = trace;
     }
 
     public String getFile() {
