@@ -139,12 +139,17 @@ public class TaurusReporter implements Reporter {
             builder.append(sample.getLabel()).append(','); // label
 
             builder.append(','); // responseCode
-            builder.append(sample.getErrorMessage()).append(','); // responseMessage
+            String errorMsg = formatMessage(sample.getErrorMessage());
+            builder.append(errorMsg).append(','); // responseMessage
 
             builder.append(sample.isSuccessful()).append(','); // success
             builder.append(sample.getActiveThreads()).append(","); // allThreads
-            builder.append(sample.getErrorMessage().getBytes().length).append("\r\n");
+            builder.append(errorMsg.getBytes().length).append("\r\n");
             return builder.toString();
+        }
+
+        private String formatMessage(String errorMessage) {
+            return errorMessage.replaceAll("\\r|\\n", " ");
         }
     }
 
