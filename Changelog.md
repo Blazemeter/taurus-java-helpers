@@ -1,5 +1,6 @@
 # 1.7 (1st of November, 2018)
 * `Fixed` : multiline error messages for CSV report
+* `Changes` : `start_time` to include milliseconds as decimal
 
 # 1.6 (21th of September, 2018)
 * `Fixed` : detect `ERROR` or `FAILED` sampler from Exception type
