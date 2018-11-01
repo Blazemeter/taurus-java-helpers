@@ -1,7 +1,11 @@
-# 1.6 (21th of Septamber, 2018)
+# 1.7 (1st of November, 2018)
+* `Fixed` : multiline error messages for CSV report
+* `Changes` : `start_time` to include milliseconds as decimal
+
+# 1.6 (21th of September, 2018)
 * `Fixed` : detect `ERROR` or `FAILED` sampler from Exception type
 
-# 1.5 (19th of Septamber, 2018)
+# 1.5 (19th of September, 2018)
 * `Changes` : use `FINE` level logging in ClassFilter
 * `Fixed` : JUnit 4 runner set `STATUS_BROKEN` instead of `STATUS_FAILED`
 

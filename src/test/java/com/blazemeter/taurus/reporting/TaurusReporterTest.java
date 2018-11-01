@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 import static org.apache.commons.io.FileUtils.readFileToString;
 
 @Category(TestCategory.class)
@@ -49,6 +50,27 @@ public class TaurusReporterTest extends TestCase {
 
         String actual = readFileToString(file);
         assertEquals(expect.toString(), actual);
+    }
+
+    public void testCSVMultiLineErrorMessage() throws Exception {
+        File file = File.createTempFile("report", ".csv");
+        file.deleteOnExit();
+
+        TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath());
+
+        assertFalse(reporter.isVerbose());
+
+        Sample sample = new Sample();
+        sample.setActiveThreads(4);
+        sample.setLabel("TestLabel");
+        sample.setErrorMessage("Oppps!\r\nasaaa\nprivet\r\rssss");
+        sample.setStatus(Sample.STATUS_FAILED);
+
+        reporter.writeSample(sample);
+        reporter.close();
+        assertTrue(reporter.isStopped());
+
+        assertEquals(2, getLinesCount(file));
     }
 
     public void testLDJSON() throws Exception {
