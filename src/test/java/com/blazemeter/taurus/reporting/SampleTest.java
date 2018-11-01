@@ -4,6 +4,8 @@ import categories.TestCategory;
 import junit.framework.TestCase;
 import org.junit.experimental.categories.Category;
 
+import java.math.BigDecimal;
+
 @Category(TestCategory.class)
 public class SampleTest extends TestCase {
 
@@ -16,7 +18,7 @@ public class SampleTest extends TestCase {
         assertTrue(t1 <= sample.getStartTime());
 
         long start = sample.getStartTime();
-        assertEquals(start / 1000, sample.getStartTimeInSec());
+        assertEquals(BigDecimal.valueOf(start, 3), sample.getStartTimeInSec());
 
         assertTrue(sample.isSuccessful());
         assertFalse(sample.isSkipped());
@@ -53,12 +55,12 @@ public class SampleTest extends TestCase {
         assertEquals("file", sample.getFile());
 
         sample.setErrorMessage(null);
-        assertEquals("", sample.getErrorMessage());
+        assertNull(sample.getErrorMessage());
         sample.setErrorMessage("msg");
         assertEquals("msg", sample.getErrorMessage());
 
         sample.setErrorTrace(null);
-        assertEquals("", sample.getErrorTrace());
+        assertNull(sample.getErrorTrace());
         sample.setErrorTrace("trace");
         assertEquals("trace", sample.getErrorTrace());
 

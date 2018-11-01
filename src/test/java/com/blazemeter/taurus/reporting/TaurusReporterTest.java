@@ -7,6 +7,7 @@ import org.junit.experimental.categories.Category;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import static com.blazemeter.taurus.junit.CustomRunnerTest.getLinesCount;
 import static org.apache.commons.io.FileUtils.readFileToString;
@@ -91,8 +92,8 @@ public class TaurusReporterTest extends TestCase {
         reporter.close();
 
         StringBuilder expect = new StringBuilder("{\"duration\":5,\"start_time\":");
-        expect.append(startTime / 1000);
-        expect.append(",\"test_suite\":\"\",\"error_msg\":\"Oppps!\",\"extras\":{\"full_name\":\"\"},\"error_trace\":\"\",\"test_case\":\"TestLabel\",\"status\":\"FAILED\"}\n");
+        expect.append(BigDecimal.valueOf(startTime,3));
+        expect.append(",\"test_suite\":\"\",\"error_msg\":\"Oppps!\",\"extras\":{\"full_name\":\"\"},\"error_trace\":null,\"test_case\":\"TestLabel\",\"status\":\"FAILED\"}\n");
 
         String actual = readFileToString(file);
         assertEquals(expect.toString(), actual);

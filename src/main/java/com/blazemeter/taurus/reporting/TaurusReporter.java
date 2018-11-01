@@ -114,8 +114,9 @@ public class TaurusReporter implements Reporter {
             obj.put("start_time", sample.getStartTimeInSec());
             obj.put("duration", sample.getDurationInSec());
             obj.put("status", sample.getStatus());
-            obj.put("error_msg", sample.getErrorMessage());
-            obj.put("error_trace", sample.getErrorTrace());
+            // using JSONObject.wrap to keep null values in resulting JSON
+            obj.put("error_msg", JSONObject.wrap(sample.getErrorMessage()));
+            obj.put("error_trace", JSONObject.wrap(sample.getErrorTrace()));
             JSONObject extras = new JSONObject();
             extras.put("full_name", sample.getFullName());
             obj.put("extras", extras);
@@ -139,7 +140,7 @@ public class TaurusReporter implements Reporter {
             builder.append(sample.getLabel()).append(','); // label
 
             builder.append(','); // responseCode
-            String errorMsg = formatMessage(sample.getErrorMessage());
+            String errorMsg = formatMessage(sample.getErrorMessage() == null ? "" : sample.getErrorMessage());
             builder.append(errorMsg).append(','); // responseMessage
 
             builder.append(sample.isSuccessful()).append(','); // success
