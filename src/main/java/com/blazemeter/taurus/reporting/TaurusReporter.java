@@ -2,6 +2,7 @@ package com.blazemeter.taurus.reporting;
 
 import com.blazemeter.taurus.junit.api.Reporter;
 import com.blazemeter.taurus.junit.exception.CustomRunnerException;
+import com.blazemeter.taurus.utils.Utils;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -150,7 +151,7 @@ public class TaurusReporter implements Reporter {
         }
 
         private String formatMessage(String errorMessage) {
-            return errorMessage.replaceAll("\\r|\\n", " ");
+            return Utils.escapeCSV(errorMessage);
         }
     }
 

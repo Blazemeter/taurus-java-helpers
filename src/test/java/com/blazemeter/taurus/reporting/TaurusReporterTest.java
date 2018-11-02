@@ -52,26 +52,6 @@ public class TaurusReporterTest extends TestCase {
         assertEquals(expect.toString(), actual);
     }
 
-    public void testCSVMultiLineErrorMessage() throws Exception {
-        File file = File.createTempFile("report", ".csv");
-        file.deleteOnExit();
-
-        TaurusReporter reporter = new TaurusReporter(file.getAbsolutePath());
-
-        assertFalse(reporter.isVerbose());
-
-        Sample sample = new Sample();
-        sample.setActiveThreads(4);
-        sample.setLabel("TestLabel");
-        sample.setErrorMessage("Oppps!\r\nasaaa\nprivet\r\rssss");
-        sample.setStatus(Sample.STATUS_FAILED);
-
-        reporter.writeSample(sample);
-        reporter.close();
-        assertTrue(reporter.isStopped());
-
-        assertEquals(2, getLinesCount(file));
-    }
 
     public void testLDJSON() throws Exception {
         File file = File.createTempFile("report", ".lDjsOn");
