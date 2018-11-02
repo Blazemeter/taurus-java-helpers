@@ -1,3 +1,6 @@
+# 1.8 (2nd of November, 2018)
+* `Added` : escape CSV function for error messages
+
 # 1.7 (1st of November, 2018)
 * `Fixed` : multiline error messages for CSV report
 * `Changes` : `start_time` to include milliseconds as decimal
