@@ -34,6 +34,7 @@ public class CustomRunnerTest extends TestCase {
             "com.blazemeter.taurus.classpath," +
             "com.blazemeter.taurus.grinder," +
             "com.blazemeter.taurus.reporting," +
+            "com.blazemeter.taurus.utils," +
             "net.grinder.engine.process," +
             "org.junit.runner.filter";
 
