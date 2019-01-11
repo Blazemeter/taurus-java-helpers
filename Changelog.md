@@ -1,3 +1,6 @@
+# 1.9 (11th of January, 2019)
+* `Added` : better error messages for loaded classes
+
 # 1.8 (2nd of November, 2018)
 * `Added` : escape CSV function for error messages
 
