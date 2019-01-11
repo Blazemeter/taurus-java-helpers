@@ -146,7 +146,7 @@ public class ClasspathScanner {
                 classes.add(c);
             }
         } catch (Throwable e) {
-            log.log(Level.SEVERE, "Failed to process class: " + className);
+            log.log(Level.SEVERE, "Failed to process class: " + className, e);
         }
     }
 }
