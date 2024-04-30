@@ -13,6 +13,7 @@ import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestIdentifier;
 import testcases.subpackage.TestCase5;
+import testcases.subpackage.TestCase6;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,5 +72,43 @@ public class JUnit5ListenerTest extends TestCase {
 
         status = listener.getStatusFromThrowableType(new RuntimeException(""));
         assertEquals(Sample.STATUS_BROKEN, status);
+    }
+
+    public void testDefaultName() throws Exception {
+        File tmp = new File("tmp.ldjson");
+        tmp.deleteOnExit();
+
+        TaurusReporter reporter = new TaurusReporter(tmp.getAbsolutePath());
+        JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
+
+        Method method = TestCase5.class.getDeclaredMethod("testJUnit5Method");
+        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method));
+        listener.startSample(identifier);
+        listener.executionFinished(identifier, TestExecutionResult.successful());
+
+        reporter.close();
+
+        String s = CustomRunnerTest.readFileToString(tmp);
+        assertTrue(s, s.contains("\"full_name\":\"testcases.subpackage.TestCase5.testJUnit5Method\""));
+        assertTrue(s, s.contains("\"test_case\":\"testJUnit5Method\""));
+    }
+
+    public void testDisplayName() throws Exception {
+        File tmp = new File("tmp.ldjson");
+        tmp.deleteOnExit();
+
+        TaurusReporter reporter = new TaurusReporter(tmp.getAbsolutePath());
+        JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
+
+        Method method = TestCase6.class.getDeclaredMethod("methodName");
+        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase6.class, method));
+        listener.startSample(identifier);
+        listener.executionFinished(identifier, TestExecutionResult.successful());
+
+        reporter.close();
+
+        String s = CustomRunnerTest.readFileToString(tmp);
+        assertTrue(s, s.contains("\"full_name\":\"testcases.subpackage.TestCase6.DisplayNameValue\""));
+        assertTrue(s, s.contains("\"test_case\":\"DisplayNameValue\""));
     }
 }
