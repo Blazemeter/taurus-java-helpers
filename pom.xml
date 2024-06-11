@@ -20,7 +20,7 @@
 
     <groupId>com.blazemeter</groupId>
     <artifactId>taurus-java-helpers</artifactId>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.10</version>
 
     <name>Taurus Java Helpers</name>
     <description>Taurus Java Helpers</description>
@@ -66,11 +66,9 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
-                    <arguments>-DskipTests</arguments>
+                    <arguments>javadoc:jar source:jar -DskipTests</arguments>
                     <checkModificationExcludes>
-
                         <checkModificationExclude>**</checkModificationExclude>
-
                     </checkModificationExcludes>
                     <useReleaseProfile>true</useReleaseProfile>
                 </configuration>
