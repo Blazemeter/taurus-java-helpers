@@ -10,7 +10,9 @@
 
 
     <scm>
+<!--
         <connection>scm:git:git://github.com/Blazemeter/taurus-java-helpers.git</connection>
+-->
         <developerConnection>scm:git:ssh://github.com:Blazemeter/taurus-java-helpers.git</developerConnection>
         <url>https://github.com/Blazemeter/taurus-java-helpers/tree/master</url>
       <tag>taurus-java-helpers-1.10</tag>
