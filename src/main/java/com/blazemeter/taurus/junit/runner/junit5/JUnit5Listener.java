@@ -4,6 +4,11 @@ import com.blazemeter.taurus.junit.CustomListener;
 import com.blazemeter.taurus.junit.api.Reporter;
 import com.blazemeter.taurus.junit.api.ThreadCounter;
 import com.blazemeter.taurus.reporting.Sample;
+import java.lang.reflect.Method;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.platform.commons.util.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -49,12 +54,39 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
             TestSource testSource = testIdentifier.getSource().get();
             if (testSource instanceof MethodSource) {
                 MethodSource src = (MethodSource) testSource;
-                startSample(src.getMethodName(), src.getClassName());
+                String sampleName = getSampleName(src);
+                startSample(sampleName, src.getClassName());
             } else {
                 log.severe("Unsupported test source: " + testSource.getClass().getName());
                 //TODO: other test source..
             }
         }
+    }
+
+    private String getSampleName(MethodSource src) {
+        Class<?> javaClass = getJavaClass(src);
+        Method method = StringUtils.isBlank(src.getMethodParameterTypes()) ? getJavaMethod(src, javaClass) : getJavaMethodWithParams(src, javaClass);
+        DisplayName displayNameAnnotation = method.getDeclaredAnnotation(DisplayName.class);
+        return (displayNameAnnotation != null) ? displayNameAnnotation.value() : src.getMethodName();
+    }
+
+    private Class<?> getJavaClass(MethodSource src) {
+        return ReflectionUtils.loadClass(src.getClassName()).orElseThrow(
+            () -> new PreconditionViolationException(String.format(
+                "Could not load class [%s].", src.getClassName())));
+    }
+
+    private Method getJavaMethod(MethodSource src, Class<?> javaClass) {
+        return ReflectionUtils.findMethod(javaClass, src.getMethodName()).orElseThrow(
+            () -> new PreconditionViolationException(
+                String.format("Could not find method with name [%s] in class [%s].", src.getMethodName(), javaClass.getName())));
+    }
+
+    private Method getJavaMethodWithParams(MethodSource src, Class<?> javaClass) {
+        return ReflectionUtils.findMethod(javaClass, src.getMethodName(), src.getMethodParameterTypes()).orElseThrow(
+            () -> new PreconditionViolationException(String.format(
+                "Could not find method with name [%s] and parameter types [%s] in class [%s].",
+                src.getMethodName(), src.getMethodParameterTypes(), javaClass.getName())));
     }
 
     @Override
