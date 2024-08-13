@@ -7,6 +7,8 @@ import com.blazemeter.taurus.reporting.Sample;
 import com.blazemeter.taurus.reporting.TaurusReporter;
 import junit.framework.TestCase;
 import org.junit.experimental.categories.Category;
+import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -21,8 +23,10 @@ import java.lang.reflect.Method;
 
 import static org.junit.platform.engine.TestExecutionResult.*;
 
+
 @Category(TestCategory.class)
 public class JUnit5ListenerTest extends TestCase {
+
     public void test() throws IOException {
         File tmp = File.createTempFile("tmp", ".ldjson");
         tmp.deleteOnExit();
@@ -44,8 +48,10 @@ public class JUnit5ListenerTest extends TestCase {
 
         JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
         Method method = TestCase5.class.getDeclaredMethod("testJUnit5Method");
-        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method));
-        listener.startSample(TestIdentifier.from(new ClassTestDescriptor(UniqueId.forEngine("123"), TestCase5.class)));
+        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method,
+            new DefaultJupiterConfiguration(null)));
+        listener.startSample(TestIdentifier.from(
+            new ClassTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, new DefaultJupiterConfiguration(null))));
         listener.executionStarted(identifier);
         listener.executionFinished(identifier, TestExecutionResult.failed(new RuntimeException("failed")));
 
@@ -82,7 +88,8 @@ public class JUnit5ListenerTest extends TestCase {
         JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
 
         Method method = TestCase5.class.getDeclaredMethod("testJUnit5Method");
-        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method));
+        TestIdentifier identifier = TestIdentifier.from(
+            new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase5.class, method, new DefaultJupiterConfiguration(null)));
         listener.startSample(identifier);
         listener.executionFinished(identifier, TestExecutionResult.successful());
 
@@ -101,7 +108,8 @@ public class JUnit5ListenerTest extends TestCase {
         JUnit5Listener listener = new JUnit5Listener(reporter, new Counter());
 
         Method method = TestCase6.class.getDeclaredMethod("methodName");
-        TestIdentifier identifier = TestIdentifier.from(new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase6.class, method));
+        TestIdentifier identifier = TestIdentifier.from(
+            new TestMethodTestDescriptor(UniqueId.forEngine("123"), TestCase6.class, method, new DefaultJupiterConfiguration(null)));
         listener.startSample(identifier);
         listener.executionFinished(identifier, TestExecutionResult.successful());
 
