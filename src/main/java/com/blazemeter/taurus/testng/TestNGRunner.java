@@ -1,6 +1,7 @@
 package com.blazemeter.taurus.testng;
 
 import com.blazemeter.taurus.reporting.TaurusReporter;
+import org.testng.ITestNGListener;
 import org.testng.TestNG;
 import org.testng.collections.Lists;
 
@@ -23,7 +24,7 @@ public class TestNGRunner {
     public static final String ITERATIONS = "iterations";
     public static final String HOLD = "hold_for";
     public static TaurusReporter reporter;
-    public static TestListener testListener;
+    public static ITestNGListener testListener;
 
     static {
         log.setLevel(Level.FINER);
