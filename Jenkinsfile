@@ -79,12 +79,14 @@ pipeline {
         }
 
         stage('Deploy to Maven Central') {
+/*
             when {
                 allOf {
                     branch 'master'
                     expression { env.SKIP_BUILD != 'true' }
                 }
             }
+*/
             steps {
                 withCredentials([
                         usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
