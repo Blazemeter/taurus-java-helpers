@@ -34,28 +34,10 @@ pipeline {
                 }
             }
         }
-
-        stage('Build & Test') {
-            when {
-                expression { env.SKIP_BUILD != 'true' }
-            }
-            steps {
-                sh 'mvn -B clean verify'
-            }
-        }
-
-        stage('Deploy to Maven Central') {
-            when {
-                allOf {
-                    branch 'master'
-                    expression { env.SKIP_BUILD != 'true' }
-                }
-            }
+        stage("Install GPG key") {
             steps {
                 withCredentials([
-                        usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
-                        file(credentialsId: 'sonatype-private-key', variable: 'GPG_KEY_FILE'),
-                        string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
+                        file(credentialsId: 'sonatype-private-key', variable: 'GPG_KEY_FILE')
                 ]) {
                     sh '''
                         apt-get update && apt-get install -y gnupg2
@@ -76,7 +58,33 @@ pipeline {
 
                         # Show confirmation
                         gpg --list-secret-keys
-                        
+                        '''
+                }
+            }
+        }
+
+        stage('Build & Test') {
+            when {
+                expression { env.SKIP_BUILD != 'true' }
+            }
+            steps {
+                sh 'mvn -B clean verify'
+            }
+        }
+
+        stage('Deploy to Maven Central') {
+            when {
+                allOf {
+                    branch 'master'
+                    expression { env.SKIP_BUILD != 'true' }
+                }
+            }
+            steps {
+                withCredentials([
+                        usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
+                        string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
+                ]) {
+                    sh '''
                         cat > $WORKSPACE/settings.xml <<EOF
 <settings>
   <servers>
