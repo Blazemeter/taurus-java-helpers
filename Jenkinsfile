@@ -9,6 +9,7 @@ pipeline {
     environment {
         MAVEN_OPTS = '-Dmaven.test.redirectTestOutputToFile=true'
         SKIP_BUILD = 'false'
+        GNUPGHOME="$WORKSPACE/.gnupg"
     }
 
     options {
@@ -43,7 +44,6 @@ pipeline {
                     sh '''
         set -e
         apt-get update && apt-get install -y gnupg2 pinentry-curses
-        export GNUPGHOME="$WORKSPACE/.gnupg"
         rm -rf "$GNUPGHOME"
         mkdir -p "$GNUPGHOME"
         chmod 700 "$GNUPGHOME"
@@ -64,8 +64,6 @@ pipeline {
         gpg --batch --list-secret-keys
         # Store for later stages
         echo "$KEY_ID" > KEY_ID_FILE
-        set -e
-        export GNUPGHOME="$WORKSPACE/.gnupg"
       '''
                 }
             }
@@ -76,7 +74,7 @@ pipeline {
                 expression { env.SKIP_BUILD != 'true' }
             }
             steps {
-                sh 'mvn -B clean verify'
+                sh 'mvn -B clean verify -Dgpg.homedir="$GNUPGHOME"'
             }
         }
 
