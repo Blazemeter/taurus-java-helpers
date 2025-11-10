@@ -99,12 +99,7 @@ pipeline {
 <settings>
   <servers>
     <server>
-      <id>sonatype-nexus-staging</id>
-      <username>${OSSRH_USERNAME}</username>
-      <password>${OSSRH_PASSWORD}</password>
-    </server>
-    <server>
-      <id>sonatype-nexus-snapshots</id>
+      <id>ossrh</id>
       <username>${OSSRH_USERNAME}</username>
       <password>${OSSRH_PASSWORD}</password>
     </server>
