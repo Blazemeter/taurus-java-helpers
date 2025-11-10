@@ -88,7 +88,7 @@ pipeline {
   </servers>
 </settings>
 EOF
-                        mvn -B -s $WORKSPACE/settings.xml -Dgpg.passphrase="$GPG_PASSPHRASE" -DskipTests deploy
+                    #    mvn -B -s $WORKSPACE/settings.xml -Dgpg.passphrase="$GPG_PASSPHRASE" -DskipTests deploy
                     '''
                 }
             }
