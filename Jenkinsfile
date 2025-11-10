@@ -34,29 +34,37 @@ pipeline {
                 }
             }
         }
-        stage("Install GPG key") {
+        stage('Install GPG key') {
             steps {
                 withCredentials([
-                        file(credentialsId: 'sonatype-private-key', variable: 'GPG_KEY_FILE')
+                        file(credentialsId: 'sonatype-private-key', variable: 'GPG_KEY_FILE'),
+                        string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
                 ]) {
                     sh '''
-                        apt-get update && apt-get install -y gnupg2
-                        gpg --batch --import "$GPG_KEY_FILE"
-                        KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5; exit}')
+        set -e
+        apt-get update && apt-get install -y gnupg2 pinentry-curses
+        export GNUPGHOME="$WORKSPACE/.gnupg"
+        rm -rf "$GNUPGHOME"
+        mkdir -p "$GNUPGHOME"
+        chmod 700 "$GNUPGHOME"
 
-                        if [ -z "$KEY_ID" ]; then
-                          echo "No private key found!" >&2
-                          exit 1
-                        fi
+        gpg --batch --yes --pinentry-mode loopback --import "$GPG_KEY_FILE"
 
+        KEY_ID=$(gpg --batch --with-colons --list-secret-keys | awk -F: '/^sec/ {print $5; exit}')
+        [ -n "$KEY_ID" ] || { echo "No private key imported"; exit 1; }
 
-                        # Make it the default key
-                        echo "default-key $KEY_ID" >> ~/.gnupg/gpg.conf
-                        echo "use-agent" >> ~/.gnupg/gpg.conf
+        echo "pinentry-mode loopback" >> "$GNUPGHOME/gpg.conf"
+        echo "default-key $KEY_ID" >> "$GNUPGHOME/gpg.conf"
+        echo "allow-loopback-pinentry" >> "$GNUPGHOME/gpg-agent.conf"
 
-                        # Show confirmation
-                        gpg --list-secret-keys
-                        '''
+        # Restart agent to pick up allow-loopback-pinentry (ignore errors if agent not running)
+        gpgconf --kill gpg-agent || true
+
+        echo "GPG key loaded: $KEY_ID"
+        gpg --batch --list-secret-keys
+        # Store for later stages
+        echo "$KEY_ID" > KEY_ID_FILE
+      '''
                 }
             }
         }
@@ -83,19 +91,28 @@ pipeline {
                         string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
                 ]) {
                     sh '''
-                        cat > $WORKSPACE/settings.xml <<EOF
+        set -e
+        export GNUPGHOME="$WORKSPACE/.gnupg"
+        KEY_ID=$(cat KEY_ID_FILE)
+
+        cat > settings.xml <<EOF
 <settings>
   <servers>
     <server>
       <id>sonatype-nexus-staging</id>
       <username>${OSSRH_USERNAME}</username>
-      <password>${OSRRH_PASSWORD}</password>
+      <password>${OSSRH_PASSWORD}</password>
     </server>
   </servers>
 </settings>
 EOF
-                    #    mvn -B -s $WORKSPACE/settings.xml -Dgpg.passphrase="$GPG_PASSPHRASE" -DskipTests deploy
-                    '''
+
+        mvn -B -s settings.xml \
+          -Dgpg.keyname="$KEY_ID" \
+          -Dgpg.passphrase="$GPG_PASSPHRASE" \
+          -Dgpg.homedir="$GNUPGHOME" \
+          -DskipTests deploy
+      '''
                 }
             }
         }
