@@ -49,8 +49,6 @@ pipeline {
                           exit 1
                         fi
 
-                        # Trust key so maven-gpg-plugin won't fail
-                        echo -e "5\\ny\\n" | gpg --command-fd 0 --expert --edit-key $KEY_ID trust quit
 
                         # Make it the default key
                         echo "default-key $KEY_ID" >> ~/.gnupg/gpg.conf
