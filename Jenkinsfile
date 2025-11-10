@@ -64,6 +64,8 @@ pipeline {
         gpg --batch --list-secret-keys
         # Store for later stages
         echo "$KEY_ID" > KEY_ID_FILE
+        set -e
+        export GNUPGHOME="$WORKSPACE/.gnupg"
       '''
                 }
             }
@@ -92,9 +94,7 @@ pipeline {
                 ]) {
                     sh '''
         set -e
-        export GNUPGHOME="$WORKSPACE/.gnupg"
         KEY_ID=$(cat KEY_ID_FILE)
-
         cat > settings.xml <<EOF
 <settings>
   <servers>
