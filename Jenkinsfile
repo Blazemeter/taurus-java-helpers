@@ -103,10 +103,14 @@ pipeline {
       <username>${OSSRH_USERNAME}</username>
       <password>${OSSRH_PASSWORD}</password>
     </server>
+    <server>
+      <id>sonatype-nexus-snapshots</id>
+      <username>${OSSRH_USERNAME}</username>
+      <password>${OSSRH_PASSWORD}</password>
+    </server>
   </servers>
 </settings>
 EOF
-
         mvn -B -s settings.xml \
           -Dgpg.keyname="$KEY_ID" \
           -Dgpg.passphrase="$GPG_PASSPHRASE" \
