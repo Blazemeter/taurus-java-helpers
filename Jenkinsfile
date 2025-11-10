@@ -60,6 +60,23 @@ pipeline {
                     sh '''
                         apt-get update && apt-get install -y gnupg2
                         gpg --batch --import "$GPG_KEY_FILE"
+                        KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5; exit}')
+
+                        if [ -z "$KEY_ID" ]; then
+                          echo "No private key found!" >&2
+                          exit 1
+                        fi
+
+                        # Trust key so maven-gpg-plugin won't fail
+                        echo -e "5\\ny\\n" | gpg --command-fd 0 --expert --edit-key $KEY_ID trust quit
+
+                        # Make it the default key
+                        echo "default-key $KEY_ID" >> ~/.gnupg/gpg.conf
+                        echo "use-agent" >> ~/.gnupg/gpg.conf
+
+                        # Show confirmation
+                        gpg --list-secret-keys
+                        
                         cat > $WORKSPACE/settings.xml <<EOF
 <settings>
   <servers>
