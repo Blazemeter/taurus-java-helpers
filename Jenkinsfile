@@ -64,6 +64,29 @@ pipeline {
                 }
             }
         }
+        stage('OSSRH Diagnostics') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD')]) {
+                    sh '''
+set -e
+for H in https://s01.oss.sonatype.org https://oss.sonatype.org; do
+  echo "Checking $H"
+  CODE=$(curl -s -o profiles.json -w '%{http_code}' -u "$OSSRH_USERNAME:$OSSRH_PASSWORD" \
+    "$H/service/local/staging/profile_list" || true)
+  echo "HTTP $CODE"
+  if [ "$CODE" = "200" ]; then
+     if grep -q 'com.blazemeter' profiles.json; then
+        echo "Found com.blazemeter at $H"
+        echo "$H" > SELECTED_HOST
+     fi
+  fi
+done
+[ -f SELECTED_HOST ] || { echo "No host contains staging profile for com.blazemeter"; exit 1; }
+cat SELECTED_HOST
+'''
+                }
+            }
+        }
 
 /*
         stage('Build & Test') {
