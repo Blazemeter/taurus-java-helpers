@@ -91,6 +91,9 @@ pipeline {
                     sh '''
         set -e
         KEY_ID=$(cat KEY_ID_FILE)
+        BRANCH="${BRANCH_NAME:-master}"
+        git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH"        
+        
         cat > settings.xml <<EOF
 <settings>
   <servers>
