@@ -64,30 +64,6 @@ pipeline {
                 }
             }
         }
-        stage('OSSRH Diagnostics') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD')]) {
-                    sh '''
-set -e
-for H in https://s01.oss.sonatype.org https://oss.sonatype.org https://central.sonatype.com/; do
-  echo "Checking $H"
-  CODE=$(curl -s -o profiles.json -w '%{http_code}' -u "$OSSRH_USERNAME:$OSSRH_PASSWORD" \
-    "$H/service/local/staging/profile_list" || true)
-  echo "HTTP $CODE"
-  if [ "$CODE" = "200" ]; then
-     if grep -q 'com.blazemeter' profiles.json; then
-        echo "Found com.blazemeter at $H"
-        echo "$H" > SELECTED_HOST
-     fi
-  fi
-done
-[ -f SELECTED_HOST ] || { echo "No host contains staging profile for com.blazemeter"; exit 1; }
-cat SELECTED_HOST
-'''
-                }
-            }
-        }
-
 /*
         stage('Build & Test') {
             when {
@@ -110,7 +86,7 @@ cat SELECTED_HOST
 */
             steps {
                 withCredentials([
-                        usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
+                        string(credentialsId: 'sonatype-deployment-token', variable: 'SONATYPE_TOKEN'),
                         string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE'),
                         usernamePassword(credentialsId: 'github-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')
                 ]) {
@@ -135,9 +111,9 @@ cat > settings.xml <<EOF
 <settings>
   <servers>
     <server>
-      <id>ossrh</id>
-      <username>${OSSRH_USERNAME}</username>
-      <password>${OSSRH_PASSWORD}</password>
+      <id>central</id>
+      <username>LOZXAS</username>
+      <password>${SONATYPE_TOKEN}</password>
     </server>
   </servers>
 </settings>
@@ -157,7 +133,7 @@ mvn -B -s settings.xml \
   -Dgpg.homedir="$GNUPGHOME" \
   -DskipTests \
   -Darguments="-Dgpg.keyname=$KEY_ID -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.homedir=$GNUPGHOME -Dgpg.passphrase.repeat=false -DskipTests" \
-  release:prepare release:perform
+  deploy -P release
 '''
                 }
             }
