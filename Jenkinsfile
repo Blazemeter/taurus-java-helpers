@@ -26,7 +26,10 @@ pipeline {
                     def msg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
                     if (msg =~ /chore: bump version to .+/) {
                         echo "Version bump commit detected: '${msg}'. Skipping build."
-                        env.SKIP_BUILD = 'true'
+                        run = currentBuild.getRawBuild()
+                        run.doStop()
+                        sleep time: 5, unit: 'SECONDS'
+                        run.delete()
                     }
                 }
             }
@@ -135,24 +138,6 @@ mvn -B -s settings.xml \
 '''
                 }
             }
-        }
-
-        stage('Skip Notice') {
-            when {
-                expression { env.SKIP_BUILD == 'true' }
-            }
-            steps {
-                echo 'Build skipped due to version bump commit.'
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline finished.'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
