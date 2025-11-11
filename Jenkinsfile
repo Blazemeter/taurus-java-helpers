@@ -93,13 +93,24 @@ pipeline {
                 ]) {
                     sh '''
         set -e
+        export GIT_TERMINAL_PROMPT=0
         KEY_ID=$(cat KEY_ID_FILE)
         BRANCH="${BRANCH_NAME:-master}"
-        git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH"        
+
+        git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH"
         git config user.name "jenkins-ci"
         git config user.email "ci@blazemeter.com"
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Blazemeter/taurus-java-helpers.git
-        
+
+        # Configure credential helper
+        mkdir -p ~/.config
+        printf "https://%s:%s@github.com\\n" "$GIT_USERNAME" "$GITHUB_TOKEN" > ~/.git-credentials
+        git config --global credential.helper store
+
+        # Set remote without inline credentials
+        git remote set-url origin https://github.com/Blazemeter/taurus-java-helpers.git
+        git fetch origin
+        git status
+
         cat > settings.xml <<EOF
 <settings>
   <servers>
@@ -111,6 +122,7 @@ pipeline {
   </servers>
 </settings>
 EOF
+
         mvn -B -s settings.xml \
           -Dgpg.keyname="$KEY_ID" \
           -Dgpg.passphrase="$GPG_PASSPHRASE" \
