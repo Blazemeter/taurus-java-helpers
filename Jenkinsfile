@@ -64,6 +64,7 @@ pipeline {
                 }
             }
         }
+
 /*
         stage('Build & Test') {
             when {
@@ -133,7 +134,7 @@ mvn -B -s settings.xml \
   -Dgpg.homedir="$GNUPGHOME" \
   -DskipTests \
   -Darguments="-Dgpg.keyname=$KEY_ID -Dgpg.passphrase=$GPG_PASSPHRASE -Dgpg.homedir=$GNUPGHOME -Dgpg.passphrase.repeat=false -DskipTests" \
-  deploy -P release
+  release:prepare release:perform
 '''
                 }
             }
