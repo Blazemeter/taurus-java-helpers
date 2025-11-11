@@ -68,7 +68,6 @@ pipeline {
             }
         }
 
-/*
         stage('Build & Test') {
             when {
                 expression { env.SKIP_BUILD != 'true' }
@@ -77,17 +76,11 @@ pipeline {
                 sh 'mvn -B clean verify -Dgpg.homedir="$GNUPGHOME"'
             }
         }
-*/
 
         stage('Deploy to Maven Central') {
-/*
             when {
-                allOf {
-                    branch 'master'
-                    expression { env.SKIP_BUILD != 'true' }
-                }
+                branch 'master'
             }
-*/
             steps {
                 withCredentials([
                         string(credentialsId: 'sonatype-deployment-token', variable: 'SONATYPE_TOKEN'),
