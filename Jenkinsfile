@@ -69,7 +69,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD')]) {
                     sh '''
 set -e
-for H in https://s01.oss.sonatype.org https://oss.sonatype.org; do
+for H in https://s01.oss.sonatype.org https://oss.sonatype.org https://central.sonatype.com/; do
   echo "Checking $H"
   CODE=$(curl -s -o profiles.json -w '%{http_code}' -u "$OSSRH_USERNAME:$OSSRH_PASSWORD" \
     "$H/service/local/staging/profile_list" || true)
