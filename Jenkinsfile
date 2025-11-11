@@ -1,3 +1,5 @@
+@Library ("jenkins_library") _
+clearWorkspaceAsRoot()
 pipeline {
     agent {
         docker {
