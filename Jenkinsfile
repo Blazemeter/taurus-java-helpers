@@ -87,7 +87,7 @@ pipeline {
 */
             steps {
                 withCredentials([
-                        string(credentialsId: 'sonatype-deployment-token', variable: 'SONATYPE_TOKEN'),
+                        usernamePassword(credentialsId: 'sonatype', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
                         string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE'),
                         usernamePassword(credentialsId: 'github-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')
                 ]) {
@@ -101,25 +101,29 @@ git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH"
 git config user.name "jenkins-ci"
 git config user.email "ci@blazemeter.com"
 
-mkdir -p ~/.config
+# GitHub auth
 printf "https://%s:%s@github.com\\n" "$GIT_USERNAME" "$GITHUB_TOKEN" > ~/.git-credentials
 git config --global credential.helper store
 git remote set-url origin https://github.com/Blazemeter/taurus-java-helpers.git
 git fetch origin
 
+# Maven settings with proper OSSRH (staging-capable) credentials
 cat > settings.xml <<EOF
 <settings>
   <servers>
     <server>
       <id>ossrh</id>
-      <username>LOZXAS</username>
-      <password>${SONATYPE_TOKEN}</password>
+      <username>${OSSRH_USERNAME}</username>
+      <password>${OSSRH_PASSWORD}</password>
     </server>
   </servers>
 </settings>
 EOF
 
-# Pre-test signing (optional sanity check)
+# Sanity: do not echo credentials; just show which user
+echo "Using OSSRH username: ${OSSRH_USERNAME}"
+
+# Test GPG
 echo test > sign.test
 gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" -u "$KEY_ID" -ab sign.test
 rm sign.test sign.test.asc
