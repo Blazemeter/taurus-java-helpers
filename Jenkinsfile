@@ -18,12 +18,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Detect Version Bump') {
             steps {
                 script {
