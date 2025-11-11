@@ -13,12 +13,12 @@
         <connection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</connection>
         <developerConnection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</developerConnection>
         <url>https://github.com/Blazemeter/taurus-java-helpers</url>
-        <tag>taurus-java-helpers-1.13</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <groupId>com.blazemeter</groupId>
     <artifactId>taurus-java-helpers</artifactId>
-    <version>1.13</version>
+    <version>1.14-SNAPSHOT</version>
 
     <name>Taurus Java Helpers</name>
     <description>Taurus Java Helpers</description>
