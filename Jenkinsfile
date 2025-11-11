@@ -43,7 +43,7 @@ pipeline {
                 ]) {
                     sh '''
         set -e
-        apt-get update && apt-get install -y gnupg2 pinentry-curses
+        apt-get update && apt-get install -y pinentry-curses
         rm -rf "$GNUPGHOME"
         mkdir -p "$GNUPGHOME"
         chmod 700 "$GNUPGHOME"
@@ -110,7 +110,7 @@ EOF
           -Dgpg.keyname="$KEY_ID" \
           -Dgpg.passphrase="$GPG_PASSPHRASE" \
           -Dgpg.homedir="$GNUPGHOME" \
-          -DskipTests deploy
+          -DskipTests release:prepare release:perform
       '''
                 }
             }
