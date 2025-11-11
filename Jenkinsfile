@@ -89,7 +89,7 @@ pipeline {
 */
             steps {
                 withCredentials([
-                        usernamePassword(credentialsId: 'sonatype-deployment-token', usernameVariable: 'OSSRH_USERNAME', passwordVariable: 'OSSRH_PASSWORD'),
+                        string(credentialsId: 'sonatype-deployment-token', variable: 'SONATYPE_TOKEN'),
                         string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
                 ]) {
                     sh '''
@@ -100,8 +100,8 @@ pipeline {
   <servers>
     <server>
       <id>ossrh</id>
-      <username>${OSSRH_USERNAME}</username>
-      <password>${OSSRH_PASSWORD}</password>
+      <username>LOZXAS</username>
+      <password>${SONATYPE_TOKEN}</password>
     </server>
   </servers>
 </settings>
