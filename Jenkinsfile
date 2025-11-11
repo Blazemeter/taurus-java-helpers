@@ -120,9 +120,6 @@ cat > settings.xml <<EOF
 </settings>
 EOF
 
-# Sanity: do not echo credentials; just show which user
-echo "Using OSSRH username: ${OSSRH_USERNAME}"
-
 # Test GPG
 echo test > sign.test
 gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" -u "$KEY_ID" -ab sign.test
