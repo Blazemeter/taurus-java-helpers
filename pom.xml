@@ -7,23 +7,34 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-
-
     <scm>
-<!--
-        <connection>scm:git:git://github.com/Blazemeter/taurus-java-helpers.git</connection>
--->
-        <developerConnection>scm:git:ssh://git@github.com/Blazemeter/taurus-java-helpers.git</developerConnection>
-        <url>https://github.com/Blazemeter/taurus-java-helpers/tree/master</url>
-      <tag>taurus-java-helpers-1.12</tag>
-  </scm>
+        <connection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</connection>
+        <developerConnection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</developerConnection>
+        <url>https://github.com/Blazemeter/taurus-java-helpers</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <groupId>com.blazemeter</groupId>
     <artifactId>taurus-java-helpers</artifactId>
-    <version>1.12-SNAPSHOT</version>
+    <version>1.20-SNAPSHOT</version>
 
     <name>Taurus Java Helpers</name>
     <description>Taurus Java Helpers</description>
+
+    <developers>
+        <developer>
+            <id>zmaly</id>
+            <name>Zdenek Maly</name>
+            <email>zmaly@perforce.com</email>
+            <organization>BlazeMeter</organization>
+            <organizationUrl>https://www.blazemeter.com</organizationUrl>
+            <roles>
+                <role>maintainer</role>
+            </roles>
+            <timezone>UTC</timezone>
+        </developer>
+        <!-- Add more developers as needed -->
+    </developers>
 
     <repositories>
         <repository>
@@ -81,14 +92,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
+                        <phase>deploy</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
                         <configuration>
+                            <homedir>${gpg.homedir}</homedir>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
@@ -98,27 +111,26 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.13</version>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>sonatype-nexus-staging</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <publishingServerId>central</publishingServerId>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://central.sonatype.com/api/v1/publish</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.4</version>
-            <type>maven-plugin</type>
-        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -129,8 +141,6 @@
             <artifactId>grinder</artifactId>
             <version>3.11</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
@@ -147,29 +157,22 @@
             <artifactId>junit-vintage-engine</artifactId>
             <version>5.10.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.10.3</version>
         </dependency>
-
-
-
-
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
             <version>2.48.2</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20240303</version>
         </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
