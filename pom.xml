@@ -10,13 +10,11 @@
 
 
     <scm>
-<!--
-        <connection>scm:git:git://github.com/Blazemeter/taurus-java-helpers.git</connection>
--->
-        <developerConnection>scm:git:ssh://git@github.com/Blazemeter/taurus-java-helpers.git</developerConnection>
-        <url>https://github.com/Blazemeter/taurus-java-helpers/tree/master</url>
-      <tag>taurus-java-helpers-1.13</tag>
-  </scm>
+        <connection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</connection>
+        <developerConnection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</developerConnection>
+        <url>https://github.com/Blazemeter/taurus-java-helpers</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <groupId>com.blazemeter</groupId>
     <artifactId>taurus-java-helpers</artifactId>

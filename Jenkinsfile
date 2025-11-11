@@ -65,6 +65,7 @@ pipeline {
             }
         }
 
+/*
         stage('Build & Test') {
             when {
                 expression { env.SKIP_BUILD != 'true' }
@@ -73,6 +74,7 @@ pipeline {
                 sh 'mvn -B clean verify -Dgpg.homedir="$GNUPGHOME"'
             }
         }
+*/
 
         stage('Deploy to Maven Central') {
 /*
@@ -86,13 +88,17 @@ pipeline {
             steps {
                 withCredentials([
                         string(credentialsId: 'sonatype-deployment-token', variable: 'SONATYPE_TOKEN'),
-                        string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE')
+                        string(credentialsId: 'sonatype-private-key-passphrase', variable: 'GPG_PASSPHRASE'),
+                        usernamePassword(credentialsId: 'github-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GIT_USERNAME')
                 ]) {
                     sh '''
         set -e
         KEY_ID=$(cat KEY_ID_FILE)
         BRANCH="${BRANCH_NAME:-master}"
         git checkout -B "$BRANCH" "origin/$BRANCH" || git checkout -B "$BRANCH"        
+        git config user.name "jenkins-ci"
+        git config user.email "ci@blazemeter.com"
+        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/Blazemeter/taurus-java-helpers.git
         
         cat > settings.xml <<EOF
 <settings>
