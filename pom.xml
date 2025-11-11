@@ -7,7 +7,13 @@
         <artifactId>oss-parent</artifactId>
         <version>9</version>
     </parent>
-
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:https://github.com/Blazemeter/taurus-java-helpers.git</connection>
@@ -22,6 +28,21 @@
 
     <name>Taurus Java Helpers</name>
     <description>Taurus Java Helpers</description>
+
+    <developers>
+        <developer>
+            <id>zmaly</id>
+            <name>Zdenek Maly</name>
+            <email>zmaly@perforce.com</email>
+            <organization>BlazeMeter</organization>
+            <organizationUrl>https://www.blazemeter.com</organizationUrl>
+            <roles>
+                <role>maintainer</role>
+            </roles>
+            <timezone>UTC</timezone>
+        </developer>
+        <!-- Add more developers as needed -->
+    </developers>
 
     <repositories>
         <repository>
