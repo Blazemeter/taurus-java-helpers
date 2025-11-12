@@ -23,9 +23,10 @@ pipeline {
         stage('Detect Version Bump') {
             steps {
                 script {
-                    def msg = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
-                    if (msg =~ /chore: bump version to .+/) {
-                        echo "Version bump commit detected: '${msg}'. Skipping build."
+                    committer = sh(script: "git log | grep Author | head -1 | awk '{print \$2}'", returnStdout: true).trim()
+                    print "Commiter: ${committer}"
+                    if (isBranchIndexingBuildCause() && committer == "jenkins") {
+                        echo "Version bump commit detected. Skipping build."
                         run = currentBuild.getRawBuild()
                         run.doStop()
                         sleep time: 5, unit: 'SECONDS'
