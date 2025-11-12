@@ -15,7 +15,8 @@ import java.util.logging.Logger;
 
 public class TaurusReporter implements Reporter {
 
-    private FileWriter outStream;
+    private FileWriter reportOutStream;
+    private FileWriter errorOutStream;
     private static final Logger log = Logger.getLogger(TaurusReporter.class.getName());
     private final LinkedBlockingQueue<Sample> queue = new LinkedBlockingQueue<>();
 
@@ -25,12 +26,19 @@ public class TaurusReporter implements Reporter {
 
     private final boolean isVerbose;
 
-    public TaurusReporter(String fileName) throws IOException {
-        outStream = openFile(fileName);
-        formatter = createFormatter(fileName);
+    public TaurusReporter(String reportFileName) throws IOException {
+        this(reportFileName, null);
+    }
+
+    public TaurusReporter(String reportFileName, String errorFileName) throws IOException {
+        reportOutStream = openFile(reportFileName);
+        if (errorFileName != null) {
+            errorOutStream = openFile(errorFileName);
+        }
+        formatter = createFormatter(reportFileName);
         isVerbose = formatter instanceof JSONFormatter;
 
-        log.info("File: " + fileName + ", formatter: " + formatter.getClass().getSimpleName());
+        log.info("File: " + reportFileName + ", formatter: " + formatter.getClass().getSimpleName());
 
         reporter = new PoolWorker();
         reporter.setName("Reporter thread");
@@ -53,8 +61,8 @@ public class TaurusReporter implements Reporter {
         } else {
             CSVFormatter formatter = new CSVFormatter();
             try {
-                outStream.write(formatter.getHeader());
-                outStream.write("\n");
+                reportOutStream.write(formatter.getHeader());
+                reportOutStream.write("\n");
             } catch (IOException e) {
                 isStopped = true;
                 log.log(Level.SEVERE, "Failed to write CSV header", e);
@@ -76,7 +84,10 @@ public class TaurusReporter implements Reporter {
         log.info("Closing reporter stream");
         isStopped = true;
         reporter.join();
-        outStream.close();
+        reportOutStream.close();
+        if (errorOutStream != null) {
+            errorOutStream.close();
+        }
     }
 
     private class PoolWorker extends Thread {
@@ -92,8 +103,8 @@ public class TaurusReporter implements Reporter {
                 }
                 if (sample != null) {
                     try {
-                        outStream.write(formatter.formatToString(sample));
-                        outStream.flush();
+                        reportOutStream.write(formatter.formatToString(sample));
+                        reportOutStream.flush();
                     } catch (Exception e) {
                         log.log(Level.SEVERE, "Failed to write sample: ", e);
                     }
@@ -141,8 +152,10 @@ public class TaurusReporter implements Reporter {
             builder.append(sample.getLabel()).append(','); // label
 
             builder.append(','); // responseCode
-            String errorMsg = formatMessage(sample.getErrorMessage() == null ? "" : sample.getErrorMessage());
-            builder.append(errorMsg).append(','); // responseMessage
+            String errorMsg = sample.getErrorMessage() == null ? "" : sample.getErrorMessage();
+            String sanitizedTrace = sample.getErrorTrace() == null ? "" : sample.getErrorTrace();
+            String combinedErrorMsg = Utils.escapeCSV(errorMsg + (sanitizedTrace.isEmpty() ? "" : " | " + sanitizedTrace));
+            builder.append(combinedErrorMsg).append(','); // responseMessage ( + stack trace)
 
             builder.append(sample.isSuccessful()).append(','); // success
             builder.append(sample.getActiveThreads()).append(","); // allThreads

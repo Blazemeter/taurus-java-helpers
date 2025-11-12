@@ -18,6 +18,7 @@ public class Sample {
     private String errorMessage;
     private String errorTrace;
     private String description = "";
+    private boolean containerSample = false;
 
     private int activeThreads;
 
@@ -130,6 +131,14 @@ public class Sample {
 
     public void setActiveThreads(int activeThreads) {
         this.activeThreads = activeThreads;
+    }
+
+    public boolean isContainerSample() {
+        return containerSample;
+    }
+
+    public void setContainerSample(boolean containerSample) {
+        this.containerSample = containerSample;
     }
 }
 
