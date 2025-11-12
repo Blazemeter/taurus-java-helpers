@@ -1,5 +1,7 @@
 /target/
 /.idea/
+/libs/*
+/localTests/*
 *.iml
 
 

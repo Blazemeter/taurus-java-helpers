@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class CustomRunner {
     private static final Logger log = Logger.getLogger(CustomRunner.class.getName());
     public static final String REPORT_FILE = "report_file";
+    public static final String ERROR_FILE = "error_file";
     public static final String ITERATIONS = "iterations";
     public static final String HOLD = "hold_for";
     public static final String CONCURRENCY = "concurrency";
@@ -54,6 +55,7 @@ public class CustomRunner {
 
     protected static boolean isCustomRunnerProperty(String propName) {
         return REPORT_FILE.equals(propName)
+                || ERROR_FILE.equals(propName)
                 || ITERATIONS.equals(propName)
                 || HOLD.equals(propName)
                 || INCLUDE_CATEGORY.equals(propName)

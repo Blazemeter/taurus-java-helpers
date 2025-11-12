@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.blazemeter.taurus.junit.CustomRunner.CONCURRENCY;
+import static com.blazemeter.taurus.junit.CustomRunner.ERROR_FILE;
 import static com.blazemeter.taurus.junit.CustomRunner.HOLD;
 import static com.blazemeter.taurus.junit.CustomRunner.ITERATIONS;
 import static com.blazemeter.taurus.junit.CustomRunner.RAMP_UP;
@@ -42,7 +43,8 @@ public class Supervisor {
     public Supervisor(Properties properties) {
         this.properties = properties;
         try {
-            this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE));
+            this.reporter = new TaurusReporter(properties.getProperty(REPORT_FILE),
+                properties.getProperty(ERROR_FILE));
         } catch (IOException e) {
             log.log(Level.SEVERE, "Failed to create reporter", e);
             throw new CustomRunnerException("Failed to create reporter", e);

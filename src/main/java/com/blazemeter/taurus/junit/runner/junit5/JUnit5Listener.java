@@ -101,6 +101,23 @@ public class JUnit5Listener extends CustomListener implements TestExecutionListe
             } else {
                 finishSample(status, null, null);
             }
+        } else {
+            //container or other -> we need to somehow handel errors in @BeforeAll/@AfterAll
+            Optional<Throwable> optional = testExecutionResult.getThrowable();
+            if (optional.isPresent()) {
+                Throwable throwable = optional.get();
+                String exceptionName = throwable.getClass().getName();
+                if (isVerbose()) {
+                    log.severe(String.format("failed %s(%s)", testIdentifier.getDisplayName(), "container"));
+                }
+                //we don't have sample here, so we create a dummy one to report the error
+                pendingSample = new Sample();
+                pendingSample.setLabel(testIdentifier.getDisplayName());
+                pendingSample.setSuite("container");
+                pendingSample.setFullName("container." + testIdentifier.getDisplayName());
+                pendingSample.setContainerSample(true);
+                finishSample(getStatusFromThrowableType(throwable), exceptionName + ": " + throwable.getMessage(), throwable);
+            }
         }
     }
 
