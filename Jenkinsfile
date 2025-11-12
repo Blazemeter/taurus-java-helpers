@@ -25,7 +25,7 @@ pipeline {
                 script {
                     committer = sh(script: "git log | grep Author | head -1 | awk '{print \$2}'", returnStdout: true).trim()
                     print "Commiter: ${committer}"
-                    if (isBranchIndexingBuildCause() && committer == "jenkins") {
+                    if (committer == "jenkins") {
                         echo "Version bump commit detected. Skipping build."
                         run = currentBuild.getRawBuild()
                         run.doStop()
